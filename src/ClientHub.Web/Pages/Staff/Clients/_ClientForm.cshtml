@@ -1,0 +1,39 @@
+@using ClientHub.Web.Data.Entities
+@using ClientHub.Web.Services.Clients
+@model ClientInput
+@* Shared by Create and Edit. Field names are prefixed "Input." to bind to the page's Input property. *@
+@{
+    var name = new InputModel("Input.Name", L["Staff.ClientForm.Name"], Model.Name, Required: true);
+    var ic = new InputModel("Input.IcOrRegNo", L["Staff.ClientForm.IcOrRegNo"], Model.IcOrRegNo, Required: true);
+    var phone = new InputModel("Input.Phone", L["Staff.ClientForm.Phone"], Model.Phone, "tel", "tel", Required: true, InputMode: "tel");
+    // Only Lawyer/OM may change the login email (Fiqri, overrides Q-14); Edit passes EmailReadOnly for Staff.
+    var emailReadOnly = ViewData["EmailReadOnly"] is true;
+    var email = new InputModel("Input.Email", L["Staff.ClientForm.Email"], Model.Email, "email", "email", Required: true, InputMode: "email",
+        Hint: emailReadOnly ? L["Staff.ClientForm.EmailLocked"] : L["Staff.ClientForm.EmailHint"], ReadOnly: emailReadOnly);
+    var address = new InputModel("Input.Address", L["Staff.ClientForm.Address"], Model.Address, Required: true);
+    var cpName = new InputModel("Input.ContactPersonName", L["Staff.ClientForm.ContactPersonName"], Model.ContactPersonName);
+    var cpPhone = new InputModel("Input.ContactPersonPhone", L["Staff.ClientForm.ContactPersonPhone"], Model.ContactPersonPhone, "tel", "tel", InputMode: "tel");
+}
+<div class="space-y-4" x-data="{ type: '@Model.ClientType' }">
+    <fieldset class="space-y-1">
+        <legend class="text-badge text-text-secondary">@L["Staff.ClientForm.Type"]</legend>
+        <div class="flex gap-2">
+            @foreach (var t in new[] { ClientType.Person, ClientType.Company })
+            {
+                <label class="inline-flex min-h-[44px] cursor-pointer items-center gap-2 rounded-control border border-border px-4 text-label has-[:checked]:border-brand-navy has-[:checked]:text-brand-navy">
+                    <input type="radio" name="Input.ClientType" value="@t" checked="@(Model.ClientType == t)" x-model="type" class="accent-brand-navy" />@L["ClientType." + t]
+                </label>
+            }
+        </div>
+    </fieldset>
+    <partial name="Components/_Input" model="name" />
+    <partial name="Components/_Input" model="ic" />
+    <partial name="Components/_Input" model="phone" />
+    <partial name="Components/_Input" model="email" />
+    <partial name="Components/_Input" model="address" />
+    <div class="space-y-4" x-show="type === '@ClientType.Company'" @(Model.ClientType == ClientType.Company ? "" : "x-cloak")>
+        <p class="text-label text-text-secondary">@L["Staff.ClientForm.ContactPerson"]</p>
+        <partial name="Components/_Input" model="cpName" />
+        <partial name="Components/_Input" model="cpPhone" />
+    </div>
+</div>

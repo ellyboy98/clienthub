@@ -1,25 +1,62 @@
 @page
 @model ClientHub.Web.Pages.Portal.IndexModel
-@using System.Security.Claims
-@using ClientHub.Web.Services.Access
 @{
     ViewData["Title"] = L["Portal.Nav.Home"];
-    var soon = new EmptyStateModel(L["Common.ComingSoon"]);
-    var name = User.FindFirstValue(AppClaimsPrincipalFactory.DisplayNameClaim);
+    var noCases = new EmptyStateModel(L["Portal.Cases.Empty"]);
 }
 @section Header {
     <header class="bg-brand-navy px-5 pb-6 pt-4 text-white">
         <div class="mx-auto flex max-w-2xl items-center justify-between">
             <partial name="_Logo" model="true" />
-            <div class="flex items-center">
-                <partial name="Components/_Bell" model="@("text-white")" />
-                <a href="/Account/Manage" class="inline-flex h-11 w-11 items-center justify-center rounded-full text-white" aria-label="@L["Common.MyAccount"]">
-                    <svg class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path stroke-linecap="round" d="M4 20a8 8 0 0 1 16 0"/></svg>
-                </a>
-            </div>
+            <partial name="_PortalHeader" />
         </div>
-        <h1 class="mx-auto mt-4 max-w-2xl text-h1">@string.Format(L["Portal.Home.Greeting"].Value, name)</h1>
+        <h1 class="mx-auto mt-4 max-w-2xl text-h1">@string.Format(L["Portal.Home.Greeting"].Value, Model.Name)</h1>
     </header>
 }
-@* Placeholder until M3 adds requests, case cards and tiles. *@
-<partial name="Components/_EmptyState" model="soon" />
+<div class="space-y-5">
+    @if (Model.Needed.Count > 0)
+    {
+        <section class="rounded-card border border-warning/30 bg-warning-bg p-4 shadow-card" data-needed>
+            <h2 class="mb-3 text-h3 text-warning">@L["Portal.Home.StillNeed"]</h2>
+            <ul class="space-y-3">
+                @foreach (var n in Model.Needed)
+                {
+                    var upload = new ButtonModel(L["Portal.Home.Upload"], ButtonVariant.Accent, Href: $"/Portal/Cases/Details/{n.CaseId}");
+                    <li class="flex items-center justify-between gap-3">
+                        <div class="min-w-0">
+                            <p class="text-label">@n.Name</p>
+                            <p class="truncate text-caption text-text-secondary">@n.CaseTitle</p>
+                            @if (n.Reason is not null) { <p class="text-caption text-danger">@n.Reason</p> }
+                        </div>
+                        <partial name="Components/_Button" model="upload" />
+                    </li>
+                }
+            </ul>
+        </section>
+    }
+
+    <section class="space-y-3">
+        <h2 class="text-h2">@L["Portal.Home.YourCases"]</h2>
+        @if (Model.Cases.Count == 0)
+        {
+            <partial name="Components/_EmptyState" model="noCases" />
+        }
+        @foreach (var c in Model.Cases)
+        {
+            var card = new CaseCardModel(c.Title, c.Status, c.CaseType, c.OpenedAt, c.LastUpdateAt, $"/Portal/Cases/Details/{c.Id}");
+            <partial name="Components/_CaseCard" model="card" />
+        }
+    </section>
+
+    <div class="grid grid-cols-2 gap-4">
+        <a href="/Portal/Chat" class="card block min-h-[44px] space-y-1" data-tile="messages">
+            <p class="text-badge text-text-secondary">@L["Portal.Home.Messages"]</p>
+            <p class="text-h2">@Model.UnreadMessages <span class="text-caption text-text-secondary">@L["Portal.Home.Unread"]</span></p>
+        </a>
+        <a href="/Portal/Bills" class="card block min-h-[44px] space-y-1 bg-brand-gold-soft" data-tile="bills">
+            <p class="text-badge text-text-secondary">@L["Portal.Home.Bills"]</p>
+            <p class="text-h2">@Format.Rm(Model.AmountUnpaid)</p>
+            <p class="text-caption text-text-secondary">@L["Portal.Home.Unpaid"]</p>
+        </a>
+    </div>
+</div>

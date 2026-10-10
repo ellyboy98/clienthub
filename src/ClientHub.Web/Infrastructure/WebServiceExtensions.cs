@@ -2,6 +2,8 @@ using System.Globalization;
 using ClientHub.Web.Data.Entities;
 using ClientHub.Web.Services.Access;
 using ClientHub.Web.Services.Audit;
+using ClientHub.Web.Services.Cases;
+using ClientHub.Web.Services.Clients;
 using ClientHub.Web.Services.Email;
 using Microsoft.AspNetCore.HostFiltering;
 using Microsoft.AspNetCore.HttpOverrides;
@@ -102,6 +104,8 @@ public static class WebServiceExtensions
         services.AddScoped<IAccessService, AccessService>();
         services.AddScoped<IAuditService, AuditService>();
         services.AddScoped<IEmailSender, SmtpEmailSender>();
+        services.AddScoped<ICaseService, CaseService>();
+        services.AddScoped<IClientService, ClientService>();
         return services;
     }
 }

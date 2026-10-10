@@ -21,11 +21,14 @@ public class AppFactory : WebApplicationFactory<Program>, IAsyncLifetime
     private readonly TestDatabase _db = new();
     public FakeEmailSender Emails { get; } = new();
 
+    /// <summary>Production default. <see cref="FirmAppFactory"/> turns it off so Lawyer/OM page tests need no TOTP.</summary>
+    protected virtual bool RequireFirm2fa => true;
+
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
         builder.UseEnvironment("Testing");
         builder.UseSetting("ConnectionStrings:Default", _db.ConnectionString);
-        builder.UseSetting("REQUIRE_FIRM_2FA", "true");
+        builder.UseSetting("REQUIRE_FIRM_2FA", RequireFirm2fa ? "true" : "false");
         builder.UseSetting("APP_BASE_URL", BaseUrl);
         builder.UseSetting("SECURITY_STAMP_INTERVAL_SECONDS", "0");
         builder.ConfigureLogging(l => l.ClearProviders());
@@ -68,6 +71,19 @@ public class AppFactory : WebApplicationFactory<Program>, IAsyncLifetime
         return f(scope.ServiceProvider.GetRequiredService<AppDbContext>());
     }
 
+    public async Task<T> WithDbAsync<T>(Func<AppDbContext, Task<T>> f)
+    {
+        using var scope = Services.CreateScope();
+        return await f(scope.ServiceProvider.GetRequiredService<AppDbContext>());
+    }
+
+    /// <summary>Runs f with a service from a fresh scope (services that hold a DbContext).</summary>
+    public async Task<T> WithServiceAsync<TService, T>(Func<TService, Task<T>> f) where TService : notnull
+    {
+        using var scope = Services.CreateScope();
+        return await f(scope.ServiceProvider.GetRequiredService<TService>());
+    }
+
     public static string Token(string html)
     {
         var m = Regex.Match(html, "name=\"__RequestVerificationToken\"[^>]*value=\"([^\"]+)\"");
@@ -94,4 +110,10 @@ public class AppFactory : WebApplicationFactory<Program>, IAsyncLifetime
         if (res.StatusCode != HttpStatusCode.Redirect) throw new InvalidOperationException($"Login failed for {email}: {res.StatusCode}");
         return client;
     }
+}
+
+/// <summary>Same app with REQUIRE_FIRM_2FA=false, for page tests signed in as Lawyer or Office Manager.</summary>
+public class FirmAppFactory : AppFactory
+{
+    protected override bool RequireFirm2fa => false;
 }

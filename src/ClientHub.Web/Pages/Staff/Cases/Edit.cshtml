@@ -1,0 +1,21 @@
+@page "{id:guid}"
+@model ClientHub.Web.Pages.Staff.Cases.EditModel
+@{
+    ViewData["Title"] = L["Staff.Cases.Edit"];
+    var save = new ButtonModel(L["Common.Save"]);
+    var cancel = new ButtonModel(L["Common.Cancel"], ButtonVariant.Ghost, Href: $"/Staff/Cases/Details/{Model.Id}");
+}
+<div class="mx-auto max-w-2xl space-y-5">
+    <nav class="text-caption text-text-secondary">
+        <a href="/Staff/Clients/Details/@Model.Case.ClientId" class="hover:underline">@Model.Case.Client!.Name</a> /
+        <a href="/Staff/Cases/Details/@Model.Id" class="hover:underline">@Model.Case.Title</a> / @L["Staff.Cases.Edit"]
+    </nav>
+    <h1 class="text-h1">@L["Staff.Cases.Edit"]</h1>
+    <form method="post" class="card space-y-5" novalidate>
+        <partial name="_CaseFields" model="Model.Fields" />
+        <div class="flex gap-2">
+            <partial name="Components/_Button" model="save" />
+            <partial name="Components/_Button" model="cancel" />
+        </div>
+    </form>
+</div>

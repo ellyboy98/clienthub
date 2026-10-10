@@ -2,10 +2,35 @@
 @model ClientHub.Web.Pages.Staff.IndexModel
 @{
     ViewData["Title"] = L["Staff.Nav.Dashboard"];
-    var soon = new EmptyStateModel(L["Common.ComingSoon"]);
+    var tiles = new[]
+    {
+        ("active", L["Staff.Dashboard.ActiveCases"].Value, Model.ActiveCases, "/Staff/Cases"),
+        ("documents", L["Staff.Dashboard.PendingDocuments"].Value, Model.PendingDocuments, "/Staff/Cases"),
+        ("chats", L["Staff.Dashboard.UnreadChats"].Value, Model.UnreadChats, "/Staff/Chats"),
+        ("bills", L["Staff.Dashboard.BillsAwaiting"].Value, Model.BillsAwaiting, "/Staff/Bills"),
+    };
+    var empty = new EmptyStateModel(L["Staff.Cases.Empty"]);
 }
-@* Placeholder until M3 builds the dashboard tiles and active cases table. *@
 <div class="space-y-5">
     <h1 class="text-h1">@L["Staff.Nav.Dashboard"]</h1>
-    <partial name="Components/_EmptyState" model="soon" />
+    <div class="grid grid-cols-2 gap-4 xl:grid-cols-4">
+        @foreach (var (key, label, count, href) in tiles)
+        {
+            <a href="@href" class="card block min-h-[44px] space-y-1 hover:border-border-strong" data-tile="@key">
+                <p class="text-badge text-text-secondary">@label</p>
+                <p class="text-display" data-tile-count>@count</p>
+            </a>
+        }
+    </div>
+    <section class="space-y-3">
+        <h2 class="text-h2">@L["Staff.Dashboard.ActiveCasesTable"]</h2>
+        @if (Model.Rows.Count == 0)
+        {
+            <partial name="Components/_EmptyState" model="empty" />
+        }
+        else
+        {
+            <partial name="/Pages/Staff/Cases/_CaseTable.cshtml" model="Model.Rows" />
+        }
+    </section>
 </div>

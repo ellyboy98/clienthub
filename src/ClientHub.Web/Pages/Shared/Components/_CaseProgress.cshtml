@@ -1,0 +1,23 @@
+@using ClientHub.Web.Data.Entities
+@model CaseProgressModel
+@{
+    var cancelled = Model.Status == CaseStatus.Cancelled;
+    var current = Array.IndexOf(CaseStatus.Steps, Model.Status);
+}
+<div class="space-y-2">
+    <ol class="grid grid-cols-5 gap-1" aria-label="@L["Common.Case.Progress"]">
+        @for (var i = 0; i < CaseStatus.Steps.Length; i++)
+        {
+            var step = CaseStatus.Steps[i];
+            var done = !cancelled && i <= current;
+            <li class="space-y-1" aria-current="@(i == current ? "step" : null)">
+                <div class="h-2 rounded-full @(done ? "bg-brand-navy" : "bg-bg-subtle")"></div>
+                <p class="text-caption @(i == current ? "font-medium text-text-primary" : "text-text-secondary")">@L[StatusTone.Key(step)]</p>
+            </li>
+        }
+    </ol>
+    @if (cancelled)
+    {
+        <partial name="Components/_StatusBadge" model="Model.Status" />
+    }
+</div>

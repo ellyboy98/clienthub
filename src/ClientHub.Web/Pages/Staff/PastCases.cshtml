@@ -1,0 +1,17 @@
+@page
+@model ClientHub.Web.Pages.Staff.PastCasesModel
+@{
+    ViewData["Title"] = L["Staff.Nav.PastCases"];
+    var empty = new EmptyStateModel(L["Staff.PastCases.Empty"]);
+}
+<div class="space-y-5">
+    <h1 class="text-h1">@L["Staff.Nav.PastCases"]</h1>
+    @if (Model.Rows.Count == 0)
+    {
+        <partial name="Components/_EmptyState" model="empty" />
+    }
+    else
+    {
+        <partial name="/Pages/Staff/Cases/_CaseTable.cshtml" model="Model.Rows" />
+    }
+</div>

@@ -1,54 +1,49 @@
-# Review: M2 Shell, sign-in and access rules
+# Review: M3 Clients and cases (uncommitted, build/v1)
 
-Scope: uncommitted diff on build/v1 plus untracked files (node_modules, bin, obj, site.css skipped), checked against
-plan.md M2 and requirements.md. Access rules (R-001..R-013) in `AccessService` are correct and fully tested; folder
-policies, 404 on policy failure, Lawyer-only Settings, firm 2FA gate, lockout, inactive-login block, Data Protection
-keys in PostgreSQL, SMTP password protector and en/ms resx parity (105 keys, no missing keys used in code) are all in place.
+Scope: `git diff` plus untracked M3 files. What passed: every Staff and Portal page handler (GET and POST) loads through
+`CasesFor`/`ClientsFor` and returns 404 on a miss. Create client, create case, assign staff and deactivate/reactivate are
+gated by `IsLawyerOrOfficeManager` on POST as well as GET. Lawyer/staff/client ids from form fields are checked as an
+active Lawyer, active Staff or an accessible client. Staff cannot change lawyer/staff through Edit (Q-10). `closed_at`
+logic and audit rows have tests. en/ms resx keys match and every key used exists. No hard-coded UI text, no IC numbers
+logged, one Primary action per screen, gold only where UI-Design-Notes asks for it.
 
 ## Critical (must fix before commit)
 
-1. `src/ClientHub.Web/Pages/Account/ForgotPassword.cshtml.cs:42`: the reset link is built from the request `Host`
-   (`Url.Page(..., Request.Scheme)`). The app has no `AllowedHosts` (no appsettings.json) and `APP_BASE_URL`
-   (in `.env.example`) is never read, so a forged `Host` header produces a reset email that points to an attacker's
-   domain and leaks the token (password-reset poisoning). M3's account-creation email will reuse this. Fix: build
-   set-password links from `APP_BASE_URL` in one helper (for example `Infrastructure/AppLinks.cs`) and also set `AllowedHosts`.
+1. `src/ClientHub.Web/Services/Clients/ClientService.cs:143-149` (`UpdateAsync`): the login email/user name changes
+   through `UserManager.UpdateAsync`, which does not rotate the security stamp. A set-password or reset link already
+   sent to the old (for example mistyped) address stays valid for its full day, and the corrected address never gets a
+   link (R-014). Fix: change the email with `SetEmailAsync`/`SetUserNameAsync` (or call `UpdateSecurityStampAsync`
+   afterwards), and if the user has no password yet, send a new account-created link to the new address. Add a test
+   that the old token fails after an email change.
 
 ## Should fix (next milestone)
 
-1. `src/ClientHub.Web/Services/Access/AppSignInManager.cs:16`: `is_active = false` blocks new logins only; an existing
-   14-day cookie keeps working because `ValidateSecurityStampAsync` never checks `IsActive`. Fix: override
-   `ValidateSecurityStampAsync(ClaimsPrincipal)` to return null for inactive users, and update the security stamp when
-   a user is deactivated (M3/M6).
-2. `src/ClientHub.Web/Services/Email/SmtpEmailSender.cs:31`: when `smtp_host` is empty the full email body, including
-   set-password and reset tokens, goes to the log in every environment (production too, until Settings is filled in).
-   Fix: log the body only in Development; elsewhere log a warning with recipient id and subject only.
-3. `src/ClientHub.Web/Pages/Shared/_Head.cshtml:5-6`: htmx and Alpine load from unpkg with no `integrity`
-   attribute on a portal that shows IC numbers and case files. Fix: vendor both into `wwwroot/js` (or add SRI hashes and `crossorigin`).
-4. `src/ClientHub.Web/Pages/Shared/_Head.cshtml:3`: pages set `ViewData["Title"] = L[...]` (a `LocalizedString`),
-   so `ViewData["Title"] is string t` never matches and no page has its own title. Fix: test `ViewData["Title"]?.ToString()`
-   or assign `.Value` in pages.
-5. `src/ClientHub.Web/Program.cs:467` with `Pages/NotFound.cshtml.cs:12`: every empty 4xx/5xx response is re-executed and
-   rewritten to 404, so an expired antiforgery token (400) or 405 shows "page not found". R-008 needs this only for
-   access failures and missing rows. Fix: re-execute only for 404 (or keep the original status for non-404 codes).
-6. `src/ClientHub.Web/Data/DataServiceExtensions.cs:26-28`: Data Protection keys are stored unencrypted in the same
-   database (and backup) as `firm_settings.smtp_password`, so anyone with a DB dump can decrypt the SMTP password and mint
-   auth cookies. Fix: protect the key ring with a secret held outside the DB (for example `ProtectKeysWithCertificate` from
-   an env var), or have Fiqri accept the risk in decisions.md.
-7. `src/ClientHub.Web/Services/Email/SmtpEmailSender.cs:35`: uses `System.Net.Mail` while TSD (Stack table) specifies
-   MailKit, and port 465 (implicit TLS) does not work. This changes the TSD, not only the implementation (see decisions.md entry 7).
-   Fix: get Fiqri's approval recorded as his decision, or switch to MailKit.
-8. `src/ClientHub.Web/Pages/Shared/_StaffLayout.cshtml:31`: R-136 asks for an unread count on Chats; M2 claims R-136 but
-   the link has no count. Fix: add the count in M5 and note it as open in status.md.
+1. `src/ClientHub.Web/Services/Cases/CaseService.cs:92-94` and `:100-103`: the status change (and update post) and its
+   audit row are saved by two separate `SaveChangesAsync` calls, so a failure in between leaves a change with no audit
+   row (R-044). Fix: add the audit entry to the context before one `SaveChangesAsync`, or wrap both in a transaction.
+2. `src/ClientHub.Web/Services/Clients/ClientService.cs:185-186` with `Pages/Staff/Clients/Create.cshtml.cs:32`: if the
+   account-created email fails, the error is only logged and the OM still sees "Client created". Fix: return an
+   email-failed flag and show a warning notice telling them to use Forgot password for the client.
+3. `src/ClientHub.Web/Pages/Staff/Clients/Edit.cshtml.cs:44-52` (Q-14 as approved): any Staff user who can open a
+   client can change that client's login email, then use Forgot password to take over the client's account. Fix: ask
+   Fiqri whether login-email changes should be Lawyer/OM only (spec change), or at least write an audit row for them.
+4. `.claude/handoffs/decisions.md` (M3 status entry): "Completed and Cancelled keep the first `closed_at`" is a
+   reading of R-039 that the spec does not state. Fix: confirm with Fiqri, or reset `closed_at` on every move into a
+   closed status (`Domain.cs:44`).
 
 ## Nice to have
 
-1. `src/ClientHub.Web/Pages/Account/Culture.cshtml.cs:20`: a GET request changes `users.language` (a cross-site link can
-   change it). Fix: keep the cookie on GET and save `users.language` only from the My account POST.
-2. `src/ClientHub.Web/Pages/Account/Manage/TwoFactor.cshtml.cs:75`: Staff/Client can turn 2FA off without entering their
-   password or a code again. Fix: require the current authenticator code on Disable.
-3. `src/ClientHub.Web/Pages/Account/Login.cshtml.cs:56-62`: unknown emails return without a password hash, so response
-   time shows whether an account exists. Fix: run a dummy `PasswordHasher.VerifyHashedPassword` on the unknown-email path.
-4. `src/ClientHub.Web/Pages/Account/Login.cshtml.cs:59`: the raw typed email of unknown accounts is kept in `audit_log`
-   (personal data of non-users). Fix: store a masked form (for example `ab***@domain`) unless PDPA logging needs the full value.
-5. `src/ClientHub.Web/Infrastructure/WebServiceExtensions.cs:84-85`: forwarded headers are trusted from any source, so
-   `X-Forwarded-For` can be spoofed if IPs are ever logged. Fix: leave as is for Vercel, but do not use `RemoteIpAddress` in audit rows.
+1. `src/ClientHub.Web/Pages/Staff/Cases/Details.cshtml.cs:96`: an invalid staff choice returns a bare 400. Fix: show
+   the page again with `Validation.InvalidChoice`, as Edit does.
+2. `src/ClientHub.Web/Pages/Staff/Cases/Edit.cshtml.cs:68`: `Request.Form.ContainsKey("Form.StaffIds")` misses indexed
+   keys (`Form.StaffIds[0]`). This is harmless because lines 72-73 ignore those fields for Staff. Fix: check
+   `Form.StaffIds.Count > 0`, so the 404 rule cannot be bypassed this way.
+3. `src/ClientHub.Web/Services/Clients/ClientService.cs:179-183`: `CurrentUICulture` is not restored in a `finally`.
+   Fix: wrap the swap in try/finally.
+4. `src/ClientHub.Web/Services/Cases/CaseService.cs:95,104`: the `// NOTIFY:` markers say `R-1xx`. Fix: write the exact
+   requirement ids so M7 can grep for them.
+5. `src/ClientHub.Web/Pages/Staff/Clients/Index.cshtml.cs:47`: a client with no login (`UserId` null) is shown as
+   Active. Fix: show a neutral "No login" state, or treat it as Inactive.
+6. `src/ClientHub.Web/Services/Cases/CaseService.cs:39`: the client check only tests that the client exists, not that
+   the user can access it. This is correct today because only Lawyer/OM call it. Fix: take the access-scoped query, so
+   the check stays correct if the role rules change.

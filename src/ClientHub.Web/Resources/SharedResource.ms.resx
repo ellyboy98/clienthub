@@ -114,4 +114,126 @@ Jika anda tidak memintanya, abaikan e-mel ini.</value></data>
   <data name="Validation.Email" xml:space="preserve"><value>Masukkan alamat e-mel yang sah.</value></data>
   <data name="Validation.PasswordMismatch" xml:space="preserve"><value>Kata laluan tidak sepadan.</value></data>
   <data name="Validation.Required" xml:space="preserve"><value>Ruangan ini wajib diisi.</value></data>
+  <data name="Common.Search" xml:space="preserve"><value>Cari</value></data>
+  <data name="Common.Open" xml:space="preserve"><value>Buka</value></data>
+  <data name="Common.Edit" xml:space="preserve"><value>Sunting</value></data>
+  <data name="Common.Saved" xml:space="preserve"><value>Disimpan.</value></data>
+  <data name="Common.Error" xml:space="preserve"><value>Berlaku ralat. Sila cuba lagi.</value></data>
+  <data name="Common.None" xml:space="preserve"><value>Tiada</value></data>
+  <data name="Common.Choose" xml:space="preserve"><value>Pilih…</value></data>
+  <data name="Common.Back" xml:space="preserve"><value>Kembali</value></data>
+  <data name="Common.Case.Opened" xml:space="preserve"><value>Dibuka</value></data>
+  <data name="Common.Case.LastUpdate" xml:space="preserve"><value>Kemas kini terakhir</value></data>
+  <data name="Common.Case.Progress" xml:space="preserve"><value>Kemajuan kes</value></data>
+  <data name="ClientType.Person" xml:space="preserve"><value>Individu</value></data>
+  <data name="ClientType.Company" xml:space="preserve"><value>Syarikat</value></data>
+  <data name="CaseType.Civil" xml:space="preserve"><value>Sivil</value></data>
+  <data name="CaseType.Criminal" xml:space="preserve"><value>Jenayah</value></data>
+  <data name="Status.Inactive" xml:space="preserve"><value>Tidak aktif</value></data>
+  <data name="Validation.EmailTaken" xml:space="preserve"><value>E-mel ini sudah digunakan oleh log masuk lain.</value></data>
+  <data name="Validation.TooLong" xml:space="preserve"><value>Ini terlalu panjang.</value></data>
+  <data name="Validation.InvalidChoice" xml:space="preserve"><value>Pilih pilihan yang sah.</value></data>
+  <data name="Staff.Clients.Title" xml:space="preserve"><value>Klien</value></data>
+  <data name="Staff.Clients.New" xml:space="preserve"><value>+ Klien baharu</value></data>
+  <data name="Staff.Clients.Search" xml:space="preserve"><value>Cari mengikut nama atau No. KP / No. pendaftaran</value></data>
+  <data name="Staff.Clients.Filter" xml:space="preserve"><value>Tapis klien</value></data>
+  <data name="Staff.Clients.Filter.All" xml:space="preserve"><value>Semua</value></data>
+  <data name="Staff.Clients.Filter.Person" xml:space="preserve"><value>Individu</value></data>
+  <data name="Staff.Clients.Filter.Company" xml:space="preserve"><value>Syarikat</value></data>
+  <data name="Staff.Clients.Filter.Inactive" xml:space="preserve"><value>Tidak aktif</value></data>
+  <data name="Staff.Clients.Empty" xml:space="preserve"><value>Tiada klien untuk dipaparkan.</value></data>
+  <data name="Staff.Clients.Col.Client" xml:space="preserve"><value>Klien</value></data>
+  <data name="Staff.Clients.Col.Type" xml:space="preserve"><value>Jenis</value></data>
+  <data name="Staff.Clients.Col.IcOrRegNo" xml:space="preserve"><value>No. KP / Pendaftaran</value></data>
+  <data name="Staff.Clients.Col.Phone" xml:space="preserve"><value>Telefon</value></data>
+  <data name="Staff.Clients.Col.ActiveCases" xml:space="preserve"><value>Kes aktif</value></data>
+  <data name="Staff.Clients.Col.Login" xml:space="preserve"><value>Log masuk</value></data>
+  <data name="Staff.Clients.Created" xml:space="preserve"><value>Klien dicipta. E-mel tetapan kata laluan telah dihantar.</value></data>
+  <data name="Staff.Clients.CreateSubmit" xml:space="preserve"><value>Cipta klien</value></data>
+  <data name="Staff.Clients.CreateIntro" xml:space="preserve"><value>Klien mendapat satu log masuk dan e-mel dengan pautan untuk menetapkan kata laluan.</value></data>
+  <data name="Staff.Clients.Edit" xml:space="preserve"><value>Sunting klien</value></data>
+  <data name="Staff.ClientForm.Type" xml:space="preserve"><value>Jenis klien</value></data>
+  <data name="Staff.ClientForm.Name" xml:space="preserve"><value>Nama</value></data>
+  <data name="Staff.ClientForm.IcOrRegNo" xml:space="preserve"><value>No. KP / No. pendaftaran syarikat</value></data>
+  <data name="Staff.ClientForm.Phone" xml:space="preserve"><value>Telefon</value></data>
+  <data name="Staff.ClientForm.Email" xml:space="preserve"><value>E-mel</value></data>
+  <data name="Staff.ClientForm.EmailHint" xml:space="preserve"><value>Ini juga e-mel log masuk klien.</value></data>
+  <data name="Staff.ClientForm.Address" xml:space="preserve"><value>Alamat</value></data>
+  <data name="Staff.ClientForm.ContactPerson" xml:space="preserve"><value>Orang yang bertanggungjawab</value></data>
+  <data name="Staff.ClientForm.ContactPersonName" xml:space="preserve"><value>Nama orang yang bertanggungjawab</value></data>
+  <data name="Staff.ClientForm.ContactPersonPhone" xml:space="preserve"><value>Telefon orang yang bertanggungjawab</value></data>
+  <data name="Staff.Client.Details" xml:space="preserve"><value>Butiran</value></data>
+  <data name="Staff.Client.Cases" xml:space="preserve"><value>Kes</value></data>
+  <data name="Staff.Client.NoCases" xml:space="preserve"><value>Tiada kes untuk dipaparkan.</value></data>
+  <data name="Staff.Client.OpenChat" xml:space="preserve"><value>Buka sembang</value></data>
+  <data name="Staff.Client.CreateCase" xml:space="preserve"><value>Cipta kes</value></data>
+  <data name="Staff.Client.Deactivate" xml:space="preserve"><value>Nyahaktifkan log masuk</value></data>
+  <data name="Staff.Client.DeactivateConfirm" xml:space="preserve"><value>Klien tidak lagi boleh log masuk. Rekod mereka kekal dalam sistem.</value></data>
+  <data name="Staff.Client.Reactivate" xml:space="preserve"><value>Aktifkan semula log masuk</value></data>
+  <data name="Staff.Client.Deactivated" xml:space="preserve"><value>Log masuk dinyahaktifkan.</value></data>
+  <data name="Staff.Client.Reactivated" xml:space="preserve"><value>Log masuk diaktifkan semula.</value></data>
+  <data name="Staff.CaseTable.Case" xml:space="preserve"><value>Kes</value></data>
+  <data name="Staff.CaseTable.Client" xml:space="preserve"><value>Klien</value></data>
+  <data name="Staff.CaseTable.Type" xml:space="preserve"><value>Jenis</value></data>
+  <data name="Staff.CaseTable.Status" xml:space="preserve"><value>Status</value></data>
+  <data name="Staff.CaseTable.Lawyer" xml:space="preserve"><value>Peguam</value></data>
+  <data name="Staff.Cases.Title" xml:space="preserve"><value>Kes</value></data>
+  <data name="Staff.Cases.Empty" xml:space="preserve"><value>Tiada kes aktif.</value></data>
+  <data name="Staff.Cases.New" xml:space="preserve"><value>Kes baharu</value></data>
+  <data name="Staff.Cases.CreateSubmit" xml:space="preserve"><value>Cipta kes</value></data>
+  <data name="Staff.Cases.Created" xml:space="preserve"><value>Kes dicipta.</value></data>
+  <data name="Staff.Cases.Edit" xml:space="preserve"><value>Sunting kes</value></data>
+  <data name="Staff.PastCases.Empty" xml:space="preserve"><value>Tiada kes lepas.</value></data>
+  <data name="Staff.CaseForm.Client" xml:space="preserve"><value>Klien</value></data>
+  <data name="Staff.CaseForm.Title" xml:space="preserve"><value>Tajuk kes</value></data>
+  <data name="Staff.CaseForm.Type" xml:space="preserve"><value>Jenis kes</value></data>
+  <data name="Staff.CaseForm.Description" xml:space="preserve"><value>Penerangan</value></data>
+  <data name="Staff.CaseForm.DescriptionHint" xml:space="preserve"><value>Pilihan. Klien boleh melihatnya.</value></data>
+  <data name="Staff.CaseForm.Lawyer" xml:space="preserve"><value>Peguam yang bertanggungjawab</value></data>
+  <data name="Staff.CaseForm.Staff" xml:space="preserve"><value>Kakitangan yang ditugaskan</value></data>
+  <data name="Staff.CaseForm.NoStaff" xml:space="preserve"><value>Belum ada akaun kakitangan.</value></data>
+  <data name="Staff.Case.PostUpdate" xml:space="preserve"><value>Hantar kemas kini</value></data>
+  <data name="Staff.Case.ChangeStatus" xml:space="preserve"><value>Tukar status</value></data>
+  <data name="Staff.Case.StatusChanged" xml:space="preserve"><value>Status ditukar.</value></data>
+  <data name="Staff.Case.UpdatePosted" xml:space="preserve"><value>Kemas kini dihantar.</value></data>
+  <data name="Staff.Case.Updates" xml:space="preserve"><value>Kemas kini</value></data>
+  <data name="Staff.Case.UpdatesVisible" xml:space="preserve"><value>Kemas kini boleh dilihat oleh klien.</value></data>
+  <data name="Staff.Case.UpdatePlaceholder" xml:space="preserve"><value>Tulis kemas kini untuk klien</value></data>
+  <data name="Staff.Case.NoUpdates" xml:space="preserve"><value>Belum ada kemas kini.</value></data>
+  <data name="Staff.Case.Details" xml:space="preserve"><value>Butiran kes</value></data>
+  <data name="Staff.Case.Closed" xml:space="preserve"><value>Ditutup</value></data>
+  <data name="Staff.Case.Client" xml:space="preserve"><value>Klien</value></data>
+  <data name="Staff.Case.Profile" xml:space="preserve"><value>Profil</value></data>
+  <data name="Staff.Dashboard.ActiveCases" xml:space="preserve"><value>Kes aktif</value></data>
+  <data name="Staff.Dashboard.PendingDocuments" xml:space="preserve"><value>Dokumen belum diterima daripada klien</value></data>
+  <data name="Staff.Dashboard.UnreadChats" xml:space="preserve"><value>Sembang belum dibaca</value></data>
+  <data name="Staff.Dashboard.BillsAwaiting" xml:space="preserve"><value>Bil menunggu bayaran</value></data>
+  <data name="Staff.Dashboard.ActiveCasesTable" xml:space="preserve"><value>Kes aktif</value></data>
+  <data name="Portal.Home.StillNeed" xml:space="preserve"><value>Kami masih memerlukan daripada anda</value></data>
+  <data name="Portal.Home.Upload" xml:space="preserve"><value>Muat naik</value></data>
+  <data name="Portal.Home.YourCases" xml:space="preserve"><value>Kes anda</value></data>
+  <data name="Portal.Home.Messages" xml:space="preserve"><value>Mesej</value></data>
+  <data name="Portal.Home.Unread" xml:space="preserve"><value>belum dibaca</value></data>
+  <data name="Portal.Home.Bills" xml:space="preserve"><value>Bil</value></data>
+  <data name="Portal.Home.Unpaid" xml:space="preserve"><value>belum dibayar</value></data>
+  <data name="Portal.Cases.Title" xml:space="preserve"><value>Kes anda</value></data>
+  <data name="Portal.Cases.Empty" xml:space="preserve"><value>Anda tiada kes aktif.</value></data>
+  <data name="Portal.Cases.Past" xml:space="preserve"><value>Kes lepas</value></data>
+  <data name="Portal.Cases.PastEmpty" xml:space="preserve"><value>Anda tiada kes lepas.</value></data>
+  <data name="Portal.Case.Lawyer" xml:space="preserve"><value>Peguam yang bertanggungjawab</value></data>
+  <data name="Portal.Case.About" xml:space="preserve"><value>Mengenai kes ini</value></data>
+  <data name="Portal.Case.Tab.Updates" xml:space="preserve"><value>Kemas kini</value></data>
+  <data name="Portal.Case.Tab.Documents" xml:space="preserve"><value>Dokumen</value></data>
+  <data name="Portal.Case.Tab.Bills" xml:space="preserve"><value>Bil</value></data>
+  <data name="Portal.Case.NoUpdates" xml:space="preserve"><value>Belum ada kemas kini.</value></data>
+  <data name="Email.AccountCreated.Subject" xml:space="preserve"><value>Akaun portal klien anda</value></data>
+  <data name="Email.AccountCreated.Body" xml:space="preserve"><value>Salam {0},
+
+Firma telah mencipta akaun portal klien anda. Gunakan pautan ini untuk menetapkan kata laluan anda. Pautan ini sah selama satu hari:
+{1}
+
+Jika pautan telah tamat tempoh, gunakan "Lupa kata laluan" di halaman log masuk.</value></data>
+  <data name="Staff.ClientForm.EmailLocked" xml:space="preserve"><value>Ini e-mel log masuk klien. Hanya peguam atau pengurus pejabat boleh menukarnya.</value></data>
+  <data name="Staff.Clients.EmailNotSent" xml:space="preserve"><value>Disimpan, tetapi e-mel tetapan kata laluan tidak dapat dihantar. Minta klien menggunakan "Lupa kata laluan" di halaman log masuk, atau cuba lagi kemudian.</value></data>
+  <data name="Staff.Clients.EmailChangedLinkSent" xml:space="preserve"><value>Disimpan. Pautan tetapan kata laluan baharu telah dihantar ke alamat e-mel baharu.</value></data>
 </root>

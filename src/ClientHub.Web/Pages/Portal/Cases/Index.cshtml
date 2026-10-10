@@ -1,0 +1,22 @@
+@page
+@model ClientHub.Web.Pages.Portal.Cases.IndexModel
+@{
+    ViewData["Title"] = L["Portal.Cases.Title"];
+    var empty = new EmptyStateModel(L["Portal.Cases.Empty"]);
+    var past = new ButtonModel(L["Portal.Cases.Past"], ButtonVariant.Ghost, Href: "/Portal/Cases/Past");
+}
+<div class="space-y-4">
+    <div class="flex items-center justify-between">
+        <h1 class="text-h1">@L["Portal.Cases.Title"]</h1>
+        <partial name="Components/_Button" model="past" />
+    </div>
+    @if (Model.Cases.Count == 0)
+    {
+        <partial name="Components/_EmptyState" model="empty" />
+    }
+    @foreach (var c in Model.Cases)
+    {
+        var card = new CaseCardModel(c.Title, c.Status, c.CaseType, c.OpenedAt, c.LastUpdateAt, $"/Portal/Cases/Details/{c.Id}");
+        <partial name="Components/_CaseCard" model="card" />
+    }
+</div>

@@ -1,0 +1,57 @@
+@using ClientHub.Web.Data.Entities
+@model ClientHub.Web.Pages.Staff.Cases.CaseFieldsModel
+@* Title, type, description (everyone who can open the case); lawyer and staff only when Model.CanAssign. *@
+@{
+    var f = Model.Form;
+    var title = new InputModel("Form.Title", L["Staff.CaseForm.Title"], f.Title, Required: true);
+    var errors = ViewContext.ViewData.ModelState;
+    string? Err(string key) => errors.TryGetValue(key, out var e) && e.Errors.Count > 0 ? e.Errors[0].ErrorMessage : null;
+}
+<partial name="Components/_Input" model="title" />
+<fieldset class="space-y-1">
+    <legend class="text-badge text-text-secondary">@L["Staff.CaseForm.Type"]</legend>
+    <div class="flex gap-2">
+        @foreach (var t in new[] { CaseType.Civil, CaseType.Criminal })
+        {
+            <label class="inline-flex min-h-[44px] cursor-pointer items-center gap-2 rounded-control border border-border px-4 text-label has-[:checked]:border-brand-navy has-[:checked]:text-brand-navy">
+                <input type="radio" name="Form.CaseType" value="@t" checked="@(f.CaseType == t)" class="accent-brand-navy" />@L["CaseType." + t]
+            </label>
+        }
+    </div>
+    @if (Err("Form.CaseType") is { } typeErr) { <p class="text-caption text-danger">@typeErr</p> }
+</fieldset>
+<div class="space-y-1">
+    <label for="Form_Description" class="block text-badge text-text-secondary">@L["Staff.CaseForm.Description"]</label>
+    <textarea id="Form_Description" name="Form.Description" rows="4" class="input h-auto py-2">@f.Description</textarea>
+    <p class="text-caption text-text-muted">@L["Staff.CaseForm.DescriptionHint"]</p>
+</div>
+@if (Model.CanAssign)
+{
+    <div class="space-y-1">
+        <label for="Form_LawyerId" class="block text-badge text-text-secondary">@L["Staff.CaseForm.Lawyer"]</label>
+        <select id="Form_LawyerId" name="Form.LawyerId" class="input @(Err("Form.LawyerId") is null ? "" : "input-error")">
+            <option value="">@L["Common.Choose"]</option>
+            @foreach (var l in Model.Lawyers)
+            {
+                <option value="@l.Id" selected="@(f.LawyerId == l.Id)">@l.Name</option>
+            }
+        </select>
+        @if (Err("Form.LawyerId") is { } lawyerErr) { <p class="text-caption text-danger">@lawyerErr</p> }
+    </div>
+    <fieldset class="space-y-1">
+        <legend class="text-badge text-text-secondary">@L["Staff.CaseForm.Staff"]</legend>
+        @if (Model.Staff.Count == 0)
+        {
+            <p class="text-caption text-text-muted">@L["Staff.CaseForm.NoStaff"]</p>
+        }
+        <div class="flex flex-wrap gap-2">
+            @foreach (var s in Model.Staff)
+            {
+                <label class="inline-flex min-h-[44px] cursor-pointer items-center gap-2 rounded-control border border-border px-4 text-label has-[:checked]:border-brand-navy has-[:checked]:text-brand-navy">
+                    <input type="checkbox" name="Form.StaffIds" value="@s.Id" checked="@f.StaffIds.Contains(s.Id)" class="accent-brand-navy" />@s.Name
+                </label>
+            }
+        </div>
+        @if (Err("Form.StaffIds") is { } staffErr) { <p class="text-caption text-danger">@staffErr</p> }
+    </fieldset>
+}

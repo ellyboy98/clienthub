@@ -36,6 +36,13 @@ public static class CaseStatus
 {
     public const string New = "New", DocumentsCollected = "DocumentsCollected", Filed = "Filed",
         Hearing = "Hearing", Completed = "Completed", Cancelled = "Cancelled";
+
+    /// <summary>The 5-step progress bar; Cancelled sits outside it and can be set from any step.</summary>
+    public static readonly string[] Steps = { New, DocumentsCollected, Filed, Hearing, Completed };
+    public static readonly string[] All = { New, DocumentsCollected, Filed, Hearing, Completed, Cancelled };
+    public static readonly string[] Closed = { Completed, Cancelled };
+    public static bool IsValid(string? s) => s is not null && All.Contains(s);
+    public static bool IsClosed(string s) => s is Completed or Cancelled;
 }
 public static class RequestStatus { public const string Pending = "Pending", Received = "Received", Rejected = "Rejected"; }
 public static class BillStatus { public const string Draft = "Draft", Sent = "Sent", Paid = "Paid"; }

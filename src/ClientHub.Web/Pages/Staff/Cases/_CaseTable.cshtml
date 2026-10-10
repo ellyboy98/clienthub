@@ -1,0 +1,30 @@
+@using ClientHub.Web.Services.Cases
+@model IReadOnlyList<CaseRow>
+@* Active-cases table (R-138): case, client, type, status, lawyer, last update. Rows are already access-scoped. *@
+<div class="card overflow-x-auto p-0 md:p-0">
+    <table class="w-full text-left text-body-sm">
+        <thead class="bg-bg-subtle text-badge text-text-secondary">
+            <tr>
+                <th class="px-4 py-3">@L["Staff.CaseTable.Case"]</th>
+                <th class="px-4 py-3">@L["Staff.CaseTable.Client"]</th>
+                <th class="px-4 py-3">@L["Staff.CaseTable.Type"]</th>
+                <th class="px-4 py-3">@L["Staff.CaseTable.Status"]</th>
+                <th class="px-4 py-3">@L["Staff.CaseTable.Lawyer"]</th>
+                <th class="px-4 py-3">@L["Common.Case.LastUpdate"]</th>
+            </tr>
+        </thead>
+        <tbody class="divide-y divide-border">
+            @foreach (var r in Model)
+            {
+                <tr data-case-row="@r.Id">
+                    <td class="px-4 py-3"><a href="/Staff/Cases/Details/@r.Id" class="inline-flex min-h-[44px] items-center font-medium text-brand-navy hover:underline">@r.Title</a></td>
+                    <td class="px-4 py-3">@r.ClientName</td>
+                    <td class="px-4 py-3">@L["CaseType." + r.CaseType]</td>
+                    <td class="px-4 py-3"><partial name="Components/_StatusBadge" model="r.Status" /></td>
+                    <td class="px-4 py-3">@r.LawyerName</td>
+                    <td class="px-4 py-3 text-text-secondary">@(r.LastUpdateAt is null ? L["Common.None"].Value : Format.Date(r.LastUpdateAt))</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

@@ -1,0 +1,94 @@
+@page "{id:guid}"
+@model ClientHub.Web.Pages.Staff.Clients.DetailsModel
+@using ClientHub.Web.Data.Entities
+@{
+    var c = Model.Client;
+    ViewData["Title"] = c.Name;
+    var edit = new ButtonModel(L["Common.Edit"], ButtonVariant.Secondary, Href: $"/Staff/Clients/Edit/{c.Id}");
+    var chat = new ButtonModel(L["Staff.Client.OpenChat"], ButtonVariant.Secondary, Href: $"/Staff/Chats/{c.Id}");
+    var newCase = new ButtonModel(L["Staff.Client.CreateCase"], Href: $"/Staff/Cases/Create?clientId={c.Id}");
+    var login = Model.LoginActive ? StatusTone.Active : StatusTone.Inactive;
+    var deactivateDialog = new ConfirmDialogModel("deactivate", L["Staff.Client.Deactivate"], L["Staff.Client.DeactivateConfirm"],
+        L["Staff.Client.Deactivate"], $"/Staff/Clients/Details/{c.Id}?handler=Deactivate");
+    var deactivate = new ButtonModel(L["Staff.Client.Deactivate"], ButtonVariant.Danger, Type: "button", OnClick: ConfirmDialogModel.OpenScript("deactivate"));
+    var reactivate = new ButtonModel(L["Staff.Client.Reactivate"], ButtonVariant.Secondary);
+    var noCases = new EmptyStateModel(L["Staff.Client.NoCases"]);
+    var details = new List<(string, string?)>
+    {
+        (L["Staff.ClientForm.Type"], L["ClientType." + c.ClientType]),
+        (L["Staff.ClientForm.IcOrRegNo"], c.IcOrRegNo),
+        (L["Staff.ClientForm.Phone"], c.Phone),
+        (L["Staff.ClientForm.Email"], c.Email),
+        (L["Staff.ClientForm.Address"], c.Address),
+    };
+    if (c.ClientType == ClientType.Company)
+    {
+        details.Add((L["Staff.ClientForm.ContactPersonName"], c.ContactPersonName));
+        details.Add((L["Staff.ClientForm.ContactPersonPhone"], c.ContactPersonPhone));
+    }
+}
+<div class="space-y-5">
+    <nav class="text-caption text-text-secondary"><a href="/Staff/Clients" class="hover:underline">@L["Staff.Clients.Title"]</a> / @c.Name</nav>
+    <div class="flex flex-wrap items-center justify-between gap-3">
+        <div class="flex items-center gap-3">
+            <h1 class="text-h1">@c.Name</h1>
+            <partial name="Components/_StatusBadge" model="login" />
+        </div>
+        <div class="flex flex-wrap gap-2">
+            <partial name="Components/_Button" model="chat" />
+            <partial name="Components/_Button" model="edit" />
+            @if (Model.CanManage)
+            {
+                <partial name="Components/_Button" model="newCase" />
+            }
+        </div>
+    </div>
+    @if (Model.Warning is not null)
+    {
+        <p class="rounded-control bg-warning-bg px-3 py-2 text-body-sm text-warning" role="alert">@Model.Warning</p>
+    }
+    @if (Model.Notice is not null)
+    {
+        <p class="rounded-control bg-success-bg px-3 py-2 text-body-sm text-success" role="status">@Model.Notice</p>
+    }
+
+    <div class="grid gap-5 lg:grid-cols-3">
+        <section class="space-y-3 lg:col-span-2">
+            <h2 class="text-h2">@L["Staff.Client.Cases"]</h2>
+            @if (Model.Cases.Count == 0)
+            {
+                <partial name="Components/_EmptyState" model="noCases" />
+            }
+            else
+            {
+                <partial name="/Pages/Staff/Cases/_CaseTable.cshtml" model="Model.Cases" />
+            }
+        </section>
+
+        <section class="card space-y-4">
+            <h2 class="text-h3">@L["Staff.Client.Details"]</h2>
+            <dl class="space-y-3 text-body-sm">
+                @foreach (var (label, value) in details)
+                {
+                    <div><dt class="text-badge text-text-secondary">@label</dt><dd>@value</dd></div>
+                }
+            </dl>
+            @if (Model.CanManage)
+            {
+                <div class="border-t border-border pt-4">
+                    @if (Model.LoginActive)
+                    {
+                        <partial name="Components/_Button" model="deactivate" />
+                        <partial name="Components/_ConfirmDialog" model="deactivateDialog" />
+                    }
+                    else
+                    {
+                        <form method="post" asp-page-handler="Reactivate" asp-route-id="@c.Id">
+                            <partial name="Components/_Button" model="reactivate" />
+                        </form>
+                    }
+                </div>
+            }
+        </section>
+    </div>
+</div>

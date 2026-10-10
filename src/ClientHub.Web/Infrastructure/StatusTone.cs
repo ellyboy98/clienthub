@@ -8,6 +8,8 @@ public enum Tone { Neutral, Info, Success, Warning, Danger }
 public static class StatusTone
 {
     public const string Active = "Active";
+    /// <summary>Deactivated login (Clients list, Client page).</summary>
+    public const string Inactive = "Inactive";
 
     public static Tone For(string status) => status switch
     {

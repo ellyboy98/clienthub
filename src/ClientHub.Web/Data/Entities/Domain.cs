@@ -28,6 +28,22 @@ public class Case : Entity
     public DateTime OpenedAt { get; set; }
     public DateTime? ClosedAt { get; set; }
     public List<CaseStaff> StaffLinks { get; set; } = new();
+
+    /// <summary>Completed or Cancelled: listed under Past cases.</summary>
+    public bool IsClosed => CaseStatus.IsClosed(Status);
+
+    /// <summary>
+    /// Any status to any status (R-037, R-038, Q-09). Entering Completed/Cancelled sets closed_at;
+    /// moving between the two keeps it; returning to an active step clears it.
+    /// </summary>
+    public void SetStatus(string status, DateTime now)
+    {
+        if (!CaseStatus.IsValid(status)) throw new ArgumentException($"Unknown case status '{status}'.", nameof(status));
+        var wasClosed = IsClosed;
+        Status = status;
+        if (!IsClosed) ClosedAt = null;
+        else if (!wasClosed || ClosedAt is null) ClosedAt = now;
+    }
 }
 
 public class CaseStaff : Entity

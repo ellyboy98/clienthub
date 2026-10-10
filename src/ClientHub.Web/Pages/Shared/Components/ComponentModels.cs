@@ -14,7 +14,8 @@ public record BadgeModel(string Text, Tone Tone);
 
 /// <summary>Name is the form field name ("Input.Email"); errors are read from ModelState under that name.</summary>
 public record InputModel(string Name, string Label, string? Value = null, string Type = "text",
-    string? Autocomplete = null, bool Required = false, string? Hint = null, string? InputMode = null, bool Autofocus = false);
+    string? Autocomplete = null, bool Required = false, string? Hint = null, string? InputMode = null, bool Autofocus = false,
+    bool ReadOnly = false);
 
 public record CardModel(IHtmlContent Body, string? Title = null);
 
@@ -33,3 +34,9 @@ public record ConfirmDialogModel(string Id, string Title, string Message, string
 
 /// <summary>Markup hook for wwwroot/js/upload.js (built in M4): data attributes describe the upload target.</summary>
 public record FileUploadModel(string Id, string Label, string StartUrl, string CompleteUrl, bool Accent = false);
+
+/// <summary>Case card in the portal (R-151, R-155): title, status badge, type, opened date, last update.</summary>
+public record CaseCardModel(string Title, string Status, string CaseType, DateTime OpenedAt, DateTime? LastUpdateAt, string Href);
+
+/// <summary>5-step progress bar plus Cancelled (R-142). Status is the case status value.</summary>
+public record CaseProgressModel(string Status);

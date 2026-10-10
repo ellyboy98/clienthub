@@ -10,7 +10,7 @@ Start with Prompt 1 in KICKOFF.md once the 5-hour usage window has reset.
 | --- | --- | --- | --- |
 | M1 | Job A: foundation (deployer) | 20 min | built and verified (dev storage is SeaweedFS), not committed |
 | M2 | Shell, sign-in and access rules | 30 min | built, review fixes applied, 39/39 tests green, not committed |
-| M3 | Clients and cases | 30 min | not started |
+| M3 | Clients and cases | 30 min | built, review fixes applied, 75/75 tests green, not committed |
 | M4 | Storage and documents | 30 min | not started |
 | M5 | Chat | 20 min | not started |
 | M6 | Bills and Settings | 25 min | not started |
@@ -73,3 +73,38 @@ Tester notes:
 - Rebuild CSS after pulling (`npm run css:build` in `src/ClientHub.Web`); `site.css` is git-ignored.
 - Check at 390px: login, `/Portal` (bottom nav), `/Account/Manage`; staff sidebar collapses to a navy top bar with menu toggle below 1024px.
 - Something was bound to port 5000 inside the app container at the start of M2 (an earlier `dotnet run`/watch); it is no longer running.
+
+## M3 Clients and cases (developer, 2026-10-10)
+
+Built:
+- Domain: `CaseStatus.{Steps,All,Closed,IsValid,IsClosed}` (`Data/Entities/Base.cs`), `Case.SetStatus(status, now)` + `IsClosed` (`Data/Entities/Domain.cs`). No migration (no schema change).
+- Services: `Services/Cases/CaseService.cs` (`ICaseService`: create, details, staff, status + audit, post update + audit, lawyer/staff pickers; `CaseRow`, `CaseQueries.Active/Past/ToRows`),
+  `Services/Clients/ClientService.cs` (`ClientInput` validation incl. Company person-in-charge; `IClientService`: create with Client login + set-password email via `IAppLinks.SetPassword`,
+  update incl. login email, deactivate via `DeactivateAsync` / reactivate). Registered in `WebServiceExtensions.cs`. `// NOTIFY:` markers left for M7 in status change and post update.
+- Staff pages: `Staff/Index` (4 tiles + active cases table; no attention feed, cut), `Staff/Clients/{Index,Create,Details,Edit,_ClientForm}`, `Staff/Cases/{Index,Create,Details,Edit,_CaseTable,_CaseFields,CaseForm.cs}`,
+  `Staff/PastCases`.
+- Portal pages: `Portal/Index` (greeting, "We still need from you", case cards, Messages/Bills tiles), `Portal/_PortalHeader`, `Portal/Cases/{Index,Details,Past}`.
+- Components: `Shared/Components/{_CaseCard,_CaseProgress}.cshtml` + models in `ComponentModels.cs`; `StatusTone.Inactive`.
+- Resx: 114 new keys, en + ms.
+- Tests: `Cases/CaseTests.cs` (12), `Clients/ClientTests.cs` (9), `Cases/CasePageAccessTests.cs` (12); `Support/TestData.cs`; `Support/AppFactory.cs` gains `FirmAppFactory`,
+  `WithDbAsync`, `WithServiceAsync`. Full suite 72/72.
+
+Skipped / left for later milestones:
+- Case page: document requests, documents (M4) and bills / "+ New bill" (M6). Portal case Documents and Bills tabs show "coming soon".
+- Portal Home "Upload" buttons link to the case page; upload is M4. Chat links go to `/Staff/Chats/{clientId}` (M5). `/Staff/Bills`, `/Portal/Bills`, `/Portal/Chat` still 404.
+- Dashboard "Needs your attention" feed: cut (decisions.md).
+
+Tester notes:
+- Seed has one client/case; create more as OM (`om@`, needs 2FA or `REQUIRE_FIRM_2FA=false`). Run `npm run css:build` first (new classes).
+- Check at 390px: `/Portal`, `/Portal/Cases`, `/Portal/Cases/Details/{id}`, `/Portal/Cases/Past`. Staff tables scroll horizontally on narrow screens.
+- Client form: the person-in-charge fields appear only when Company is chosen (Alpine); the server also refuses Company without them.
+- Deactivate on the Client page asks for confirmation; the client is signed out at the next request (stamp interval) and appears under the Inactive chip.
+
+Review fixes (M3 review, 2026-10-10):
+- Critical 1: email change rotates the security stamp (`ClientService.UpdateAsync`); a login without a password gets a fresh set-password link at the new address.
+- Fiqri: only Lawyer/OM change a client's email. Staff see the email read only (`_Input` gained `ReadOnly`); a Staff POST with a changed email returns 404 (`Clients/Edit`), and the service refuses it too (`canChangeEmail`).
+- Should fix 2: a failed account-created email still saves the client and shows a warning on the Client page (`Staff.Clients.EmailNotSent`, en + ms). `FakeEmailSender.Fail` simulates SMTP failure.
+- Should fix 4: Completed↔Cancelled keeping the first `closed_at` is confirmed by Fiqri (decisions.md).
+- New tests in `ClientTests`: EmailChange_OldSetPasswordLinkFails_NewLinkSent, Staff_ChangeEmail_404_OtherFieldsSave, Create_EmailFails_ClientCreated_WarningShown; EditEmail_UpdatesLoginEmail now runs as OM.
+- Still open from the review (left on purpose): Should fix 1 (status/update and audit row in one save), Nice-to-have 1-6.
+

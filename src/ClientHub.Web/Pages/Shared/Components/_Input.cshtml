@@ -8,7 +8,7 @@
     <label for="@id" class="block text-badge text-text-secondary">@Model.Label</label>
     <input id="@id" name="@Model.Name" type="@Model.Type" value="@(Model.Type == "password" ? null : Model.Value)"
            autocomplete="@Model.Autocomplete" inputmode="@Model.InputMode"
-           class="input @(hasError ? "input-error" : "")" required="@Model.Required" autofocus="@Model.Autofocus"
+           class="input @(hasError ? "input-error" : "")" required="@Model.Required" autofocus="@Model.Autofocus" readonly="@Model.ReadOnly"
            aria-invalid="@(hasError ? "true" : null)" />
     @if (hasError)
     {

@@ -1,0 +1,20 @@
+using ClientHub.Web.Data;
+using ClientHub.Web.Services.Access;
+using ClientHub.Web.Services.Cases;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.EntityFrameworkCore;
+
+namespace ClientHub.Web.Pages.Portal.Cases;
+
+/// <summary>The client's active cases (Q-04), with a link to Past cases.</summary>
+public class IndexModel : PageModel
+{
+    private readonly AppDbContext _db;
+    private readonly IAccessService _access;
+    public IndexModel(AppDbContext db, IAccessService access) { _db = db; _access = access; }
+
+    public List<CaseRow> Cases { get; private set; } = new();
+
+    public async Task OnGetAsync() =>
+        Cases = await _access.CasesFor(User).Active().ToRows(_db).OrderByDescending(r => r.OpenedAt).ToListAsync();
+}

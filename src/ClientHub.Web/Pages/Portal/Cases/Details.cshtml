@@ -1,0 +1,67 @@
+@page "{id:guid}"
+@model ClientHub.Web.Pages.Portal.Cases.DetailsModel
+@{
+    var c = Model.Case;
+    ViewData["Title"] = c.Title;
+    var baseUrl = $"/Portal/Cases/Details/{c.Id}";
+    var tabs = new TabsModel(new[]
+    {
+        new TabItem(L["Portal.Case.Tab.Updates"], baseUrl, Model.Tab == DetailsModel.TabUpdates),
+        new TabItem(L["Portal.Case.Tab.Documents"], baseUrl + "?tab=" + DetailsModel.TabDocuments, Model.Tab == DetailsModel.TabDocuments),
+        new TabItem(L["Portal.Case.Tab.Bills"], baseUrl + "?tab=" + DetailsModel.TabBills, Model.Tab == DetailsModel.TabBills),
+    });
+    var noUpdates = new EmptyStateModel(L["Portal.Case.NoUpdates"]);
+    var soon = new EmptyStateModel(L["Common.ComingSoon"]);
+    var back = c.IsClosed ? "/Portal/Cases/Past" : "/Portal/Cases";
+}
+@section Header {
+    <header class="bg-brand-navy px-5 pb-6 pt-4 text-white">
+        <div class="mx-auto flex max-w-2xl items-center justify-between">
+            <a href="@back" class="inline-flex h-11 w-11 items-center justify-center rounded-full text-white" aria-label="@L["Common.Back"]">
+                <svg class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M15 18l-6-6 6-6"/></svg>
+            </a>
+            <partial name="/Pages/Portal/_PortalHeader.cshtml" />
+        </div>
+        <div class="mx-auto mt-3 max-w-2xl space-y-2">
+            <h1 class="text-h1">@c.Title</h1>
+            <div class="flex flex-wrap items-center gap-2">
+                <partial name="Components/_StatusBadge" model="c.Status" />
+                <span class="text-caption text-white/70">@L["CaseType." + c.CaseType] · @L["Common.Case.Opened"] @Format.Date(c.OpenedAt)</span>
+            </div>
+            <p class="text-body-sm text-white/80">@L["Portal.Case.Lawyer"]: @c.Lawyer?.DisplayName</p>
+        </div>
+    </header>
+}
+<div class="space-y-4">
+    @if (c.Description is not null)
+    {
+        <section class="card">
+            <h2 class="mb-1 text-badge text-text-secondary">@L["Portal.Case.About"]</h2>
+            <p class="whitespace-pre-line text-body-sm">@c.Description</p>
+        </section>
+    }
+    <partial name="Components/_Tabs" model="tabs" />
+    @if (Model.Tab == DetailsModel.TabUpdates)
+    {
+        if (Model.Updates.Count == 0)
+        {
+            <partial name="Components/_EmptyState" model="noUpdates" />
+        }
+        else
+        {
+            <ol class="space-y-3" data-updates>
+                @foreach (var u in Model.Updates)
+                {
+                    <li class="card space-y-1">
+                        <p class="text-caption text-text-secondary">@Format.Date(u.PostedAt)</p>
+                        <p class="whitespace-pre-line text-body-sm">@u.Body</p>
+                    </li>
+                }
+            </ol>
+        }
+    }
+    else
+    {
+        <partial name="Components/_EmptyState" model="soon" />
+    }
+</div>

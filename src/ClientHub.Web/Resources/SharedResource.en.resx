@@ -114,4 +114,126 @@ If you did not ask for this, you can ignore this email.</value></data>
   <data name="Validation.Email" xml:space="preserve"><value>Enter a valid email address.</value></data>
   <data name="Validation.PasswordMismatch" xml:space="preserve"><value>The passwords do not match.</value></data>
   <data name="Validation.Required" xml:space="preserve"><value>This field is required.</value></data>
+  <data name="Common.Search" xml:space="preserve"><value>Search</value></data>
+  <data name="Common.Open" xml:space="preserve"><value>Open</value></data>
+  <data name="Common.Edit" xml:space="preserve"><value>Edit</value></data>
+  <data name="Common.Saved" xml:space="preserve"><value>Saved.</value></data>
+  <data name="Common.Error" xml:space="preserve"><value>Something went wrong. Please try again.</value></data>
+  <data name="Common.None" xml:space="preserve"><value>None</value></data>
+  <data name="Common.Choose" xml:space="preserve"><value>Choose…</value></data>
+  <data name="Common.Back" xml:space="preserve"><value>Back</value></data>
+  <data name="Common.Case.Opened" xml:space="preserve"><value>Opened</value></data>
+  <data name="Common.Case.LastUpdate" xml:space="preserve"><value>Last update</value></data>
+  <data name="Common.Case.Progress" xml:space="preserve"><value>Case progress</value></data>
+  <data name="ClientType.Person" xml:space="preserve"><value>Person</value></data>
+  <data name="ClientType.Company" xml:space="preserve"><value>Company</value></data>
+  <data name="CaseType.Civil" xml:space="preserve"><value>Civil</value></data>
+  <data name="CaseType.Criminal" xml:space="preserve"><value>Criminal</value></data>
+  <data name="Status.Inactive" xml:space="preserve"><value>Inactive</value></data>
+  <data name="Validation.EmailTaken" xml:space="preserve"><value>This email is already used by another login.</value></data>
+  <data name="Validation.TooLong" xml:space="preserve"><value>This is too long.</value></data>
+  <data name="Validation.InvalidChoice" xml:space="preserve"><value>Choose a valid option.</value></data>
+  <data name="Staff.Clients.Title" xml:space="preserve"><value>Clients</value></data>
+  <data name="Staff.Clients.New" xml:space="preserve"><value>+ New client</value></data>
+  <data name="Staff.Clients.Search" xml:space="preserve"><value>Search by name or IC / reg. no.</value></data>
+  <data name="Staff.Clients.Filter" xml:space="preserve"><value>Filter clients</value></data>
+  <data name="Staff.Clients.Filter.All" xml:space="preserve"><value>All</value></data>
+  <data name="Staff.Clients.Filter.Person" xml:space="preserve"><value>Person</value></data>
+  <data name="Staff.Clients.Filter.Company" xml:space="preserve"><value>Company</value></data>
+  <data name="Staff.Clients.Filter.Inactive" xml:space="preserve"><value>Inactive</value></data>
+  <data name="Staff.Clients.Empty" xml:space="preserve"><value>No clients to show.</value></data>
+  <data name="Staff.Clients.Col.Client" xml:space="preserve"><value>Client</value></data>
+  <data name="Staff.Clients.Col.Type" xml:space="preserve"><value>Type</value></data>
+  <data name="Staff.Clients.Col.IcOrRegNo" xml:space="preserve"><value>IC / Reg. no.</value></data>
+  <data name="Staff.Clients.Col.Phone" xml:space="preserve"><value>Phone</value></data>
+  <data name="Staff.Clients.Col.ActiveCases" xml:space="preserve"><value>Active cases</value></data>
+  <data name="Staff.Clients.Col.Login" xml:space="preserve"><value>Login</value></data>
+  <data name="Staff.Clients.Created" xml:space="preserve"><value>Client created. A set-password email was sent.</value></data>
+  <data name="Staff.Clients.CreateSubmit" xml:space="preserve"><value>Create client</value></data>
+  <data name="Staff.Clients.CreateIntro" xml:space="preserve"><value>The client gets one login and an email with a link to set their password.</value></data>
+  <data name="Staff.Clients.Edit" xml:space="preserve"><value>Edit client</value></data>
+  <data name="Staff.ClientForm.Type" xml:space="preserve"><value>Client type</value></data>
+  <data name="Staff.ClientForm.Name" xml:space="preserve"><value>Name</value></data>
+  <data name="Staff.ClientForm.IcOrRegNo" xml:space="preserve"><value>IC no. / Company reg. no.</value></data>
+  <data name="Staff.ClientForm.Phone" xml:space="preserve"><value>Phone</value></data>
+  <data name="Staff.ClientForm.Email" xml:space="preserve"><value>Email</value></data>
+  <data name="Staff.ClientForm.EmailHint" xml:space="preserve"><value>This is also the client's login email.</value></data>
+  <data name="Staff.ClientForm.Address" xml:space="preserve"><value>Address</value></data>
+  <data name="Staff.ClientForm.ContactPerson" xml:space="preserve"><value>Person in charge</value></data>
+  <data name="Staff.ClientForm.ContactPersonName" xml:space="preserve"><value>Person in charge name</value></data>
+  <data name="Staff.ClientForm.ContactPersonPhone" xml:space="preserve"><value>Person in charge phone</value></data>
+  <data name="Staff.Client.Details" xml:space="preserve"><value>Details</value></data>
+  <data name="Staff.Client.Cases" xml:space="preserve"><value>Cases</value></data>
+  <data name="Staff.Client.NoCases" xml:space="preserve"><value>No cases to show.</value></data>
+  <data name="Staff.Client.OpenChat" xml:space="preserve"><value>Open chat</value></data>
+  <data name="Staff.Client.CreateCase" xml:space="preserve"><value>Create case</value></data>
+  <data name="Staff.Client.Deactivate" xml:space="preserve"><value>Deactivate login</value></data>
+  <data name="Staff.Client.DeactivateConfirm" xml:space="preserve"><value>The client will no longer be able to sign in. Their records stay in the system.</value></data>
+  <data name="Staff.Client.Reactivate" xml:space="preserve"><value>Reactivate login</value></data>
+  <data name="Staff.Client.Deactivated" xml:space="preserve"><value>Login deactivated.</value></data>
+  <data name="Staff.Client.Reactivated" xml:space="preserve"><value>Login reactivated.</value></data>
+  <data name="Staff.CaseTable.Case" xml:space="preserve"><value>Case</value></data>
+  <data name="Staff.CaseTable.Client" xml:space="preserve"><value>Client</value></data>
+  <data name="Staff.CaseTable.Type" xml:space="preserve"><value>Type</value></data>
+  <data name="Staff.CaseTable.Status" xml:space="preserve"><value>Status</value></data>
+  <data name="Staff.CaseTable.Lawyer" xml:space="preserve"><value>Lawyer</value></data>
+  <data name="Staff.Cases.Title" xml:space="preserve"><value>Cases</value></data>
+  <data name="Staff.Cases.Empty" xml:space="preserve"><value>No active cases.</value></data>
+  <data name="Staff.Cases.New" xml:space="preserve"><value>New case</value></data>
+  <data name="Staff.Cases.CreateSubmit" xml:space="preserve"><value>Create case</value></data>
+  <data name="Staff.Cases.Created" xml:space="preserve"><value>Case created.</value></data>
+  <data name="Staff.Cases.Edit" xml:space="preserve"><value>Edit case</value></data>
+  <data name="Staff.PastCases.Empty" xml:space="preserve"><value>No past cases.</value></data>
+  <data name="Staff.CaseForm.Client" xml:space="preserve"><value>Client</value></data>
+  <data name="Staff.CaseForm.Title" xml:space="preserve"><value>Case title</value></data>
+  <data name="Staff.CaseForm.Type" xml:space="preserve"><value>Case type</value></data>
+  <data name="Staff.CaseForm.Description" xml:space="preserve"><value>Description</value></data>
+  <data name="Staff.CaseForm.DescriptionHint" xml:space="preserve"><value>Optional. The client can see it.</value></data>
+  <data name="Staff.CaseForm.Lawyer" xml:space="preserve"><value>Lawyer in charge</value></data>
+  <data name="Staff.CaseForm.Staff" xml:space="preserve"><value>Assigned staff</value></data>
+  <data name="Staff.CaseForm.NoStaff" xml:space="preserve"><value>No staff accounts yet.</value></data>
+  <data name="Staff.Case.PostUpdate" xml:space="preserve"><value>Post update</value></data>
+  <data name="Staff.Case.ChangeStatus" xml:space="preserve"><value>Change status</value></data>
+  <data name="Staff.Case.StatusChanged" xml:space="preserve"><value>Status changed.</value></data>
+  <data name="Staff.Case.UpdatePosted" xml:space="preserve"><value>Update posted.</value></data>
+  <data name="Staff.Case.Updates" xml:space="preserve"><value>Updates</value></data>
+  <data name="Staff.Case.UpdatesVisible" xml:space="preserve"><value>Updates are visible to the client.</value></data>
+  <data name="Staff.Case.UpdatePlaceholder" xml:space="preserve"><value>Write an update for the client</value></data>
+  <data name="Staff.Case.NoUpdates" xml:space="preserve"><value>No updates yet.</value></data>
+  <data name="Staff.Case.Details" xml:space="preserve"><value>Case details</value></data>
+  <data name="Staff.Case.Closed" xml:space="preserve"><value>Closed</value></data>
+  <data name="Staff.Case.Client" xml:space="preserve"><value>Client</value></data>
+  <data name="Staff.Case.Profile" xml:space="preserve"><value>Profile</value></data>
+  <data name="Staff.Dashboard.ActiveCases" xml:space="preserve"><value>Active cases</value></data>
+  <data name="Staff.Dashboard.PendingDocuments" xml:space="preserve"><value>Documents pending from clients</value></data>
+  <data name="Staff.Dashboard.UnreadChats" xml:space="preserve"><value>Unread chats</value></data>
+  <data name="Staff.Dashboard.BillsAwaiting" xml:space="preserve"><value>Bills awaiting payment</value></data>
+  <data name="Staff.Dashboard.ActiveCasesTable" xml:space="preserve"><value>Active cases</value></data>
+  <data name="Portal.Home.StillNeed" xml:space="preserve"><value>We still need from you</value></data>
+  <data name="Portal.Home.Upload" xml:space="preserve"><value>Upload</value></data>
+  <data name="Portal.Home.YourCases" xml:space="preserve"><value>Your cases</value></data>
+  <data name="Portal.Home.Messages" xml:space="preserve"><value>Messages</value></data>
+  <data name="Portal.Home.Unread" xml:space="preserve"><value>unread</value></data>
+  <data name="Portal.Home.Bills" xml:space="preserve"><value>Bills</value></data>
+  <data name="Portal.Home.Unpaid" xml:space="preserve"><value>unpaid</value></data>
+  <data name="Portal.Cases.Title" xml:space="preserve"><value>Your cases</value></data>
+  <data name="Portal.Cases.Empty" xml:space="preserve"><value>You have no active cases.</value></data>
+  <data name="Portal.Cases.Past" xml:space="preserve"><value>Past cases</value></data>
+  <data name="Portal.Cases.PastEmpty" xml:space="preserve"><value>You have no past cases.</value></data>
+  <data name="Portal.Case.Lawyer" xml:space="preserve"><value>Lawyer in charge</value></data>
+  <data name="Portal.Case.About" xml:space="preserve"><value>About this case</value></data>
+  <data name="Portal.Case.Tab.Updates" xml:space="preserve"><value>Updates</value></data>
+  <data name="Portal.Case.Tab.Documents" xml:space="preserve"><value>Documents</value></data>
+  <data name="Portal.Case.Tab.Bills" xml:space="preserve"><value>Bills</value></data>
+  <data name="Portal.Case.NoUpdates" xml:space="preserve"><value>No updates yet.</value></data>
+  <data name="Email.AccountCreated.Subject" xml:space="preserve"><value>Your client portal account</value></data>
+  <data name="Email.AccountCreated.Body" xml:space="preserve"><value>Hello {0},
+
+The firm has created your client portal account. Use this link to set your password. It works for one day:
+{1}
+
+If the link has expired, use "Forgot password" on the sign-in page.</value></data>
+  <data name="Staff.ClientForm.EmailLocked" xml:space="preserve"><value>This is the client's login email. Only a lawyer or the office manager can change it.</value></data>
+  <data name="Staff.Clients.EmailNotSent" xml:space="preserve"><value>Saved, but the set-password email could not be sent. Ask the client to use "Forgot password" on the sign-in page, or try again later.</value></data>
+  <data name="Staff.Clients.EmailChangedLinkSent" xml:space="preserve"><value>Saved. A new set-password link was sent to the new email address.</value></data>
 </root>

@@ -1,6 +1,6 @@
 ---
 name: gotchas-aspnet-razor
-description: ClientHub build gotchas found in M2 - resx manifest naming, Razor partial model quoting, container PORT, Secure cookies with curl, pkill self-kill
+description: ClientHub build gotchas from M2/M3 - resx manifest naming, partial model quoting, PORT, Secure cookies, EF record projection ordering, validatable localisation, test tokens/factories
 metadata:
   type: project
 ---
@@ -13,6 +13,11 @@ metadata:
 - Email links must come from `IAppLinks` (APP_BASE_URL), never `Url.Page(..., Request.Scheme)` — review flagged reset poisoning. Tests capture mail via `AppFactory.Emails` (FakeEmailSender).
 - Razor HTML-encodes non-ASCII like the middle dot in titles; assert with a regex, not the literal.
 - Lawyer/OM are redirected to 2FA setup by `FirmTwoFactorMiddleware` unless `REQUIRE_FIRM_2FA=false`; integration tests for Lawyer/OM pages must expect that or enrol 2FA.
+- (M3) EF cannot OrderBy on members of a positional-record projection (`new Row(a, b)`); use member-init (`new Row { A = a }`) when the query is ordered after projecting.
+- (M3) `IValidatableObject` messages bypass the data-annotations localizer; resolve `IStringLocalizer<SharedResource>` from `ValidationContext.GetService` (see ClientInput).
+- (M3) Portal pages have no antiforgery form; tests posting as a Client take the token from `/Account/Manage`. Staff: any `/Staff` page (logout form).
+- (M3) `AppFactory.WithDb` with an async lambda disposes the scope too early; use `WithDbAsync`. Lawyer/OM page tests use `FirmAppFactory` (2FA off).
+- (M3 review) Changing a login email via `UserManager.UpdateAsync` does NOT rotate the security stamp; call `UpdateSecurityStampAsync` so old reset/set-password links die. Reviewer treats this as Critical.
 
-**Why:** each cost a debug cycle in M2.
+**Why:** each cost a debug cycle in M2/M3.
 **How to apply:** check before adding resx, partials, manual curl checks or Lawyer-only integration tests in later milestones.
