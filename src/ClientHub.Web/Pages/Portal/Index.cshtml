@@ -53,7 +53,7 @@
     <div class="grid grid-cols-2 gap-4">
         <a href="/Portal/Chat" class="card block min-h-[44px] space-y-1" data-tile="messages">
             <p class="text-badge text-text-secondary">@L["Portal.Home.Messages"]</p>
-            <p class="text-h2">@Model.UnreadMessages <span class="text-caption text-text-secondary">@L["Portal.Home.Unread"]</span></p>
+            <p class="text-h2"><span data-tile-count>@Model.UnreadMessages</span> <span class="text-caption text-text-secondary">@L["Portal.Home.Unread"]</span></p>
         </a>
         <a href="/Portal/Bills" class="card block min-h-[44px] space-y-1 bg-brand-gold-soft" data-tile="bills">
             <p class="text-badge text-text-secondary">@L["Portal.Home.Bills"]</p>

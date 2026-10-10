@@ -269,4 +269,18 @@ If the link has expired, use "Forgot password" on the sign-in page.</value></dat
   <data name="Portal.Case.Reupload" xml:space="preserve"><value>Re-upload</value></data>
   <data name="Portal.Case.NoDocuments" xml:space="preserve"><value>No documents shared yet.</value></data>
   <data name="Portal.Case.ReceivedRequests" xml:space="preserve"><value>Documents you have sent</value></data>
+  <data name="Staff.Chats.Title" xml:space="preserve"><value>Chats</value></data>
+  <data name="Staff.Chats.Empty" xml:space="preserve"><value>No client chats you can open yet.</value></data>
+  <data name="Staff.Chats.Choose" xml:space="preserve"><value>Choose a client to open their chat.</value></data>
+  <data name="Portal.Chat.Title" xml:space="preserve"><value>Chat with the firm</value></data>
+  <data name="Portal.Chat.Intro" xml:space="preserve"><value>Your lawyer and the firm's staff reply here.</value></data>
+  <data name="Chat.NoMessages" xml:space="preserve"><value>No messages yet.</value></data>
+  <data name="Chat.Message" xml:space="preserve"><value>Message</value></data>
+  <data name="Chat.Placeholder" xml:space="preserve"><value>Write a message</value></data>
+  <data name="Chat.Send" xml:space="preserve"><value>Send</value></data>
+  <data name="Chat.Attach" xml:space="preserve"><value>Attach a file</value></data>
+  <data name="Chat.UnreadCount" xml:space="preserve"><value>{0} unread</value></data>
+  <data name="Chat.Error.Empty" xml:space="preserve"><value>Write a message first.</value></data>
+  <data name="Chat.Error.TooLong" xml:space="preserve"><value>A message can be up to 4,000 characters.</value></data>
+  <data name="Staff.Chats.Profile" xml:space="preserve"><value>Client profile</value></data>
 </root>

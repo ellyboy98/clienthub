@@ -3,6 +3,7 @@ using ClientHub.Web.Data.Entities;
 using ClientHub.Web.Services.Access;
 using ClientHub.Web.Services.Audit;
 using ClientHub.Web.Services.Cases;
+using ClientHub.Web.Services.Chat;
 using ClientHub.Web.Services.Clients;
 using ClientHub.Web.Services.Documents;
 using ClientHub.Web.Services.Email;
@@ -115,6 +116,7 @@ public static class WebServiceExtensions
         services.AddSingleton<IUploadTicketProtector, UploadTicketProtector>();
         services.AddScoped<IUploadService, UploadService>();
         services.AddScoped<IDocumentService, DocumentService>();
+        services.AddScoped<IChatService, ChatService>();
         return services;
     }
 }

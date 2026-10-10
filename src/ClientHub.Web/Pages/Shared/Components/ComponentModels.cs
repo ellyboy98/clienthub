@@ -51,3 +51,19 @@ public record CaseCardModel(string Title, string Status, string CaseType, DateTi
 
 /// <summary>5-step progress bar plus Cancelled (R-142). Status is the case status value.</summary>
 public record CaseProgressModel(string Status);
+
+/// <summary>
+/// One chat as seen by the current user (R-146, R-153). FirmSide: the viewer is a firm user, so firm messages sit on the
+/// right; for a Client their own messages do. PollUrl/SendUrl already carry the handler; the cursor is appended.
+/// </summary>
+public record ChatViewModel(Guid ClientId, Guid Me, bool FirmSide, string PollUrl, string SendUrl);
+
+/// <summary>Messages plus the polling sentinel that carries the cursor (seq of the last message shown).</summary>
+public record ChatMessagesModel(ChatViewModel Chat, IReadOnlyList<ClientHub.Web.Services.Chat.ChatMessageView> Messages, long AfterSeq)
+{
+    public static ChatMessagesModel From(ChatViewModel chat, IReadOnlyList<ClientHub.Web.Services.Chat.ChatMessageView> messages, long previousSeq = 0) =>
+        new(chat, messages, messages.Count > 0 ? messages[^1].Seq : previousSeq);
+}
+
+/// <summary>Mine: on the viewer's side (navy, right). The sender name shows on every message not written by the viewer.</summary>
+public record MessageBubbleModel(ClientHub.Web.Services.Chat.ChatMessageView Message, bool Mine, bool ShowName);

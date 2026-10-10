@@ -1,7 +1,11 @@
 @using System.Security.Claims
 @using ClientHub.Web.Services.Access
+@using ClientHub.Web.Services.Chat
 @inject IAccessService Access
+@inject IChatService Chats
 @{
+    // R-136: chats with unread client messages, same count as the dashboard tile.
+    var unreadChats = await Chats.UnreadAsync(User);
     var page = ViewContext.RouteData.Values["page"] as string ?? "";
     string Active(string prefix, bool exact = false) =>
         (exact ? page == prefix : page.StartsWith(prefix)) ? "nav-link nav-link-active" : "nav-link";
@@ -28,7 +32,14 @@
             <a href="/Staff" class="@Active("/Staff/Index", true)">@L["Staff.Nav.Dashboard"]</a>
             <a href="/Staff/Clients" class="@Active("/Staff/Clients")">@L["Staff.Nav.Clients"]</a>
             <a href="/Staff/Cases" class="@Active("/Staff/Cases")">@L["Staff.Nav.Cases"]</a>
-            <a href="/Staff/Chats" class="@Active("/Staff/Chats")">@L["Staff.Nav.Chats"]</a>
+            <a href="/Staff/Chats" class="@Active("/Staff/Chats") justify-between">
+                <span>@L["Staff.Nav.Chats"]</span>
+                @if (unreadChats > 0)
+                {
+                    <span class="inline-flex min-w-[24px] items-center justify-center rounded-full bg-brand-gold px-2 text-badge text-brand-navy" data-nav-unread="@unreadChats"
+                          aria-label="@string.Format(L["Chat.UnreadCount"].Value, unreadChats)">@unreadChats</span>
+                }
+            </a>
             <a href="/Staff/Bills" class="@Active("/Staff/Bills")">@L["Staff.Nav.Bills"]</a>
             <a href="/Staff/PastCases" class="@Active("/Staff/PastCases")">@L["Staff.Nav.PastCases"]</a>
             @if (Access.CanManageSettings(User))

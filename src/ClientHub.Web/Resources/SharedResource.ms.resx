@@ -269,4 +269,18 @@ Jika pautan telah tamat tempoh, gunakan "Lupa kata laluan" di halaman log masuk.
   <data name="Portal.Case.Reupload" xml:space="preserve"><value>Muat naik semula</value></data>
   <data name="Portal.Case.NoDocuments" xml:space="preserve"><value>Belum ada dokumen dikongsi.</value></data>
   <data name="Portal.Case.ReceivedRequests" xml:space="preserve"><value>Dokumen yang telah anda hantar</value></data>
+  <data name="Staff.Chats.Title" xml:space="preserve"><value>Sembang</value></data>
+  <data name="Staff.Chats.Empty" xml:space="preserve"><value>Belum ada sembang pelanggan yang boleh anda buka.</value></data>
+  <data name="Staff.Chats.Choose" xml:space="preserve"><value>Pilih pelanggan untuk membuka sembang mereka.</value></data>
+  <data name="Portal.Chat.Title" xml:space="preserve"><value>Sembang dengan firma</value></data>
+  <data name="Portal.Chat.Intro" xml:space="preserve"><value>Peguam anda dan kakitangan firma membalas di sini.</value></data>
+  <data name="Chat.NoMessages" xml:space="preserve"><value>Belum ada mesej.</value></data>
+  <data name="Chat.Message" xml:space="preserve"><value>Mesej</value></data>
+  <data name="Chat.Placeholder" xml:space="preserve"><value>Tulis mesej</value></data>
+  <data name="Chat.Send" xml:space="preserve"><value>Hantar</value></data>
+  <data name="Chat.Attach" xml:space="preserve"><value>Lampirkan fail</value></data>
+  <data name="Chat.UnreadCount" xml:space="preserve"><value>{0} belum dibaca</value></data>
+  <data name="Chat.Error.Empty" xml:space="preserve"><value>Tulis mesej terlebih dahulu.</value></data>
+  <data name="Chat.Error.TooLong" xml:space="preserve"><value>Mesej boleh mengandungi sehingga 4,000 aksara.</value></data>
+  <data name="Staff.Chats.Profile" xml:space="preserve"><value>Profil pelanggan</value></data>
 </root>

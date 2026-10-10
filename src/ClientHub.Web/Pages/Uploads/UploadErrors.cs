@@ -16,6 +16,7 @@ internal static class UploadErrors
             UploadError.TooLarge => "Upload.Error.TooLarge",
             UploadError.Empty => "Upload.Error.Empty",
             UploadError.Missing => "Upload.Error.Missing",
+            UploadError.CaptionTooLong => "Chat.Error.TooLong",
             _ => "Upload.Error.Expired"
         }].Value })
     };

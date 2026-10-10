@@ -1,0 +1,29 @@
+@model MessageBubbleModel
+@* Firm and client bubbles look the same in both areas (R-146, R-153). Text is HTML-encoded by Razor; never use Html.Raw here. *@
+@{
+    var m = Model.Message;
+}
+<div class="flex @(Model.Mine ? "justify-end" : "justify-start")" id="msg-@m.Id" data-message="@m.Id">
+    <div class="max-w-[85%] rounded-card px-4 py-2 shadow-card sm:max-w-[70%] @(Model.Mine ? "bg-brand-navy text-white" : "border border-border bg-bg-surface text-text-primary")">
+        @if (Model.ShowName)
+        {
+            <p class="text-badge @(Model.Mine ? "text-white/70" : "text-text-secondary")" data-sender>@m.SenderName</p>
+        }
+        @if (m.Body.Length > 0)
+        {
+            <p class="whitespace-pre-line break-words text-body-sm" data-body>@m.Body</p>
+        }
+        @if (m.HasFile)
+        {
+            <a href="/Files/Download/@m.Id?handler=Message" data-file
+               class="mt-1 flex min-h-[44px] items-center gap-3 rounded-control px-3 @(Model.Mine ? "bg-white/10 hover:bg-white/20" : "bg-bg-subtle hover:bg-border")">
+                <svg class="h-5 w-5 shrink-0" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linejoin="round" d="M7 3h7l5 5v13H7zM14 3v5h5"/></svg>
+                <span class="min-w-0">
+                    <span class="block truncate text-label">@m.AttachmentName</span>
+                    <span class="block text-caption @(Model.Mine ? "text-white/70" : "text-text-secondary")">@Format.FileSize(m.AttachmentSizeBytes ?? 0) · @L["Common.Download"]</span>
+                </span>
+            </a>
+        }
+        <p class="mt-1 text-right text-caption @(Model.Mine ? "text-white/60" : "text-text-muted")"><time datetime="@m.SentAt.ToString("o")">@Format.DateTime(m.SentAt)</time></p>
+    </div>
+</div>

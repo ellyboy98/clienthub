@@ -1,0 +1,38 @@
+@model ChatViewModel
+@using ClientHub.Web.Services.Chat
+@using ClientHub.Web.Services.Storage
+@* Text: HTMX post, then the server's HX-Trigger "chat:refresh" makes the poller fetch at once.
+   File: wwwroot/js/upload.js with a Chat(clientId) target; the typed text goes with Complete as the file's caption (R-067
+   "text and/or a file"), and on completion it raises the same event instead of reloading. *@
+<div class="border-t border-border bg-bg-surface p-3">
+    <div class="mb-2 space-y-2" data-upload data-upload-start="/Uploads/Start" data-upload-complete="/Uploads/Complete" data-upload-event="chat:refresh" data-upload-caption="#chat-body"
+         data-upload-max="@UploadRules.MaxBytes" data-upload-ext="@string.Join(",", UploadRules.Extensions)"
+         data-msg-type="@L["Upload.Error.BadType"]" data-msg-size="@L["Upload.Error.TooLarge"]"
+         data-msg-failed="@L["Upload.Error.Failed"]" data-msg-uploading="@L["Upload.Uploading"]">
+        @Html.AntiForgeryToken()
+        <input type="hidden" data-upload-field name="kind" value="@UploadTargetKind.Chat" />
+        <input type="hidden" data-upload-field name="clientId" value="@Model.ClientId" />
+        <div class="hidden flex justify-end" data-upload-progress>
+            <div class="w-64 max-w-[85%] rounded-card bg-brand-navy px-4 py-2 text-white shadow-card">
+                <p class="truncate text-caption text-white/80" data-upload-status></p>
+                <div class="mt-2 h-2 w-full overflow-hidden rounded-full bg-white/20"><div class="h-full w-0 bg-brand-gold transition-all" data-upload-bar></div></div>
+            </div>
+        </div>
+        <p class="hidden text-caption text-danger" data-upload-error role="alert"></p>
+        <input id="chat-file" type="file" class="sr-only" accept=".pdf,.docx,.jpg,.jpeg,.png,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,image/jpeg,image/png" />
+    </div>
+    <form method="post" action="@Model.SendUrl" hx-post="@Model.SendUrl" hx-target="#chat-error" hx-swap="innerHTML"
+          hx-on::after-request="if (event.detail.successful && !event.detail.xhr.responseText) this.reset()"
+          class="flex items-end gap-2" data-chat-form>
+        @Html.AntiForgeryToken()
+        <label for="chat-file" class="inline-flex h-11 w-11 shrink-0 cursor-pointer items-center justify-center rounded-control border border-border-strong bg-bg-surface text-brand-navy hover:bg-bg-subtle" title="@L["Chat.Attach"]">
+            <span class="sr-only">@L["Chat.Attach"]</span>
+            <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M20 11.5l-8.2 8.2a5 5 0 0 1-7.1-7.1l8.5-8.5a3.3 3.3 0 0 1 4.7 4.7l-8.5 8.5a1.7 1.7 0 0 1-2.4-2.4l7.8-7.8"/></svg>
+        </label>
+        <label for="chat-body" class="sr-only">@L["Chat.Message"]</label>
+        <textarea id="chat-body" name="body" rows="1" required maxlength="@ChatService.MaxBodyLength" placeholder="@L["Chat.Placeholder"]"
+                  class="input min-h-[44px] flex-1 resize-y border-transparent bg-bg-subtle py-2.5" data-chat-body></textarea>
+        <button type="submit" class="btn btn-primary shrink-0">@L["Chat.Send"]</button>
+    </form>
+    <p id="chat-error" class="text-caption text-danger empty:hidden" role="alert"></p>
+</div>

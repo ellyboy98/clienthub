@@ -57,7 +57,19 @@
     try {
       const start = await post(d.uploadStart, fields);
       await put(start.url, file, start.contentType, function (p) { bar.style.width = Math.round(p * 100) + "%"; });
-      await post(d.uploadComplete, { ticket: start.ticket, __RequestVerificationToken: fields.__RequestVerificationToken });
+      const captionBox = d.uploadCaption ? document.querySelector(d.uploadCaption) : null;
+      const complete = { ticket: start.ticket, __RequestVerificationToken: fields.__RequestVerificationToken };
+      if (captionBox) complete.caption = captionBox.value;
+      await post(d.uploadComplete, complete);
+      if (captionBox) captionBox.value = "";
+      if (d.uploadEvent && window.htmx) {
+        // Chat: the new file message arrives through the poller instead of a page reload.
+        window.htmx.trigger(document.body, d.uploadEvent);
+        hide(progress); hide(status);
+        input.disabled = false;
+        input.value = "";
+        return;
+      }
       window.location.reload();
     } catch (e) {
       hide(progress); hide(status);

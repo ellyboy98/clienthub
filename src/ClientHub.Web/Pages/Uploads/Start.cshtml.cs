@@ -17,10 +17,16 @@ public class StartModel : PageModel
 
     public IActionResult OnGet() => NotFound();
 
-    public async Task<IActionResult> OnPostAsync(string? kind, Guid? caseId, Guid? requestId, string? fileName, long size)
+    public async Task<IActionResult> OnPostAsync(string? kind, Guid? caseId, Guid? requestId, Guid? clientId, string? fileName, long size)
     {
-        if ((kind is not null && kind != UploadTargetKind.Case) || caseId is null) return NotFound();
-        var r = await _uploads.StartAsync(User, UploadTarget.Case(caseId.Value, requestId), fileName, size, HttpContext.RequestAborted);
+        UploadTarget? target = kind switch
+        {
+            null or UploadTargetKind.Case when caseId is { } c => UploadTarget.Case(c, requestId),
+            UploadTargetKind.Chat when clientId is { } cl => UploadTarget.Chat(cl),
+            _ => null
+        };
+        if (target is null) return NotFound();
+        var r = await _uploads.StartAsync(User, target, fileName, size, HttpContext.RequestAborted);
         if (r.Error != UploadError.None) return UploadErrors.ToResult(r.Error, _l);
         return new JsonResult(new { url = r.Url, ticket = r.Ticket, contentType = r.ContentType });
     }

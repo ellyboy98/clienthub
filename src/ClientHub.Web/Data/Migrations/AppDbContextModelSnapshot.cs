@@ -729,6 +729,13 @@ namespace ClientHub.Web.Data.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("sent_at");
 
+                    b.Property<long>("Seq")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasColumnName("seq");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityAlwaysColumn(b.Property<long>("Seq"));
+
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("updated_at");
@@ -736,11 +743,18 @@ namespace ClientHub.Web.Data.Migrations
                     b.HasKey("Id")
                         .HasName("pk_messages");
 
+                    b.HasIndex("AttachmentKey")
+                        .IsUnique()
+                        .HasDatabaseName("ix_messages_attachment_key");
+
                     b.HasIndex("SenderId")
                         .HasDatabaseName("ix_messages_sender_id");
 
                     b.HasIndex("ClientId", "SentAt")
                         .HasDatabaseName("ix_messages_client_id_sent_at");
+
+                    b.HasIndex("ClientId", "Seq")
+                        .HasDatabaseName("ix_messages_client_id_seq");
 
                     b.ToTable("messages", (string)null);
                 });

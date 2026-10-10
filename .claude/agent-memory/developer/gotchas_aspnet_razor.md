@@ -1,6 +1,6 @@
 ---
 name: gotchas-aspnet-razor
-description: ClientHub build gotchas from M2-M4 - resx manifest naming, partial model quoting, PORT, Secure cookies, EF record projection ordering, validatable localisation, test tokens/factories
+description: ClientHub build gotchas from M2-M5 - resx manifest naming, partial model quoting, PORT, Secure cookies, EF record projection ordering, validatable localisation, test tokens/factories
 metadata:
   type: project
 ---
@@ -24,5 +24,9 @@ metadata:
 - (M4) Portal pages without an open request render no antiforgery token; take it from `/Account/Manage` in client tests.
 - (M4 review) Reviewer treats a reusable presigned PUT as Critical (overwrite after validation). Pattern: PUT to `staging/` key, validate, CopyObject to a server-only key, re-validate the copy, delete staging; catch Npgsql UniqueViolation for concurrent completes. Never log file names (may contain IC numbers).
 
+- (M5) HTMX polling pattern that renders only new rows: a sentinel `<div id="chat-poll" hx-get="...&after=<ticks>" hx-trigger="every 5s, chat:refresh from:body" hx-swap="outerHTML">`; the handler returns new rows + a fresh sentinel. Send handlers set `HX-Trigger: chat:refresh` for an instant refresh. Handler partials: `PartialViewResult` with the absolute view path `/Pages/Shared/Components/_X.cshtml`.
+- (M5) Tailwind v3 emits `.hidden` after `.flex`, so `class="hidden flex"` + JS removing `hidden` works. Test hooks on counts need `data-tile-count>N<` (TestData.Tile regex).
+
+- (M5 review) Reviewer treats a timestamp poll cursor as Critical (late commits skipped AND marked read). Pattern: identity `seq` cursor + `pg_advisory_xact_lock(<id as bigint>)` in the insert transaction (identity values are assigned at insert, not commit), and mark read only `seq <=` what the viewer was shown; background-tab polls must not mark read (`hx-vals='js:{visible:...}'`). Migrations generated in the container are root-owned: edit/chown them via `docker compose exec app`. Drop EF's `defaultValue: 0L` on an added identity column.
 **Why:** each cost a debug cycle in M2/M3.
 **How to apply:** check before adding resx, partials, manual curl checks or Lawyer-only integration tests in later milestones.

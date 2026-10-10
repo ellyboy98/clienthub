@@ -12,7 +12,7 @@ Start with Prompt 1 in KICKOFF.md once the 5-hour usage window has reset.
 | M2 | Shell, sign-in and access rules | 30 min | built, review fixes applied, 39/39 tests green, not committed |
 | M3 | Clients and cases | 30 min | built, review fixes applied, 75/75 tests green, not committed |
 | M4 | Storage and documents | 30 min | built, review fixes applied, 119/119 tests green, not committed |
-| M5 | Chat | 20 min | not started |
+| M5 | Chat | 20 min | built, review fixes applied, 133/133 tests green, not committed |
 | M6 | Bills and Settings | 25 min | not started |
 | M7 | Notifications and email | 20 min | not started |
 | M8 | Deploy and backups (deployer) | 10 min | not started |
@@ -156,3 +156,54 @@ Review/test fixes (M4, 2026-10-10):
   staging object on head or copy re-reads the document by final key and returns it, else 400. New test Copy_MissingSource_ReturnsFalse. Flow + storage tests 10/10 runs green.
 
 - Seen once in a full-suite run after the race fix: M3 `CaseTests.Create_StatusNew_OpenedAtSet` failed (passed alone and in the next 2 full runs). Likely its 1-second time window under load; not M4 code, left for the tester to watch.
+
+
+## M5 Chat (developer, 2026-10-10)
+
+Built:
+- Service: `Services/Chat/ChatService.cs` (`IChatService`: own client id, list with unread counts, unread total, open + mark read (Q-05),
+  new-since cursor, send (trim, 1..4000 chars), chat-file `RecordUploadAsync`, chat-file download URL + audit). Every id goes through
+  `ClientsFor`/`CanAccessClientAsync`; no edit/delete (Q-21). `// NOTIFY: ChatMessage R-091/R-092` markers in send and file record.
+- Uploads: `UploadService` Chat branch (key `chats/<clientId>/<uuid>/<name>`, same staging -> copy -> re-validate, ticket bound to user +
+  target, idempotent completion by `attachment_key`, access via CanAccessClient). `Uploads/Start` accepts `kind=Chat&clientId=`.
+  Migration `*_M5_MessageAttachmentKeyIndex` (unique `messages.attachment_key`).
+- Downloads: `Files/Download/{messageId}?handler=Message` (CanAccessClient, audit `Document.Downloaded` with entity `Message`, 5-min presigned GET).
+- Pages: `Staff/Chats/Index` (list), `Staff/Chats/Thread` at `/Staff/Chats/{clientId}` (list left on desktop, thread right; `?handler=New`
+  poll, `?handler=Send`), `Staff/Chats/_ChatList`, `Staff/Chats/ChatPages.cs` (shared send/poll results), `Portal/Chat/Index`
+  (`/Portal/Chat`, client id from the signed-in Client only).
+- Components: `_MessageBubble`, `_ChatMessages` (bubbles + polling sentinel `#chat-poll`, `hx-trigger="every 5s, chat:refresh from:body"`,
+  outerHTML swap so only new messages are rendered), `_ChatComposer` (HTMX send; attach via `upload.js` with `data-upload-event`), models in
+  `ComponentModels.cs`. `wwwroot/js/chat.js` (scroll to newest, Enter sends). `upload.js`: optional `data-upload-event` instead of reload.
+- Sidebar Chats unread pill (gold, R-136) in `_StaffLayout`; dashboard tile now uses `IChatService.UnreadAsync` (same count).
+  Portal Home Messages tile count got `data-tile-count` (test hook only).
+- Resx: 13 keys en + ms (`Staff.Chats.*`, `Portal.Chat.*`, `Chat.*`).
+- Tests: `tests/ClientHub.Tests/Chat/ChatTests.cs` (10): Staff_UnassignedClient_404, Staff_AssignedToAnyCase_ReadsAndSends,
+  LawyerAndOfficeManager_SeeEveryChat, Client_OtherClientChat_404, PollingEndpoint_ReturnsOnlyNewMessages_EscapesText,
+  Send_Htmx_TriggersRefresh_EmptyAndTooLongRefused, OpenChat_MarksOtherSideRead, AttachmentKey_UnderChatsClientId,
+  ChatFile_Download_WritesAudit, ChatUpload_TicketForOtherClient_Refused. Full suite 129/129.
+
+Skipped:
+- Save to case (R-070..R-072): CUT. Plan tests SaveToCase_* and Client_SaveToCase_404 not written; no SaveToCase page.
+- Upload progress is a navy "bubble" above the composer, not inside the final message bubble (the message row exists only after completion).
+
+Tester notes:
+- Run `npm run css:build`. Two browsers: client@ on `/Portal/Chat`, staff/lawyer on `/Staff/Chats/{clientId}`; a message appears on the
+  other side within 5 s; sender's own send appears at once (HX-Trigger). Pill in the sidebar and the list clears when the thread opens.
+- Check at 390px: `/Portal/Chat` (card fills the screen above the bottom nav), `/Staff/Chats/{id}` (list hidden, back arrow).
+- Attach a PNG/PDF in chat: PUT goes to `staging/...`; message shows name + size, download link `/Files/Download/{id}?handler=Message`.
+
+Review fixes (M5 review, 2026-10-10):
+- Critical 1: `messages.seq bigint GENERATED ALWAYS AS IDENTITY` (migration `*_M5_MessageSeq`, index `(client_id, seq)`) is the poll cursor
+  (`seq > after`, ordered by seq). `SendAsync` and `RecordUploadAsync` insert inside a transaction that first takes
+  `pg_advisory_xact_lock(<client id as bigint>)`, so per chat seq order = commit order. Mark-read covers only `seq <=` the highest seq shown to
+  that viewer (returned or the cursor).
+- Should fix 1: the poll sends `visible` (hx-vals from `document.visibilityState`); background-tab polls fetch but do not mark read.
+  `chat.js` triggers an immediate poll when the tab becomes visible again.
+- Should fix 2: a file message carries the composer text as its caption (`upload.js` sends `caption` with Complete via `data-upload-caption`;
+  `IUploadService.CompleteAsync(user, ticket, caption, ct)`; over 4000 chars = 400 `Chat.Error.TooLong`).
+- Should fix 3: audit actions `Message.FileUploaded` / `Message.FileDownloaded`.
+- Nice to have: `hx-sync="this:queue last"` on the poll sentinel; `Staff.Chats.Profile` key (en + ms); no "file" fallback name
+  (downloads require `attachment_name`). Not done: Nice 4 (portal double client lookup per poll), Nice 5 (bubble sides) recorded in decisions.md.
+- New tests: Poll_LateCommittedEarlierStamp_StillShown_HiddenPollLeavesUnread, Poll_UncommittedInsert_NotSkippedNorMarkedRead,
+  ConcurrentSends_AllShownInSeqOrder, ChatFile_CarriesCaption_TooLongRefused. ChatTests 14/14 in 5 consecutive runs; full suite 133/133.
+- Tester: with the thread open in a background tab, a new client message must stay unread (pill stays) until the tab is shown.

@@ -17,9 +17,9 @@ public class CompleteModel : PageModel
 
     public IActionResult OnGet() => NotFound();
 
-    public async Task<IActionResult> OnPostAsync(string? ticket)
+    public async Task<IActionResult> OnPostAsync(string? ticket, string? caption)
     {
-        var r = await _uploads.CompleteAsync(User, ticket, HttpContext.RequestAborted);
+        var r = await _uploads.CompleteAsync(User, ticket, caption, HttpContext.RequestAborted);
         if (r.Error != UploadError.None) return UploadErrors.ToResult(r.Error, _l);
         return new JsonResult(new { ok = true, id = r.EntityId });
     }

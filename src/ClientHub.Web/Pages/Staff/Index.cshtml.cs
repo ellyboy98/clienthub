@@ -2,6 +2,7 @@ using ClientHub.Web.Data;
 using ClientHub.Web.Data.Entities;
 using ClientHub.Web.Services.Access;
 using ClientHub.Web.Services.Cases;
+using ClientHub.Web.Services.Chat;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,7 +16,8 @@ public class IndexModel : PageModel
 {
     private readonly AppDbContext _db;
     private readonly IAccessService _access;
-    public IndexModel(AppDbContext db, IAccessService access) { _db = db; _access = access; }
+    private readonly IChatService _chat;
+    public IndexModel(AppDbContext db, IAccessService access, IChatService chat) { _db = db; _access = access; _chat = chat; }
 
     public int ActiveCases { get; private set; }
     public int PendingDocuments { get; private set; }
@@ -27,15 +29,13 @@ public class IndexModel : PageModel
     {
         var cases = _access.CasesFor(User);
         var caseIds = cases.Select(c => c.Id);
-        var clients = _access.ClientsFor(User);
 
         ActiveCases = await cases.Active().CountAsync();
         // Q-03: requests waiting on the client (Pending or Rejected).
         PendingDocuments = await _db.DocumentRequests
             .CountAsync(r => caseIds.Contains(r.CaseId) && (r.Status == RequestStatus.Pending || r.Status == RequestStatus.Rejected));
         // Chats with at least one unread message sent by the client's own login.
-        UnreadChats = await clients.CountAsync(cl =>
-            _db.Messages.Any(m => m.ClientId == cl.Id && m.ReadAt == null && m.SenderId == cl.UserId));
+        UnreadChats = await _chat.UnreadAsync(User);
         BillsAwaiting = await _db.Bills.CountAsync(b => caseIds.Contains(b.CaseId) && b.Status == BillStatus.Sent);
         Rows = await cases.Active().ToRows(_db).OrderByDescending(r => r.LastUpdateAt ?? r.OpenedAt).ToListAsync();
     }

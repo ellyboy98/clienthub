@@ -88,6 +88,11 @@ public class Document : Entity
 public class Message : Entity
 {
     public Guid ClientId { get; set; }
+    /// <summary>
+    /// Identity, assigned by PostgreSQL at insert. Inserts into one chat hold a per-client advisory lock until commit, so within a
+    /// chat seq order is commit order: the poll cursor (seq &gt; after) can never skip a message.
+    /// </summary>
+    public long Seq { get; set; }
     public Guid SenderId { get; set; }
     public string Body { get; set; } = "";
     public string? AttachmentKey { get; set; }

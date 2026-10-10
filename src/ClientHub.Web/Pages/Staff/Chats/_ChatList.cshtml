@@ -1,0 +1,32 @@
+@model ClientHub.Web.Pages.Staff.Chats.ChatListModel
+@* Accessible clients only (ClientsFor), unread client messages as a gold pill (R-146). *@
+@if (Model.Items.Count == 0)
+{
+    var empty = new EmptyStateModel(L["Staff.Chats.Empty"]);
+    <partial name="Components/_EmptyState" model="empty" />
+}
+else
+{
+    <nav class="card overflow-hidden p-0" aria-label="@L["Staff.Chats.Title"]">
+        <ul class="divide-y divide-border">
+            @foreach (var i in Model.Items)
+            {
+                var active = i.ClientId == Model.ActiveClientId;
+                <li>
+                    <a href="/Staff/Chats/@i.ClientId" aria-current="@(active ? "page" : null)" data-chat-item="@i.ClientId"
+                       class="flex min-h-[56px] items-center justify-between gap-3 px-4 py-3 @(active ? "bg-bg-subtle" : "hover:bg-bg-page")">
+                        <span class="min-w-0">
+                            <span class="block truncate text-label">@i.ClientName</span>
+                            <span class="block text-caption text-text-secondary">@(i.LastAt is { } at ? Format.DateTime(at) : L["Chat.NoMessages"].Value)</span>
+                        </span>
+                        @if (i.Unread > 0)
+                        {
+                            <span class="inline-flex min-w-[24px] items-center justify-center rounded-full bg-brand-gold px-2 text-badge text-brand-navy" data-unread="@i.Unread"
+                                  aria-label="@string.Format(L["Chat.UnreadCount"].Value, i.Unread)">@i.Unread</span>
+                        }
+                    </a>
+                </li>
+            }
+        </ul>
+    </nav>
+}

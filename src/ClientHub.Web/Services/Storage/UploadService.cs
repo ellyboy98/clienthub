@@ -2,12 +2,13 @@ using System.Security.Claims;
 using ClientHub.Web.Data;
 using ClientHub.Web.Data.Entities;
 using ClientHub.Web.Services.Access;
+using ClientHub.Web.Services.Chat;
 using ClientHub.Web.Services.Documents;
 using Microsoft.EntityFrameworkCore;
 
 namespace ClientHub.Web.Services.Storage;
 
-public enum UploadError { None, NotFound, BadType, TooLarge, Empty, Missing, Expired }
+public enum UploadError { None, NotFound, BadType, TooLarge, Empty, Missing, Expired, CaptionTooLong }
 
 public record StartUploadResult(UploadError Error, string? Url = null, string? Ticket = null, string? ContentType = null);
 
@@ -20,7 +21,8 @@ public record CompleteUploadResult(UploadError Error, Guid? EntityId = null);
 public interface IUploadService
 {
     Task<StartUploadResult> StartAsync(ClaimsPrincipal user, UploadTarget target, string? fileName, long size, CancellationToken ct = default);
-    Task<CompleteUploadResult> CompleteAsync(ClaimsPrincipal user, string? ticket, CancellationToken ct = default);
+    /// <summary>caption: optional text for a Chat file message (ignored for other targets).</summary>
+    Task<CompleteUploadResult> CompleteAsync(ClaimsPrincipal user, string? ticket, string? caption = null, CancellationToken ct = default);
 }
 
 public class UploadService : IUploadService
@@ -31,12 +33,13 @@ public class UploadService : IUploadService
     private readonly IStorageService _storage;
     private readonly IUploadTicketProtector _tickets;
     private readonly IDocumentService _documents;
+    private readonly IChatService _chat;
     private readonly ILogger<UploadService> _log;
 
     public UploadService(AppDbContext db, IAccessService access, IStorageService storage, IUploadTicketProtector tickets,
-        IDocumentService documents, ILogger<UploadService> log)
+        IDocumentService documents, IChatService chat, ILogger<UploadService> log)
     {
-        _db = db; _access = access; _storage = storage; _tickets = tickets; _documents = documents; _log = log;
+        _db = db; _access = access; _storage = storage; _tickets = tickets; _documents = documents; _chat = chat; _log = log;
     }
 
     public async Task<StartUploadResult> StartAsync(ClaimsPrincipal user, UploadTarget target, string? fileName, long size, CancellationToken ct = default)
@@ -53,6 +56,7 @@ public class UploadService : IUploadService
         var key = target.Kind switch
         {
             UploadTargetKind.Case => StorageKeys.ForCase(target.CaseId!.Value, name),
+            UploadTargetKind.Chat => StorageKeys.ForChat(target.ClientId!.Value, name),
             _ => throw new InvalidOperationException("Target not supported yet.")
         };
         var staging = StorageKeys.ForStaging();
@@ -60,12 +64,13 @@ public class UploadService : IUploadService
         return new(UploadError.None, _storage.PresignPut(staging, contentType, PutExpiry), ticket, contentType);
     }
 
-    public async Task<CompleteUploadResult> CompleteAsync(ClaimsPrincipal user, string? protectedTicket, CancellationToken ct = default)
+    public async Task<CompleteUploadResult> CompleteAsync(ClaimsPrincipal user, string? protectedTicket, string? caption = null, CancellationToken ct = default)
     {
         var t = _tickets.Unprotect(protectedTicket);
         if (t is null) return new(UploadError.Expired);
         // The ticket belongs to one user and one target; access is checked again because it may have been revoked.
         if (t.UserId != AccessService.UserId(user) || !KeyMatchesTarget(t)) return new(UploadError.NotFound);
+        if (t.Target.Kind == UploadTargetKind.Chat && ChatService.CheckCaption(caption) != SendError.None) return new(UploadError.CaptionTooLong);
 
         // Completing the same ticket twice (double click, retry) returns the first row instead of writing another.
         var first = await ExistingAsync(user, t, ct);
@@ -97,6 +102,7 @@ public class UploadService : IUploadService
             id = t.Target.Kind switch
             {
                 UploadTargetKind.Case => await _documents.RecordUploadAsync(t, stored, ct),
+                UploadTargetKind.Chat => await _chat.RecordUploadAsync(t, stored, caption, ct),
                 _ => throw new InvalidOperationException("Target not supported yet.")
             };
         }
@@ -104,15 +110,22 @@ public class UploadService : IUploadService
         {
             // Two completions of the same ticket raced past the lookup; the other one wrote the row (same key, same object).
             _db.ChangeTracker.Clear();
-            return await ExistingAsync(user, t, ct) ?? throw new InvalidOperationException("Unique violation without an existing document.", e);
+            return await ExistingAsync(user, t, ct) ?? throw new InvalidOperationException("Unique violation without an existing row.", e);
         }
         await DeleteStagingAsync(t, ct);
         return new(UploadError.None, id);
     }
 
-    /// <summary>The document already written for this ticket's key: its id, 404 if removed or no longer accessible, null if none.</summary>
+    /// <summary>The row already written for this ticket's key: its id, 404 if removed or no longer accessible, null if none.</summary>
     private async Task<CompleteUploadResult?> ExistingAsync(ClaimsPrincipal user, UploadTicket t, CancellationToken ct)
     {
+        if (t.Target.Kind == UploadTargetKind.Chat)
+        {
+            var messageId = await _db.Messages.Where(m => m.AttachmentKey == t.Key).Select(m => (Guid?)m.Id).FirstOrDefaultAsync(ct);
+            if (messageId is null) return null;
+            return await _access.CanAccessClientAsync(user, t.Target.ClientId!.Value, ct)
+                ? new(UploadError.None, messageId) : new(UploadError.NotFound);
+        }
         var doc = await _db.Documents.IgnoreQueryFilters().Where(d => d.StorageKey == t.Key)
             .Select(d => new { d.Id, d.IsActive }).FirstOrDefaultAsync(ct);
         if (doc is null) return null;
@@ -125,7 +138,7 @@ public class UploadService : IUploadService
     {
         var problem = UploadRules.CheckStored(obj, t.ContentType);
         if (problem == UploadProblem.None) return null;
-        _log.LogWarning("Upload refused on completion: {Problem}, case {CaseId}, user {UserId}, {Size} bytes", problem, t.Target.CaseId, t.UserId, obj.Size);
+        _log.LogWarning("Upload refused on completion: {Problem}, {Kind} {TargetId}, user {UserId}, {Size} bytes", problem, t.Target.Kind, t.Target.CaseId ?? t.Target.ClientId, t.UserId, obj.Size);
         await _storage.DeleteAsync(key, ct);
         return new(problem switch { UploadProblem.TooLarge => UploadError.TooLarge, UploadProblem.Empty => UploadError.Empty, _ => UploadError.BadType });
     }
@@ -134,22 +147,26 @@ public class UploadService : IUploadService
     private async Task DeleteStagingAsync(UploadTicket t, CancellationToken ct)
     {
         try { await _storage.DeleteAsync(t.StagingKey, ct); }
-        catch (Exception e) { _log.LogWarning(e, "Could not delete staging object for case {CaseId}", t.Target.CaseId); }
+        catch (Exception e) { _log.LogWarning(e, "Could not delete staging object for {Kind} {TargetId}", t.Target.Kind, t.Target.CaseId ?? t.Target.ClientId); }
     }
 
     private static bool KeyMatchesTarget(UploadTicket t) => t.Target.Kind switch
     {
         UploadTargetKind.Case => t.Target.CaseId is { } c && t.Key.StartsWith(StorageKeys.CasePrefix(c), StringComparison.Ordinal)
             && t.StagingKey.StartsWith(StorageKeys.StagingPrefix, StringComparison.Ordinal),
+        UploadTargetKind.Chat => t.Target.ClientId is { } cl && t.Key.StartsWith(StorageKeys.ChatPrefix(cl), StringComparison.Ordinal)
+            && t.StagingKey.StartsWith(StorageKeys.StagingPrefix, StringComparison.Ordinal),
         _ => false
     };
 
     /// <summary>
     /// Case: anyone who can open the case. Clients only against a Pending or Rejected request of that case (R-046, R-049, Q-11);
-    /// firm uploads are plain case documents (no request). Chat (M5) and SettingsQr (M6) are not accepted yet.
+    /// firm uploads are plain case documents (no request). Chat: anyone who can open the client (R-067). SettingsQr (M6) is not accepted yet.
     /// </summary>
     private async Task<bool> CanUseTargetAsync(ClaimsPrincipal user, UploadTarget target, CancellationToken ct)
     {
+        if (target.Kind == UploadTargetKind.Chat)
+            return target.ClientId is { } clientId && await _access.CanAccessClientAsync(user, clientId, ct);
         if (target.Kind != UploadTargetKind.Case || target.CaseId is not { } caseId) return false;
         if (!await _access.CanAccessCaseAsync(user, caseId, ct)) return false;
         if (_access.IsFirm(user)) return target.RequestId is null;

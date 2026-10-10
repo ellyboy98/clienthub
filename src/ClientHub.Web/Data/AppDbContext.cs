@@ -93,6 +93,9 @@ public class AppDbContext : IdentityUserContext<AppUser, Guid>, IDataProtectionK
             e.HasOne<Client>().WithMany().HasForeignKey(x => x.ClientId).OnDelete(DeleteBehavior.Restrict);
             e.HasOne<AppUser>().WithMany().HasForeignKey(x => x.SenderId).OnDelete(DeleteBehavior.Restrict);
             e.HasIndex(x => new { x.ClientId, x.SentAt });
+            e.HasIndex(x => x.AttachmentKey).IsUnique();
+            e.Property(x => x.Seq).UseIdentityAlwaysColumn();
+            e.HasIndex(x => new { x.ClientId, x.Seq });
         });
         b.Entity<Bill>(e =>
         {
