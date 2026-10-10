@@ -12,6 +12,8 @@
     var saveStaff = new ButtonModel(L["Common.Save"], ButtonVariant.Secondary);
     var chat = new ButtonModel(L["Staff.Client.OpenChat"], ButtonVariant.Secondary, Href: $"/Staff/Chats/{c.ClientId}");
     var profile = new ButtonModel(L["Staff.Case.Profile"], ButtonVariant.Ghost, Href: $"/Staff/Clients/Details/{c.ClientId}");
+    var addRequest = new ButtonModel(L["Staff.Case.AddRequest"], ButtonVariant.Secondary);
+    var upload = FileUploadModel.ForCase("case-upload", L["Staff.Case.UploadDocument"], c.Id);
     var staffNames = c.StaffLinks.Select(s => s.User?.DisplayName).Where(n => n is not null).OrderBy(n => n).ToList();
 }
 <div class="space-y-5">
@@ -48,6 +50,70 @@
 
     <div class="grid gap-5 lg:grid-cols-3">
         <div class="space-y-5 lg:col-span-2">
+            <section class="card space-y-4" id="requests" data-requests>
+                <h2 class="text-h3">@L["Staff.Case.Requests"]</h2>
+                @if (Model.Requests.Count == 0)
+                {
+                    <p class="text-body-sm text-text-secondary">@L["Staff.Case.NoRequests"]</p>
+                }
+                else
+                {
+                    <ul class="divide-y divide-border">
+                        @foreach (var r in Model.Requests)
+                        {
+                            <li class="space-y-2 py-3" data-request="@r.Id">
+                                <div class="flex flex-wrap items-start justify-between gap-2">
+                                    <div class="min-w-0 space-y-1">
+                                        <p class="text-label">@r.Name</p>
+                                        @if (r.Note is not null) { <p class="whitespace-pre-line text-caption text-text-secondary">@r.Note</p> }
+                                        @if (r.Status == RequestStatus.Rejected && r.RejectionReason is not null)
+                                        {
+                                            <p class="text-caption text-danger">@L["Common.Request.Reason"]: @r.RejectionReason</p>
+                                        }
+                                    </div>
+                                    <div class="flex items-center gap-2">
+                                        <partial name="Components/_StatusBadge" model="r.Status" />
+                                        @if (r.Status == RequestStatus.Received && r.DocumentActive)
+                                        {
+                                            var view = new ButtonModel(L["Staff.Case.View"], ButtonVariant.Ghost, Href: $"/Files/Download/{r.DocumentId}");
+                                            <partial name="Components/_Button" model="view" />
+                                        }
+                                    </div>
+                                </div>
+                                @if (r.Status == RequestStatus.Received)
+                                {
+                                    var open = Model.RejectFor == r.Id;
+                                    var reject = new ButtonModel(L["Staff.Case.Reject"], ButtonVariant.Danger);
+                                    <details @(open ? "open" : "")>
+                                        <summary class="inline-flex min-h-[44px] cursor-pointer items-center text-label text-danger">@L["Staff.Case.Reject"]</summary>
+                                        <form method="post" asp-page-handler="Reject" asp-route-id="@c.Id" class="mt-2 space-y-2" novalidate>
+                                            <input type="hidden" name="requestId" value="@r.Id" />
+                                            <label for="reason-@r.Id" class="block text-badge text-text-secondary">@L["Staff.Case.RejectReason"]</label>
+                                            <textarea id="reason-@r.Id" name="reason" rows="2" class="input h-auto py-2 @(open && Model.RejectError is not null ? "input-error" : "")"></textarea>
+                                            @if (open && Model.RejectError is not null) { <p class="text-caption text-danger">@Model.RejectError</p> }
+                                            <partial name="Components/_Button" model="reject" />
+                                        </form>
+                                    </details>
+                                }
+                            </li>
+                        }
+                    </ul>
+                }
+                <form method="post" asp-page-handler="Request" asp-route-id="@c.Id" class="space-y-2 border-t border-border pt-4" novalidate>
+                    <h3 class="text-label">@L["Staff.Case.NewRequest"]</h3>
+                    <div>
+                        <label for="req-name" class="block text-badge text-text-secondary">@L["Staff.Case.RequestName"]</label>
+                        <input id="req-name" name="name" maxlength="200" class="input @(Model.RequestError is null ? "" : "input-error")" placeholder="@L["Staff.Case.RequestNamePlaceholder"]" />
+                        @if (Model.RequestError is not null) { <p class="text-caption text-danger">@Model.RequestError</p> }
+                    </div>
+                    <div>
+                        <label for="req-note" class="block text-badge text-text-secondary">@L["Staff.Case.RequestNote"]</label>
+                        <input id="req-note" name="note" maxlength="1000" class="input" />
+                    </div>
+                    <partial name="Components/_Button" model="addRequest" />
+                </form>
+            </section>
+
             <section class="card space-y-4" id="post-update">
                 <div>
                     <h2 class="text-h3">@L["Staff.Case.Updates"]</h2>
@@ -74,6 +140,45 @@
                             </li>
                         }
                     </ol>
+                }
+            </section>
+
+            <section class="card space-y-4" id="documents" data-documents>
+                <div class="flex flex-wrap items-start justify-between gap-3">
+                    <div>
+                        <h2 class="text-h3">@L["Staff.Case.Documents"]</h2>
+                        <p class="text-caption text-text-secondary">@L["Staff.Case.DocumentsVisible"]</p>
+                    </div>
+                    <partial name="Components/_FileUpload" model="upload" />
+                </div>
+                @if (Model.Documents.Count == 0)
+                {
+                    <p class="text-body-sm text-text-secondary">@L["Staff.Case.NoDocuments"]</p>
+                }
+                else
+                {
+                    <ul class="divide-y divide-border">
+                        @foreach (var d in Model.Documents)
+                        {
+                            var download = new ButtonModel(L["Common.Download"], ButtonVariant.Ghost, Href: $"/Files/Download/{d.Id}");
+                            var dialogId = $"remove-{d.Id:N}";
+                            var remove = new ButtonModel(L["Staff.Case.Remove"], ButtonVariant.Danger, Type: "button", OnClick: ConfirmDialogModel.OpenScript(dialogId));
+                            var confirm = new ConfirmDialogModel(dialogId, L["Staff.Case.RemoveTitle"], string.Format(L["Staff.Case.RemoveMessage"].Value, d.FileName),
+                                L["Staff.Case.Remove"], $"/Staff/Cases/Details/{c.Id}?handler=Remove",
+                                new Dictionary<string, string> { ["documentId"] = d.Id.ToString() });
+                            <li class="flex flex-wrap items-center justify-between gap-2 py-3" data-document="@d.Id">
+                                <div class="min-w-0">
+                                    <p class="truncate text-label">@d.FileName</p>
+                                    <p class="text-caption text-text-secondary">@Format.FileSize(d.SizeBytes) · @Format.Date(d.UploadedAt) · @d.UploadedBy</p>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <partial name="Components/_Button" model="download" />
+                                    <partial name="Components/_Button" model="remove" />
+                                </div>
+                                <partial name="Components/_ConfirmDialog" model="confirm" />
+                            </li>
+                        }
+                    </ul>
                 }
             </section>
         </div>

@@ -4,7 +4,9 @@ using ClientHub.Web.Services.Access;
 using ClientHub.Web.Services.Audit;
 using ClientHub.Web.Services.Cases;
 using ClientHub.Web.Services.Clients;
+using ClientHub.Web.Services.Documents;
 using ClientHub.Web.Services.Email;
+using ClientHub.Web.Services.Storage;
 using Microsoft.AspNetCore.HostFiltering;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
@@ -75,6 +77,8 @@ public static class WebServiceExtensions
                 o.Conventions.AuthorizePage("/Staff/Settings", LawyerOnly);
                 o.Conventions.AuthorizeFolder("/Portal", ClientOnly);
                 o.Conventions.AuthorizeFolder("/Account/Manage");
+                o.Conventions.AuthorizeFolder("/Uploads");
+                o.Conventions.AuthorizeFolder("/Files");
             })
             .AddViewLocalization()
             .AddDataAnnotationsLocalization(o =>
@@ -106,6 +110,11 @@ public static class WebServiceExtensions
         services.AddScoped<IEmailSender, SmtpEmailSender>();
         services.AddScoped<ICaseService, CaseService>();
         services.AddScoped<IClientService, ClientService>();
+        services.AddSingleton(StorageOptions.FromConfiguration(config));
+        services.AddSingleton<IStorageService, S3StorageService>();
+        services.AddSingleton<IUploadTicketProtector, UploadTicketProtector>();
+        services.AddScoped<IUploadService, UploadService>();
+        services.AddScoped<IDocumentService, DocumentService>();
         return services;
     }
 }

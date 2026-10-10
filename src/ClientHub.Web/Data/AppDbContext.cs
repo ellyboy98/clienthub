@@ -80,6 +80,9 @@ public class AppDbContext : IdentityUserContext<AppUser, Guid>, IDataProtectionK
         b.Entity<Document>(e =>
         {
             e.ToTable("documents");
+            // Nothing is deleted: removed documents are hidden everywhere unless a query opts out with IgnoreQueryFilters().
+            e.HasQueryFilter(x => x.IsActive);
+            e.HasIndex(x => x.StorageKey).IsUnique();
             e.HasOne<Case>().WithMany().HasForeignKey(x => x.CaseId).OnDelete(DeleteBehavior.Restrict);
             e.HasOne<AppUser>().WithMany().HasForeignKey(x => x.UploadedById).OnDelete(DeleteBehavior.Restrict);
             e.HasOne<AppUser>().WithMany().HasForeignKey(x => x.RemovedById).OnDelete(DeleteBehavior.Restrict);

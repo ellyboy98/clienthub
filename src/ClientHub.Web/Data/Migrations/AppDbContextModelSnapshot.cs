@@ -556,6 +556,10 @@ namespace ClientHub.Web.Data.Migrations
                     b.HasIndex("RemovedById")
                         .HasDatabaseName("ix_documents_removed_by_id");
 
+                    b.HasIndex("StorageKey")
+                        .IsUnique()
+                        .HasDatabaseName("ix_documents_storage_key");
+
                     b.HasIndex("UploadedById")
                         .HasDatabaseName("ix_documents_uploaded_by_id");
 

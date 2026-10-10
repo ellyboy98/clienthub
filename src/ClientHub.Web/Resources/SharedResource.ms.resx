@@ -236,4 +236,37 @@ Jika pautan telah tamat tempoh, gunakan "Lupa kata laluan" di halaman log masuk.
   <data name="Staff.ClientForm.EmailLocked" xml:space="preserve"><value>Ini e-mel log masuk klien. Hanya peguam atau pengurus pejabat boleh menukarnya.</value></data>
   <data name="Staff.Clients.EmailNotSent" xml:space="preserve"><value>Disimpan, tetapi e-mel tetapan kata laluan tidak dapat dihantar. Minta klien menggunakan "Lupa kata laluan" di halaman log masuk, atau cuba lagi kemudian.</value></data>
   <data name="Staff.Clients.EmailChangedLinkSent" xml:space="preserve"><value>Disimpan. Pautan tetapan kata laluan baharu telah dihantar ke alamat e-mel baharu.</value></data>
+  <data name="Upload.Error.BadType" xml:space="preserve"><value>Hanya fail PDF, Word (.docx), JPG atau PNG boleh dimuat naik.</value></data>
+  <data name="Upload.Error.TooLarge" xml:space="preserve"><value>Fail melebihi 20 MB.</value></data>
+  <data name="Upload.Error.Empty" xml:space="preserve"><value>Fail itu kosong.</value></data>
+  <data name="Upload.Error.Missing" xml:space="preserve"><value>Fail tidak diterima. Sila cuba lagi.</value></data>
+  <data name="Upload.Error.Expired" xml:space="preserve"><value>Muat naik mengambil masa terlalu lama. Sila cuba lagi.</value></data>
+  <data name="Upload.Error.Failed" xml:space="preserve"><value>Muat naik gagal. Sila cuba lagi.</value></data>
+  <data name="Upload.Uploading" xml:space="preserve"><value>Memuat naik</value></data>
+  <data name="Common.Download" xml:space="preserve"><value>Muat turun</value></data>
+  <data name="Common.Request.Reason" xml:space="preserve"><value>Sebab</value></data>
+  <data name="Staff.Case.Requests" xml:space="preserve"><value>Permintaan dokumen</value></data>
+  <data name="Staff.Case.NoRequests" xml:space="preserve"><value>Belum ada permintaan dokumen.</value></data>
+  <data name="Staff.Case.NewRequest" xml:space="preserve"><value>Minta dokumen daripada klien</value></data>
+  <data name="Staff.Case.RequestName" xml:space="preserve"><value>Nama dokumen</value></data>
+  <data name="Staff.Case.RequestNamePlaceholder" xml:space="preserve"><value>cth. Salinan kad pengenalan</value></data>
+  <data name="Staff.Case.RequestNote" xml:space="preserve"><value>Nota kepada klien (pilihan)</value></data>
+  <data name="Staff.Case.AddRequest" xml:space="preserve"><value>Tambah permintaan</value></data>
+  <data name="Staff.Case.RequestAdded" xml:space="preserve"><value>Permintaan ditambah. Klien akan melihatnya di halaman Utama.</value></data>
+  <data name="Staff.Case.View" xml:space="preserve"><value>Lihat</value></data>
+  <data name="Staff.Case.Reject" xml:space="preserve"><value>Tolak</value></data>
+  <data name="Staff.Case.RejectReason" xml:space="preserve"><value>Sebab (klien akan melihat ini)</value></data>
+  <data name="Staff.Case.RejectReasonRequired" xml:space="preserve"><value>Berikan sebab supaya klien tahu apa yang perlu dihantar.</value></data>
+  <data name="Staff.Case.RequestRejected" xml:space="preserve"><value>Permintaan ditolak. Klien boleh memuat naik semula.</value></data>
+  <data name="Staff.Case.Documents" xml:space="preserve"><value>Dokumen</value></data>
+  <data name="Staff.Case.DocumentsVisible" xml:space="preserve"><value>Setiap dokumen di sini boleh dilihat oleh klien.</value></data>
+  <data name="Staff.Case.NoDocuments" xml:space="preserve"><value>Belum ada dokumen.</value></data>
+  <data name="Staff.Case.UploadDocument" xml:space="preserve"><value>Muat naik dokumen</value></data>
+  <data name="Staff.Case.Remove" xml:space="preserve"><value>Alih keluar</value></data>
+  <data name="Staff.Case.RemoveTitle" xml:space="preserve"><value>Alih keluar dokumen ini?</value></data>
+  <data name="Staff.Case.RemoveMessage" xml:space="preserve"><value>"{0}" akan disembunyikan daripada kes untuk semua orang. Fail itu disimpan dalam rekod.</value></data>
+  <data name="Staff.Case.DocumentRemoved" xml:space="preserve"><value>Dokumen dialih keluar. Fail itu disimpan dalam rekod.</value></data>
+  <data name="Portal.Case.Reupload" xml:space="preserve"><value>Muat naik semula</value></data>
+  <data name="Portal.Case.NoDocuments" xml:space="preserve"><value>Belum ada dokumen dikongsi.</value></data>
+  <data name="Portal.Case.ReceivedRequests" xml:space="preserve"><value>Dokumen yang telah anda hantar</value></data>
 </root>

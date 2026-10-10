@@ -11,7 +11,7 @@ Start with Prompt 1 in KICKOFF.md once the 5-hour usage window has reset.
 | M1 | Job A: foundation (deployer) | 20 min | built and verified (dev storage is SeaweedFS), not committed |
 | M2 | Shell, sign-in and access rules | 30 min | built, review fixes applied, 39/39 tests green, not committed |
 | M3 | Clients and cases | 30 min | built, review fixes applied, 75/75 tests green, not committed |
-| M4 | Storage and documents | 30 min | not started |
+| M4 | Storage and documents | 30 min | built, review fixes applied, 119/119 tests green, not committed |
 | M5 | Chat | 20 min | not started |
 | M6 | Bills and Settings | 25 min | not started |
 | M7 | Notifications and email | 20 min | not started |
@@ -108,3 +108,51 @@ Review fixes (M3 review, 2026-10-10):
 - New tests in `ClientTests`: EmailChange_OldSetPasswordLinkFails_NewLinkSent, Staff_ChangeEmail_404_OtherFieldsSave, Create_EmailFails_ClientCreated_WarningShown; EditEmail_UpdatesLoginEmail now runs as OM.
 - Still open from the review (left on purpose): Should fix 1 (status/update and audit row in one save), Nice-to-have 1-6.
 
+
+## M4 Storage and documents (developer, 2026-10-10)
+
+Built:
+- Storage: `Services/Storage/{StorageOptions,IStorageService,S3StorageService,UploadRules,UploadTicket,UploadTicketProtector,UploadService}.cs`.
+  `S3StorageService`: two AWSSDK.S3 (4.0.104.2) clients (server on S3_ENDPOINT, signer on S3_PUBLIC_ENDPOINT), path style, checksums WHEN_REQUIRED,
+  content type signed into the PUT. `UploadRules` (type from extension, 20 MB, file-name sanitising) + `StorageKeys` (only key builder).
+  `UploadTicketProtector`: Data Protection purpose `ClientHub.Upload`, time limited (15 min; PUT URL 10 min). `UploadService` (`IUploadService`):
+  start/complete for every target; only `Case` accepted now (Chat = M5, SettingsQr = M6 add their branches in `CanUseTargetAsync`/`StartAsync`/`CompleteAsync`).
+- Documents: `Services/Documents/DocumentService.cs` (requests list/add/reject, documents list, remove, download URL + audit, `RecordUploadAsync`).
+  `// NOTIFY:` markers for R-088, R-089, R-090.
+- Data: global query filter `documents.is_active`; unique index on `documents.storage_key` (migration `*_M4_DocumentStorageKeyIndex`).
+- Pages: `Uploads/{Start,Complete}` (JSON, antiforgery, 404 on access failure, 400 + localised `error` otherwise), `Uploads/UploadErrors.cs`,
+  `Files/Download/{id}` (302 to presigned GET, `Cache-Control: no-store`). Folders `/Uploads` and `/Files` require sign-in.
+  Staff case page: Document requests card (add, Received → View/Reject with reason), Documents card (Upload, Download, Remove with confirm dialog).
+  Portal case page: open requests card at top (reason, Upload/Re-upload), Documents tab with Download. Portal Home: gold Upload per pending request now uploads in place.
+- UI: `_FileUpload` partial rewritten (`FileUploadModel.ForCase(...)`), `wwwroot/js/upload.js` (type/size check, start, XHR PUT with progress bar, complete, reload),
+  loaded from `_Head`. `Format.FileSize`. `IAccessService.IsFirm`. 33 new resx keys (en + ms).
+- Tests: `Storage/StorageServiceTests.cs` (5, against SeaweedFS), `Storage/UploadTicketTests.cs` (17 incl. theories), `Documents/DocumentFlowTests.cs` (17);
+  `Support/TestStorage.cs`; `AppFactory` points S3 at the `clienthub-test` bucket with the public endpoint = internal endpoint. Full suite 114/114.
+
+Skipped / left:
+- Staff case page "tabs on phone" (R-143): sections stack on narrow screens instead. Bills section / "+ New bill": M6.
+- After an upload the page reloads (no HTMX swap). Chat and Settings QR targets: M5/M6. Save to case: cut.
+
+Tester notes:
+- Run `npm run css:build` (new classes). Browser checks need the dev app on http://localhost:5000 (CORS allows only that origin).
+- PUT goes to `http://localhost:9000/clienthub-files/cases/<caseId>/<uuid>/<name>`; check in the network tab. A 25 MB file or `.exe` is refused in the browser before any request.
+- Remove: confirm dialog says the file is kept; after removal the old `/Files/Download/{id}` returns 404 and the object is still in the bucket.
+- Check at 390px: `/Portal` (upload widget under each needed item), `/Portal/Cases/Details/{id}` and `?tab=documents`.
+
+Review/test fixes (M4, 2026-10-10):
+- Critical 1: staging keys. The browser PUTs to `staging/<uuid>/<uuid>` (no file name); Complete heads and validates it, `CopyObject`s to the final
+  `cases/<id>/<uuid>/<name>` key (known only to the server, inside the encrypted ticket), heads and validates the copy again, writes the row, then
+  deletes the staging object. Re-using the PUT URL only touches staging. `UploadTicket` gained `StagingKey`; `StorageKeys.ForStaging`.
+- Test failure: the portal case page lists Received requests read only ("Documents you have sent", status pill, no upload); Home still lists only Pending/Rejected.
+- Should fix 1: refusal log lines carry case id, user id, size and problem only (no key, no file name).
+- Should fix 3: a concurrent completion that hits the `storage_key` unique index returns the first document; a completion that finds staging already
+  cleaned up also returns the existing document. Nice-to-have 2: completing a ticket whose document was removed is 404.
+- New tests: PutUrl_ReusedAfterComplete_DoesNotChangeDocument, Complete_Concurrent_ReturnsOneDocument, Complete_AfterRemoval_404,
+  StagingKey_HasNoFileNameAndIsUnguessable; Complete_WithRequest_SetsReceivedAndLinks now checks Received on the portal case page and the staff page. Suite 118/118.
+- Deployer (M8): add an R2 lifecycle rule on the files bucket expiring `staging/` after 1 day (covers abandoned and refused uploads, review Should fix 2).
+  Optional for dev: the same rule on SeaweedFS is not needed.
+- Left: Should fix 2 Content-Length binding (not done; staging + lifecycle covers orphans, see decisions.md), Nice-to-have 1 (magic bytes) and 3 (stale reject shows 400).
+- Race fix (tester, intermittent Complete_Concurrent_ReturnsOneDocument): `IStorageService.CopyAsync` returns false when the source is gone; a missing
+  staging object on head or copy re-reads the document by final key and returns it, else 400. New test Copy_MissingSource_ReturnsFalse. Flow + storage tests 10/10 runs green.
+
+- Seen once in a full-suite run after the race fix: M3 `CaseTests.Create_StatusNew_OpenedAtSet` failed (passed alone and in the next 2 full runs). Likely its 1-second time window under load; not M4 code, left for the tester to watch.

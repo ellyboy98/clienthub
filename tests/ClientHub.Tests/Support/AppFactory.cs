@@ -31,6 +31,14 @@ public class AppFactory : WebApplicationFactory<Program>, IAsyncLifetime
         builder.UseSetting("REQUIRE_FIRM_2FA", RequireFirm2fa ? "true" : "false");
         builder.UseSetting("APP_BASE_URL", BaseUrl);
         builder.UseSetting("SECURITY_STAMP_INTERVAL_SECONDS", "0");
+        // Test bucket; presigned URLs are signed for the endpoint the tests can reach (no browser-only localhost:9000).
+        var storage = TestStorage.Options();
+        builder.UseSetting("S3_ENDPOINT", storage.Endpoint);
+        builder.UseSetting("S3_PUBLIC_ENDPOINT", storage.Endpoint);
+        builder.UseSetting("S3_REGION", storage.Region);
+        builder.UseSetting("S3_BUCKET", storage.Bucket);
+        builder.UseSetting("S3_ACCESS_KEY_ID", storage.AccessKeyId);
+        builder.UseSetting("S3_SECRET_ACCESS_KEY", storage.SecretAccessKey);
         builder.ConfigureLogging(l => l.ClearProviders());
         builder.ConfigureTestServices(s => s.AddSingleton<IEmailSender>(Emails));
     }

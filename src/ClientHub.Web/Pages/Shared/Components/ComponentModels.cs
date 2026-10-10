@@ -32,8 +32,19 @@ public record ConfirmDialogModel(string Id, string Title, string Message, string
     public static string OpenScript(string id) => $"document.getElementById('{id}').showModal()";
 }
 
-/// <summary>Markup hook for wwwroot/js/upload.js (built in M4): data attributes describe the upload target.</summary>
-public record FileUploadModel(string Id, string Label, string StartUrl, string CompleteUrl, bool Accent = false);
+/// <summary>
+/// File picker wired by wwwroot/js/upload.js: start → PUT with progress → complete, then the page reloads.
+/// Target fields are posted to /Uploads/Start as they are (kind, caseId, requestId); the server builds the key.
+/// </summary>
+public record FileUploadModel(string Id, string Label, IReadOnlyDictionary<string, string> Target, bool Accent = false, bool ShowHint = true)
+{
+    public static FileUploadModel ForCase(string id, string label, Guid caseId, Guid? requestId = null, bool accent = false, bool showHint = true)
+    {
+        var target = new Dictionary<string, string> { ["kind"] = "Case", ["caseId"] = caseId.ToString() };
+        if (requestId is { } r) target["requestId"] = r.ToString();
+        return new(id, label, target, accent, showHint);
+    }
+}
 
 /// <summary>Case card in the portal (R-151, R-155): title, status badge, type, opened date, last update.</summary>
 public record CaseCardModel(string Title, string Status, string CaseType, DateTime OpenedAt, DateTime? LastUpdateAt, string Href);

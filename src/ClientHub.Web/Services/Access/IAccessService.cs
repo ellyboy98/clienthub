@@ -22,4 +22,7 @@ public interface IAccessService
     bool IsLawyerOrOfficeManager(ClaimsPrincipal user);
 
     bool CanManageSettings(ClaimsPrincipal user);
+
+    /// <summary>Lawyer, OfficeManager or Staff (uploads without a request, request handling, removal).</summary>
+    bool IsFirm(ClaimsPrincipal user);
 }

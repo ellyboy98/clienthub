@@ -236,4 +236,37 @@ If the link has expired, use "Forgot password" on the sign-in page.</value></dat
   <data name="Staff.ClientForm.EmailLocked" xml:space="preserve"><value>This is the client's login email. Only a lawyer or the office manager can change it.</value></data>
   <data name="Staff.Clients.EmailNotSent" xml:space="preserve"><value>Saved, but the set-password email could not be sent. Ask the client to use "Forgot password" on the sign-in page, or try again later.</value></data>
   <data name="Staff.Clients.EmailChangedLinkSent" xml:space="preserve"><value>Saved. A new set-password link was sent to the new email address.</value></data>
+  <data name="Upload.Error.BadType" xml:space="preserve"><value>Only PDF, Word (.docx), JPG or PNG files can be uploaded.</value></data>
+  <data name="Upload.Error.TooLarge" xml:space="preserve"><value>The file is larger than 20 MB.</value></data>
+  <data name="Upload.Error.Empty" xml:space="preserve"><value>The file is empty.</value></data>
+  <data name="Upload.Error.Missing" xml:space="preserve"><value>The file did not arrive. Please try again.</value></data>
+  <data name="Upload.Error.Expired" xml:space="preserve"><value>The upload took too long. Please try again.</value></data>
+  <data name="Upload.Error.Failed" xml:space="preserve"><value>The upload failed. Please try again.</value></data>
+  <data name="Upload.Uploading" xml:space="preserve"><value>Uploading</value></data>
+  <data name="Common.Download" xml:space="preserve"><value>Download</value></data>
+  <data name="Common.Request.Reason" xml:space="preserve"><value>Reason</value></data>
+  <data name="Staff.Case.Requests" xml:space="preserve"><value>Document requests</value></data>
+  <data name="Staff.Case.NoRequests" xml:space="preserve"><value>No document requests yet.</value></data>
+  <data name="Staff.Case.NewRequest" xml:space="preserve"><value>Ask the client for a document</value></data>
+  <data name="Staff.Case.RequestName" xml:space="preserve"><value>Document name</value></data>
+  <data name="Staff.Case.RequestNamePlaceholder" xml:space="preserve"><value>e.g. Copy of IC</value></data>
+  <data name="Staff.Case.RequestNote" xml:space="preserve"><value>Note to client (optional)</value></data>
+  <data name="Staff.Case.AddRequest" xml:space="preserve"><value>Add request</value></data>
+  <data name="Staff.Case.RequestAdded" xml:space="preserve"><value>Request added. The client will see it on their Home page.</value></data>
+  <data name="Staff.Case.View" xml:space="preserve"><value>View</value></data>
+  <data name="Staff.Case.Reject" xml:space="preserve"><value>Reject</value></data>
+  <data name="Staff.Case.RejectReason" xml:space="preserve"><value>Reason (the client will see this)</value></data>
+  <data name="Staff.Case.RejectReasonRequired" xml:space="preserve"><value>Give a reason so the client knows what to send.</value></data>
+  <data name="Staff.Case.RequestRejected" xml:space="preserve"><value>Request rejected. The client can upload again.</value></data>
+  <data name="Staff.Case.Documents" xml:space="preserve"><value>Documents</value></data>
+  <data name="Staff.Case.DocumentsVisible" xml:space="preserve"><value>Every document here is visible to the client.</value></data>
+  <data name="Staff.Case.NoDocuments" xml:space="preserve"><value>No documents yet.</value></data>
+  <data name="Staff.Case.UploadDocument" xml:space="preserve"><value>Upload document</value></data>
+  <data name="Staff.Case.Remove" xml:space="preserve"><value>Remove</value></data>
+  <data name="Staff.Case.RemoveTitle" xml:space="preserve"><value>Remove this document?</value></data>
+  <data name="Staff.Case.RemoveMessage" xml:space="preserve"><value>"{0}" will be hidden from the case for everyone. The file is kept in the records.</value></data>
+  <data name="Staff.Case.DocumentRemoved" xml:space="preserve"><value>Document removed. The file is kept in the records.</value></data>
+  <data name="Portal.Case.Reupload" xml:space="preserve"><value>Re-upload</value></data>
+  <data name="Portal.Case.NoDocuments" xml:space="preserve"><value>No documents shared yet.</value></data>
+  <data name="Portal.Case.ReceivedRequests" xml:space="preserve"><value>Documents you have sent</value></data>
 </root>

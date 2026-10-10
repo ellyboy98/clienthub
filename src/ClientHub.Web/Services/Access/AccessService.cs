@@ -55,4 +55,6 @@ public class AccessService : IAccessService
         Role(user) is Roles.Lawyer or Roles.OfficeManager;
 
     public bool CanManageSettings(ClaimsPrincipal user) => Role(user) == Roles.Lawyer;
+
+    public bool IsFirm(ClaimsPrincipal user) => Role(user) is Roles.Lawyer or Roles.OfficeManager or Roles.Staff;
 }

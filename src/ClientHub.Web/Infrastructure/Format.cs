@@ -13,5 +13,12 @@ public static class Format
     public static string Date(System.DateTime utc) => ToLocal(utc).ToString("dd/MM/yyyy", CultureInfo.InvariantCulture);
     public static string Date(System.DateTime? utc) => utc is null ? "" : Date(utc.Value);
     public static string DateTime(System.DateTime utc) => ToLocal(utc).ToString("dd/MM/yyyy HH:mm", CultureInfo.InvariantCulture);
+    /// <summary>File size for document lists: "820 KB", "1.4 MB".</summary>
+    public static string FileSize(long bytes) => bytes switch
+    {
+        < 1024 => bytes.ToString(CultureInfo.InvariantCulture) + " B",
+        < 1024 * 1024 => Math.Ceiling(bytes / 1024d).ToString("0", CultureInfo.InvariantCulture) + " KB",
+        _ => (bytes / (1024d * 1024d)).ToString("0.0", CultureInfo.InvariantCulture) + " MB"
+    };
     public static string Rm(decimal amount) => "RM " + amount.ToString("#,##0.00", CultureInfo.InvariantCulture);
 }

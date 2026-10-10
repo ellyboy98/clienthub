@@ -2,6 +2,7 @@ using ClientHub.Web.Data;
 using ClientHub.Web.Data.Entities;
 using ClientHub.Web.Services.Access;
 using ClientHub.Web.Services.Cases;
+using ClientHub.Web.Services.Documents;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
@@ -15,11 +16,12 @@ public class DetailsModel : PageModel
     private readonly AppDbContext _db;
     private readonly IAccessService _access;
     private readonly ICaseService _cases;
+    private readonly IDocumentService _documents;
     private readonly IStringLocalizer<SharedResource> _l;
 
-    public DetailsModel(AppDbContext db, IAccessService access, ICaseService cases, IStringLocalizer<SharedResource> l)
+    public DetailsModel(AppDbContext db, IAccessService access, ICaseService cases, IDocumentService documents, IStringLocalizer<SharedResource> l)
     {
-        _db = db; _access = access; _cases = cases; _l = l;
+        _db = db; _access = access; _cases = cases; _documents = documents; _l = l;
     }
 
     [BindProperty(SupportsGet = true)] public Guid Id { get; set; }
@@ -30,6 +32,11 @@ public class DetailsModel : PageModel
     public List<Choice> StaffChoices { get; private set; } = new();
     [TempData] public string? Notice { get; set; }
     public string? UpdateError { get; private set; }
+    public List<RequestRow> Requests { get; private set; } = new();
+    public List<DocumentRow> Documents { get; private set; } = new();
+    public string? RequestError { get; private set; }
+    public Guid? RejectFor { get; private set; }
+    public string? RejectError { get; private set; }
 
     private async Task<bool> LoadAsync()
     {
@@ -47,6 +54,8 @@ public class DetailsModel : PageModel
         Updates = await _db.CaseUpdates.Where(u => u.CaseId == Id).OrderByDescending(u => u.PostedAt)
             .Join(_db.Users, u => u.AuthorId, a => a.Id, (u, a) => new UpdateRow(u.Body, u.PostedAt, a.DisplayName))
             .ToListAsync();
+        Requests = await _documents.RequestsAsync(Id);
+        Documents = await _documents.DocumentsAsync(Id);
         if (CanAssign)
         {
             var assigned = Case.StaffLinks.Select(s => s.UserId).ToHashSet();
@@ -95,6 +104,47 @@ public class DetailsModel : PageModel
         var error = await _cases.SetStaffAsync(Case, staffIds);
         if (error != CaseError.None) return BadRequest();
         Notice = _l["Common.Saved"].Value;
+        return RedirectToPage(new { id = Id });
+    }
+
+    /// <summary>R-045: add a document request (name, optional note); it starts Pending.</summary>
+    public async Task<IActionResult> OnPostRequestAsync(string? name, string? note)
+    {
+        if (!await LoadAsync()) return NotFound();
+        if (string.IsNullOrWhiteSpace(name) || name.Length > DocumentService.NameMax || (note?.Length ?? 0) > DocumentService.NoteMax)
+        {
+            RequestError = _l[string.IsNullOrWhiteSpace(name) ? "Validation.Required" : "Validation.TooLong"];
+            await LoadViewAsync();
+            return Page();
+        }
+        await _documents.AddRequestAsync(Id, name, note);
+        Notice = _l["Staff.Case.RequestAdded"].Value;
+        return RedirectToPage(new { id = Id });
+    }
+
+    /// <summary>R-048: reject a Received request; a reason is required and shown to the client.</summary>
+    public async Task<IActionResult> OnPostRejectAsync(Guid requestId, string? reason)
+    {
+        if (!await LoadAsync()) return NotFound();
+        if (!await _db.DocumentRequests.AnyAsync(r => r.Id == requestId && r.CaseId == Id)) return NotFound();
+        if (string.IsNullOrWhiteSpace(reason) || reason.Length > DocumentService.ReasonMax)
+        {
+            RejectFor = requestId;
+            RejectError = _l[string.IsNullOrWhiteSpace(reason) ? "Staff.Case.RejectReasonRequired" : "Validation.TooLong"];
+            await LoadViewAsync();
+            return Page();
+        }
+        if (!await _documents.RejectAsync(Id, requestId, reason)) return BadRequest();
+        Notice = _l["Staff.Case.RequestRejected"].Value;
+        return RedirectToPage(new { id = Id });
+    }
+
+    /// <summary>R-051, R-052: remove after confirmation; is_active = false, audit row, the stored object stays.</summary>
+    public async Task<IActionResult> OnPostRemoveAsync(Guid documentId)
+    {
+        if (!await LoadAsync() || !_access.IsFirm(User)) return NotFound();
+        if (!await _documents.RemoveAsync(Id, documentId, AccessService.UserId(User)!.Value)) return NotFound();
+        Notice = _l["Staff.Case.DocumentRemoved"].Value;
         return RedirectToPage(new { id = Id });
     }
 }

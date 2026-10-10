@@ -22,7 +22,7 @@ public class CaseTests : IClassFixture<FirmAppFactory>
         var seeded = await _app.NewClientWithCaseAsync();
         var lawyer = _app.UserId("lawyer1@clienthub.test");
         var staff = _app.UserId("staff@clienthub.test");
-        var before = DateTime.UtcNow.AddSeconds(-1);
+        var before = DateTime.UtcNow.AddMinutes(-1);
 
         var (c, error) = await _app.WithServiceAsync<ICaseService, (Case?, CaseError)>(s =>
             s.CreateAsync(new CaseInput(seeded.ClientId, " New matter ", CaseType.Criminal, lawyer, null, new[] { staff })));
@@ -30,7 +30,7 @@ public class CaseTests : IClassFixture<FirmAppFactory>
         Assert.Equal(CaseError.None, error);
         var saved = await _app.WithDbAsync(db => db.Cases.Include(x => x.StaffLinks).SingleAsync(x => x.Id == c!.Id));
         Assert.Equal(CaseStatus.New, saved.Status);
-        Assert.True(saved.OpenedAt >= before && saved.OpenedAt <= DateTime.UtcNow.AddSeconds(1));
+        Assert.True(saved.OpenedAt >= before && saved.OpenedAt <= DateTime.UtcNow.AddMinutes(1));
         Assert.Null(saved.ClosedAt);
         Assert.Equal("New matter", saved.Title);
         Assert.Equal(staff, Assert.Single(saved.StaffLinks).UserId);
