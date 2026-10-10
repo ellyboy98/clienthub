@@ -1,0 +1,74 @@
+@page "{id:guid}"
+@model ClientHub.Web.Pages.Portal.Bills.DetailsModel
+@using ClientHub.Web.Data.Entities
+@{
+    var b = Model.Bill;
+    ViewData["Title"] = b.BillNo;
+    var paid = b.Status == BillStatus.Paid;
+    var bank = new BankDetailsModel(Model.Bank, b.BillNo);
+    var print = new ButtonModel(L["Portal.Bill.Print"], ButtonVariant.Secondary, Type: "button", FullWidth: true, OnClick: "window.print()");
+}
+@section Header {
+    <header class="bg-brand-navy px-5 pb-6 pt-4 text-white">
+        <div class="no-print mx-auto flex max-w-2xl items-center justify-between">
+            <a href="/Portal/Bills" class="inline-flex h-11 w-11 items-center justify-center rounded-full text-white" aria-label="@L["Common.Back"]">
+                <svg class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M15 18l-6-6 6-6"/></svg>
+            </a>
+            <partial name="/Pages/Portal/_PortalHeader.cshtml" />
+        </div>
+        <div class="mx-auto mt-3 max-w-2xl space-y-2">
+            <p class="print-only hidden text-h3">@Model.Bank.FirmName</p>
+            <h1 class="text-h1 tabular-nums">@b.BillNo</h1>
+            <div class="flex flex-wrap items-center gap-2">
+                <partial name="Components/_StatusBadge" model="b.Status" />
+                <span class="text-caption text-white/70">@Model.CaseTitle · @L["Bill.Issued"] @Format.Date(b.IssuedAt)</span>
+            </div>
+        </div>
+    </header>
+}
+<div class="space-y-4" data-bill="@b.Id">
+    <section class="card space-y-1 bg-brand-gold-soft" data-amount-due>
+        <p class="text-badge text-text-secondary">@L[paid ? "Portal.Bill.AmountPaid" : "Portal.Bill.AmountDue"]</p>
+        <p class="text-display tabular-nums">@Format.Rm(b.Total)</p>
+        @if (paid)
+        {
+            <p class="text-caption text-text-secondary">@L["Bill.PaidOn"] @Format.Date(b.PaidAt)</p>
+        }
+    </section>
+
+    <section class="card space-y-3">
+        <h2 class="text-h3">@L["Portal.Bill.Details"]</h2>
+        <ul class="divide-y divide-border">
+            @foreach (var line in b.Lines)
+            {
+                var typeBadge = new BadgeModel(L["LineType." + line.LineType], Tone.Neutral);
+                <li class="flex items-start justify-between gap-3 py-3" data-line="@line.Id">
+                    <div class="min-w-0 space-y-1">
+                        <partial name="Components/_Badge" model="typeBadge" />
+                        <p class="text-body-sm">@line.Description</p>
+                    </div>
+                    <span class="shrink-0 text-body-sm tabular-nums">@Format.Rm(line.Amount)</span>
+                </li>
+            }
+        </ul>
+        <div class="flex items-center justify-between border-t border-border pt-3">
+            <span class="text-label">@L["Bill.Total"]</span>
+            <span class="text-h2 tabular-nums" data-bill-total>@Format.Rm(b.Total)</span>
+        </div>
+    </section>
+
+    @if (b.NoteToClient is not null)
+    {
+        <section class="card space-y-1">
+            <h2 class="text-h3">@L["Portal.Bill.Note"]</h2>
+            <p class="whitespace-pre-line text-body-sm">@b.NoteToClient</p>
+        </section>
+    }
+
+    <section class="card space-y-3">
+        <h2 class="text-h3">@L["Portal.Bill.HowToPay"]</h2>
+        <partial name="Components/_BankDetails" model="bank" />
+    </section>
+
+    <div class="no-print"><partial name="Components/_Button" model="print" /></div>
+</div>

@@ -1,0 +1,266 @@
+@page "{id:guid}"
+@model ClientHub.Web.Pages.Staff.Cases.DetailsModel
+@using ClientHub.Web.Data.Entities
+@{
+    var c = Model.Case;
+    ViewData["Title"] = c.Title;
+    var progress = new CaseProgressModel(c.Status);
+    var changeStatus = new ButtonModel(L["Staff.Case.ChangeStatus"], ButtonVariant.Secondary);
+    var postUpdateJump = new ButtonModel(L["Staff.Case.PostUpdate"], Href: "#post-update");
+    var postUpdate = new ButtonModel(L["Staff.Case.PostUpdate"]);
+    var edit = new ButtonModel(L["Common.Edit"], ButtonVariant.Ghost, Href: $"/Staff/Cases/Edit/{c.Id}");
+    var saveStaff = new ButtonModel(L["Common.Save"], ButtonVariant.Secondary);
+    var chat = new ButtonModel(L["Staff.Client.OpenChat"], ButtonVariant.Secondary, Href: $"/Staff/Chats/{c.ClientId}");
+    var profile = new ButtonModel(L["Staff.Case.Profile"], ButtonVariant.Ghost, Href: $"/Staff/Clients/Details/{c.ClientId}");
+    var addRequest = new ButtonModel(L["Staff.Case.AddRequest"], ButtonVariant.Secondary);
+    var upload = FileUploadModel.ForCase("case-upload", L["Staff.Case.UploadDocument"], c.Id);
+    var newBill = new ButtonModel(L["Staff.Case.NewBill"], ButtonVariant.Secondary);
+    var staffNames = c.StaffLinks.Select(s => s.User?.DisplayName).Where(n => n is not null).OrderBy(n => n).ToList();
+}
+<div class="space-y-5">
+    <nav class="text-caption text-text-secondary">
+        <a href="/Staff/Clients" class="hover:underline">@L["Staff.Clients.Title"]</a> /
+        <a href="/Staff/Clients/Details/@c.ClientId" class="hover:underline">@c.Client!.Name</a> / @c.Title
+    </nav>
+    <div class="flex flex-wrap items-start justify-between gap-3">
+        <div class="space-y-1">
+            <div class="flex flex-wrap items-center gap-3">
+                <h1 class="text-h1">@c.Title</h1>
+                <partial name="Components/_StatusBadge" model="c.Status" />
+            </div>
+        </div>
+        <div class="flex flex-wrap items-center gap-2">
+            <partial name="Components/_Button" model="postUpdateJump" />
+            <form method="post" asp-page-handler="Status" asp-route-id="@c.Id" class="flex items-center gap-2">
+                <label for="status" class="sr-only">@L["Staff.Case.ChangeStatus"]</label>
+                <select id="status" name="status" class="input w-auto">
+                    @foreach (var s in CaseStatus.All)
+                    {
+                        <option value="@s" selected="@(s == c.Status)">@L[StatusTone.Key(s)]</option>
+                    }
+                </select>
+                <partial name="Components/_Button" model="changeStatus" />
+            </form>
+        </div>
+    </div>
+    @if (Model.Notice is not null)
+    {
+        <p class="rounded-control bg-success-bg px-3 py-2 text-body-sm text-success" role="status">@Model.Notice</p>
+    }
+    <section class="card"><partial name="Components/_CaseProgress" model="progress" /></section>
+
+    <div class="grid gap-5 lg:grid-cols-3">
+        <div class="space-y-5 lg:col-span-2">
+            <section class="card space-y-4" id="requests" data-requests>
+                <h2 class="text-h3">@L["Staff.Case.Requests"]</h2>
+                @if (Model.Requests.Count == 0)
+                {
+                    <p class="text-body-sm text-text-secondary">@L["Staff.Case.NoRequests"]</p>
+                }
+                else
+                {
+                    <ul class="divide-y divide-border">
+                        @foreach (var r in Model.Requests)
+                        {
+                            <li class="space-y-2 py-3" data-request="@r.Id">
+                                <div class="flex flex-wrap items-start justify-between gap-2">
+                                    <div class="min-w-0 space-y-1">
+                                        <p class="text-label">@r.Name</p>
+                                        @if (r.Note is not null) { <p class="whitespace-pre-line text-caption text-text-secondary">@r.Note</p> }
+                                        @if (r.Status == RequestStatus.Rejected && r.RejectionReason is not null)
+                                        {
+                                            <p class="text-caption text-danger">@L["Common.Request.Reason"]: @r.RejectionReason</p>
+                                        }
+                                    </div>
+                                    <div class="flex items-center gap-2">
+                                        <partial name="Components/_StatusBadge" model="r.Status" />
+                                        @if (r.Status == RequestStatus.Received && r.DocumentActive)
+                                        {
+                                            var view = new ButtonModel(L["Staff.Case.View"], ButtonVariant.Ghost, Href: $"/Files/Download/{r.DocumentId}");
+                                            <partial name="Components/_Button" model="view" />
+                                        }
+                                    </div>
+                                </div>
+                                @if (r.Status == RequestStatus.Received)
+                                {
+                                    var open = Model.RejectFor == r.Id;
+                                    var reject = new ButtonModel(L["Staff.Case.Reject"], ButtonVariant.Danger);
+                                    <details @(open ? "open" : "")>
+                                        <summary class="inline-flex min-h-[44px] cursor-pointer items-center text-label text-danger">@L["Staff.Case.Reject"]</summary>
+                                        <form method="post" asp-page-handler="Reject" asp-route-id="@c.Id" class="mt-2 space-y-2" novalidate>
+                                            <input type="hidden" name="requestId" value="@r.Id" />
+                                            <label for="reason-@r.Id" class="block text-badge text-text-secondary">@L["Staff.Case.RejectReason"]</label>
+                                            <textarea id="reason-@r.Id" name="reason" rows="2" class="input h-auto py-2 @(open && Model.RejectError is not null ? "input-error" : "")"></textarea>
+                                            @if (open && Model.RejectError is not null) { <p class="text-caption text-danger">@Model.RejectError</p> }
+                                            <partial name="Components/_Button" model="reject" />
+                                        </form>
+                                    </details>
+                                }
+                            </li>
+                        }
+                    </ul>
+                }
+                <form method="post" asp-page-handler="Request" asp-route-id="@c.Id" class="space-y-2 border-t border-border pt-4" novalidate>
+                    <h3 class="text-label">@L["Staff.Case.NewRequest"]</h3>
+                    <div>
+                        <label for="req-name" class="block text-badge text-text-secondary">@L["Staff.Case.RequestName"]</label>
+                        <input id="req-name" name="name" maxlength="200" class="input @(Model.RequestError is null ? "" : "input-error")" placeholder="@L["Staff.Case.RequestNamePlaceholder"]" />
+                        @if (Model.RequestError is not null) { <p class="text-caption text-danger">@Model.RequestError</p> }
+                    </div>
+                    <div>
+                        <label for="req-note" class="block text-badge text-text-secondary">@L["Staff.Case.RequestNote"]</label>
+                        <input id="req-note" name="note" maxlength="1000" class="input" />
+                    </div>
+                    <partial name="Components/_Button" model="addRequest" />
+                </form>
+            </section>
+
+            <section class="card space-y-4" id="post-update">
+                <div>
+                    <h2 class="text-h3">@L["Staff.Case.Updates"]</h2>
+                    <p class="text-caption text-text-secondary">@L["Staff.Case.UpdatesVisible"]</p>
+                </div>
+                <form method="post" asp-page-handler="Update" asp-route-id="@c.Id" class="space-y-2" novalidate>
+                    <label for="body" class="sr-only">@L["Staff.Case.PostUpdate"]</label>
+                    <textarea id="body" name="body" rows="3" class="input h-auto py-2 @(Model.UpdateError is null ? "" : "input-error")" placeholder="@L["Staff.Case.UpdatePlaceholder"]"></textarea>
+                    @if (Model.UpdateError is not null) { <p class="text-caption text-danger">@Model.UpdateError</p> }
+                    <partial name="Components/_Button" model="postUpdate" />
+                </form>
+                @if (Model.Updates.Count == 0)
+                {
+                    <p class="text-body-sm text-text-secondary">@L["Staff.Case.NoUpdates"]</p>
+                }
+                else
+                {
+                    <ol class="divide-y divide-border">
+                        @foreach (var u in Model.Updates)
+                        {
+                            <li class="space-y-1 py-3">
+                                <p class="text-caption text-text-secondary">@Format.DateTime(u.PostedAt) · @u.Author</p>
+                                <p class="whitespace-pre-line text-body-sm">@u.Body</p>
+                            </li>
+                        }
+                    </ol>
+                }
+            </section>
+
+            <section class="card space-y-4" id="documents" data-documents>
+                <div class="flex flex-wrap items-start justify-between gap-3">
+                    <div>
+                        <h2 class="text-h3">@L["Staff.Case.Documents"]</h2>
+                        <p class="text-caption text-text-secondary">@L["Staff.Case.DocumentsVisible"]</p>
+                    </div>
+                    <partial name="Components/_FileUpload" model="upload" />
+                </div>
+                @if (Model.Documents.Count == 0)
+                {
+                    <p class="text-body-sm text-text-secondary">@L["Staff.Case.NoDocuments"]</p>
+                }
+                else
+                {
+                    <ul class="divide-y divide-border">
+                        @foreach (var d in Model.Documents)
+                        {
+                            var download = new ButtonModel(L["Common.Download"], ButtonVariant.Ghost, Href: $"/Files/Download/{d.Id}");
+                            var dialogId = $"remove-{d.Id:N}";
+                            var remove = new ButtonModel(L["Staff.Case.Remove"], ButtonVariant.Danger, Type: "button", OnClick: ConfirmDialogModel.OpenScript(dialogId));
+                            var confirm = new ConfirmDialogModel(dialogId, L["Staff.Case.RemoveTitle"], string.Format(L["Staff.Case.RemoveMessage"].Value, d.FileName),
+                                L["Staff.Case.Remove"], $"/Staff/Cases/Details/{c.Id}?handler=Remove",
+                                new Dictionary<string, string> { ["documentId"] = d.Id.ToString() });
+                            <li class="flex flex-wrap items-center justify-between gap-2 py-3" data-document="@d.Id">
+                                <div class="min-w-0">
+                                    <p class="truncate text-label">@d.FileName</p>
+                                    <p class="text-caption text-text-secondary">@Format.FileSize(d.SizeBytes) · @Format.Date(d.UploadedAt) · @d.UploadedBy</p>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <partial name="Components/_Button" model="download" />
+                                    <partial name="Components/_Button" model="remove" />
+                                </div>
+                                <partial name="Components/_ConfirmDialog" model="confirm" />
+                            </li>
+                        }
+                    </ul>
+                }
+            </section>
+        </div>
+
+        <aside class="space-y-5">
+            <section class="card space-y-4">
+                <div class="flex items-center justify-between">
+                    <h2 class="text-h3">@L["Staff.Case.Details"]</h2>
+                    <partial name="Components/_Button" model="edit" />
+                </div>
+                <dl class="space-y-3 text-body-sm">
+                    <div><dt class="text-badge text-text-secondary">@L["Staff.CaseForm.Type"]</dt><dd>@L["CaseType." + c.CaseType]</dd></div>
+                    <div><dt class="text-badge text-text-secondary">@L["Common.Case.Opened"]</dt><dd>@Format.Date(c.OpenedAt)</dd></div>
+                    @if (c.ClosedAt is not null)
+                    {
+                        <div><dt class="text-badge text-text-secondary">@L["Staff.Case.Closed"]</dt><dd>@Format.Date(c.ClosedAt)</dd></div>
+                    }
+                    <div><dt class="text-badge text-text-secondary">@L["Staff.CaseForm.Lawyer"]</dt><dd>@c.Lawyer?.DisplayName</dd></div>
+                    <div>
+                        <dt class="text-badge text-text-secondary">@L["Staff.CaseForm.Staff"]</dt>
+                        @if (Model.CanAssign)
+                        {
+                            <dd>
+                                <form method="post" asp-page-handler="Staff" asp-route-id="@c.Id" class="space-y-2">
+                                    @foreach (var s in Model.StaffChoices)
+                                    {
+                                        <label class="flex min-h-[44px] cursor-pointer items-center gap-2">
+                                            <input type="checkbox" name="staffIds" value="@s.Id" checked="@c.StaffLinks.Any(l => l.UserId == s.Id)" class="h-4 w-4 accent-brand-navy" />@s.Name
+                                        </label>
+                                    }
+                                    @if (Model.StaffChoices.Count == 0) { <p class="text-caption text-text-muted">@L["Staff.CaseForm.NoStaff"]</p> }
+                                    else { <partial name="Components/_Button" model="saveStaff" /> }
+                                </form>
+                            </dd>
+                        }
+                        else
+                        {
+                            <dd>@(staffNames.Count == 0 ? L["Common.None"].Value : string.Join(", ", staffNames))</dd>
+                        }
+                    </div>
+                    <div><dt class="text-badge text-text-secondary">@L["Staff.CaseForm.Description"]</dt><dd class="whitespace-pre-line">@(c.Description ?? L["Common.None"].Value)</dd></div>
+                </dl>
+            </section>
+
+            <section class="card space-y-3">
+                <h2 class="text-h3">@L["Staff.Case.Client"]</h2>
+                <p class="text-body-sm font-medium">@c.Client.Name</p>
+                <p class="text-caption text-text-secondary">@c.Client.Phone · @c.Client.Email</p>
+                <div class="flex flex-wrap gap-2">
+                    <partial name="Components/_Button" model="chat" />
+                    <partial name="Components/_Button" model="profile" />
+                </div>
+            </section>
+
+            <section class="card space-y-3" id="bills" data-bills>
+                <div class="flex items-center justify-between gap-2">
+                    <h2 class="text-h3">@L["Staff.Case.Bills"]</h2>
+                    <form method="post" asp-page-handler="NewBill" asp-route-id="@c.Id"><partial name="Components/_Button" model="newBill" /></form>
+                </div>
+                @if (Model.Bills.Count == 0)
+                {
+                    <p class="text-body-sm text-text-secondary">@L["Staff.Case.NoBills"]</p>
+                }
+                else
+                {
+                    <ul class="divide-y divide-border">
+                        @foreach (var bl in Model.Bills)
+                        {
+                            <li data-bill="@bl.Id">
+                                <a href="/Staff/Bills/Edit/@bl.Id" class="flex min-h-[44px] items-center justify-between gap-2 py-2 hover:bg-bg-subtle">
+                                    <span class="text-label tabular-nums">@bl.BillNo</span>
+                                    <span class="flex items-center gap-2">
+                                        <span class="text-body-sm tabular-nums">@Format.Rm(bl.Total)</span>
+                                        <partial name="Components/_StatusBadge" model="bl.Status" />
+                                    </span>
+                                </a>
+                            </li>
+                        }
+                    </ul>
+                }
+            </section>
+        </aside>
+    </div>
+</div>

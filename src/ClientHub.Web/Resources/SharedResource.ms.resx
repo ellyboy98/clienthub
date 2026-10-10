@@ -1,0 +1,437 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="Account.Common.BackToLogin" xml:space="preserve"><value>Kembali ke log masuk</value></data>
+  <data name="Account.Forgot.Intro" xml:space="preserve"><value>Masukkan e-mel anda dan kami akan menghantar pautan untuk menetapkan kata laluan baharu.</value></data>
+  <data name="Account.Forgot.Send" xml:space="preserve"><value>Hantar pautan</value></data>
+  <data name="Account.Forgot.Sent" xml:space="preserve"><value>Jika akaun wujud untuk e-mel itu, pautan untuk menetapkan kata laluan baharu sedang dihantar.</value></data>
+  <data name="Account.Forgot.Title" xml:space="preserve"><value>Lupa kata laluan</value></data>
+  <data name="Account.Login.CreatedByFirm" xml:space="preserve"><value>Akaun anda dicipta oleh firma.</value></data>
+  <data name="Account.Login.Email" xml:space="preserve"><value>E-mel</value></data>
+  <data name="Account.Login.Forgot" xml:space="preserve"><value>Lupa kata laluan</value></data>
+  <data name="Account.Login.Invalid" xml:space="preserve"><value>E-mel atau kata laluan tidak betul.</value></data>
+  <data name="Account.Login.LockedOut" xml:space="preserve"><value>Terlalu banyak cubaan gagal. Cuba lagi dalam beberapa minit.</value></data>
+  <data name="Account.Login.Password" xml:space="preserve"><value>Kata laluan</value></data>
+  <data name="Account.Login.PasswordSet" xml:space="preserve"><value>Kata laluan anda telah ditetapkan. Anda boleh log masuk sekarang.</value></data>
+  <data name="Account.Login.SignIn" xml:space="preserve"><value>Log masuk</value></data>
+  <data name="Account.Login.Title" xml:space="preserve"><value>Log masuk</value></data>
+  <data name="Account.LoginWith2fa.Code" xml:space="preserve"><value>Kod</value></data>
+  <data name="Account.LoginWith2fa.Hint" xml:space="preserve"><value>Tiada telefon? Masukkan salah satu kod pemulihan anda.</value></data>
+  <data name="Account.LoginWith2fa.Intro" xml:space="preserve"><value>Masukkan kod 6 digit daripada aplikasi pengesah anda.</value></data>
+  <data name="Account.LoginWith2fa.Invalid" xml:space="preserve"><value>Kod tidak betul.</value></data>
+  <data name="Account.LoginWith2fa.Title" xml:space="preserve"><value>Pengesahan dua langkah</value></data>
+  <data name="Account.LoginWith2fa.Verify" xml:space="preserve"><value>Sahkan</value></data>
+  <data name="Account.Manage.2faOff" xml:space="preserve"><value>Pengesahan dua langkah dimatikan.</value></data>
+  <data name="Account.Manage.2faOn" xml:space="preserve"><value>Pengesahan dua langkah dihidupkan.</value></data>
+  <data name="Account.Manage.ChangePassword" xml:space="preserve"><value>Tukar kata laluan</value></data>
+  <data name="Account.Manage.CurrentPassword" xml:space="preserve"><value>Kata laluan semasa</value></data>
+  <data name="Account.Manage.Enable2fa" xml:space="preserve"><value>Sediakan pengesahan dua langkah</value></data>
+  <data name="Account.Manage.Language" xml:space="preserve"><value>Bahasa</value></data>
+  <data name="Account.Manage.Manage2fa" xml:space="preserve"><value>Urus pengesahan dua langkah</value></data>
+  <data name="Account.Manage.PasswordChanged" xml:space="preserve"><value>Kata laluan anda telah ditukar.</value></data>
+  <data name="Account.Manage.Title" xml:space="preserve"><value>Akaun saya</value></data>
+  <data name="Account.Manage.TwoFactor" xml:space="preserve"><value>Pengesahan dua langkah</value></data>
+  <data name="Account.SetPassword.Confirm" xml:space="preserve"><value>Sahkan kata laluan baharu</value></data>
+  <data name="Account.SetPassword.New" xml:space="preserve"><value>Kata laluan baharu</value></data>
+  <data name="Account.SetPassword.Rules" xml:space="preserve"><value>Sekurang-kurangnya 10 aksara, dengan huruf besar, huruf kecil, nombor dan simbol.</value></data>
+  <data name="Account.SetPassword.Save" xml:space="preserve"><value>Simpan kata laluan</value></data>
+  <data name="Account.SetPassword.Title" xml:space="preserve"><value>Tetapkan kata laluan anda</value></data>
+  <data name="Account.TwoFactor.Disable" xml:space="preserve"><value>Matikan</value></data>
+  <data name="Account.TwoFactor.Done" xml:space="preserve"><value>Teruskan</value></data>
+  <data name="Account.TwoFactor.Enable" xml:space="preserve"><value>Hidupkan</value></data>
+  <data name="Account.TwoFactor.Enabled" xml:space="preserve"><value>Pengesahan dua langkah kini dihidupkan.</value></data>
+  <data name="Account.TwoFactor.KeyLabel" xml:space="preserve"><value>Kunci:</value></data>
+  <data name="Account.TwoFactor.RecoveryIntro" xml:space="preserve"><value>Simpan kod ini di tempat selamat. Setiap kod boleh digunakan sekali untuk log masuk jika telefon anda hilang. Kod ini hanya ditunjukkan sekarang.</value></data>
+  <data name="Account.TwoFactor.RecoveryTitle" xml:space="preserve"><value>Kod pemulihan</value></data>
+  <data name="Account.TwoFactor.RequiredNotice" xml:space="preserve"><value>Peranan anda memerlukan pengesahan dua langkah. Sediakannya untuk meneruskan.</value></data>
+  <data name="Account.TwoFactor.Step1" xml:space="preserve"><value>Pasang aplikasi pengesah pada telefon anda, seperti Google Authenticator atau Microsoft Authenticator.</value></data>
+  <data name="Account.TwoFactor.Step2" xml:space="preserve"><value>Imbas kod QR, atau taip kunci yang ditunjukkan di bawah.</value></data>
+  <data name="Account.TwoFactor.Step3" xml:space="preserve"><value>Masukkan kod 6 digit yang ditunjukkan oleh aplikasi.</value></data>
+  <data name="Account.TwoFactor.Title" xml:space="preserve"><value>Pengesahan dua langkah</value></data>
+  <data name="Common.AppName" xml:space="preserve"><value>Client Hub</value></data>
+  <data name="Common.Cancel" xml:space="preserve"><value>Batal</value></data>
+  <data name="Common.ComingSoon" xml:space="preserve"><value>Skrin ini sedang dibina.</value></data>
+  <data name="Common.Language" xml:space="preserve"><value>Bahasa</value></data>
+  <data name="Common.Language.English" xml:space="preserve"><value>English</value></data>
+  <data name="Common.Language.Malay" xml:space="preserve"><value>Bahasa Melayu</value></data>
+  <data name="Common.Menu" xml:space="preserve"><value>Menu</value></data>
+  <data name="Common.MyAccount" xml:space="preserve"><value>Akaun saya</value></data>
+  <data name="Common.Notifications" xml:space="preserve"><value>Pemberitahuan</value></data>
+  <data name="Common.Save" xml:space="preserve"><value>Simpan</value></data>
+  <data name="Common.SignOut" xml:space="preserve"><value>Log keluar</value></data>
+  <data name="Common.Upload.Hint" xml:space="preserve"><value>PDF, Word (.docx), JPG atau PNG, sehingga 20 MB.</value></data>
+  <data name="Email.ResetPassword.Body" xml:space="preserve"><value>Salam {0},
+
+Gunakan pautan ini untuk menetapkan kata laluan baharu. Pautan ini sah selama satu hari:
+{1}
+
+Jika anda tidak memintanya, abaikan e-mel ini.</value></data>
+  <data name="Email.ResetPassword.Subject" xml:space="preserve"><value>Tetapkan kata laluan Client Hub anda</value></data>
+  <data name="Identity.Generic" xml:space="preserve"><value>Kata laluan tidak dapat disimpan. Cuba kata laluan lain.</value></data>
+  <data name="Identity.InvalidToken" xml:space="preserve"><value>Pautan ini tidak sah atau telah tamat tempoh. Gunakan Lupa kata laluan untuk mendapatkan pautan baharu.</value></data>
+  <data name="Identity.PasswordMismatch" xml:space="preserve"><value>Kata laluan semasa tidak betul.</value></data>
+  <data name="Identity.PasswordRequiresDigit" xml:space="preserve"><value>Kata laluan perlu sekurang-kurangnya satu nombor.</value></data>
+  <data name="Identity.PasswordRequiresLower" xml:space="preserve"><value>Kata laluan perlu sekurang-kurangnya satu huruf kecil.</value></data>
+  <data name="Identity.PasswordRequiresNonAlphanumeric" xml:space="preserve"><value>Kata laluan perlu sekurang-kurangnya satu simbol.</value></data>
+  <data name="Identity.PasswordRequiresUniqueChars" xml:space="preserve"><value>Kata laluan perlu lebih banyak aksara berlainan.</value></data>
+  <data name="Identity.PasswordRequiresUpper" xml:space="preserve"><value>Kata laluan perlu sekurang-kurangnya satu huruf besar.</value></data>
+  <data name="Identity.PasswordTooShort" xml:space="preserve"><value>Kata laluan mesti sekurang-kurangnya 10 aksara.</value></data>
+  <data name="NotFound.Body" xml:space="preserve"><value>Halaman ini tidak wujud atau tidak lagi tersedia.</value></data>
+  <data name="NotFound.Home" xml:space="preserve"><value>Ke laman utama</value></data>
+  <data name="NotFound.Title" xml:space="preserve"><value>Halaman tidak dijumpai</value></data>
+  <data name="Portal.Home.Greeting" xml:space="preserve"><value>Salam, {0}</value></data>
+  <data name="Portal.Nav.Bills" xml:space="preserve"><value>Bil</value></data>
+  <data name="Portal.Nav.Cases" xml:space="preserve"><value>Kes</value></data>
+  <data name="Portal.Nav.Chat" xml:space="preserve"><value>Sembang</value></data>
+  <data name="Portal.Nav.Home" xml:space="preserve"><value>Utama</value></data>
+  <data name="Role.Client" xml:space="preserve"><value>Klien</value></data>
+  <data name="Role.Lawyer" xml:space="preserve"><value>Peguam</value></data>
+  <data name="Role.OfficeManager" xml:space="preserve"><value>Pengurus Pejabat</value></data>
+  <data name="Role.Staff" xml:space="preserve"><value>Kakitangan</value></data>
+  <data name="Staff.Nav.Bills" xml:space="preserve"><value>Bil</value></data>
+  <data name="Staff.Nav.Cases" xml:space="preserve"><value>Kes</value></data>
+  <data name="Staff.Nav.Chats" xml:space="preserve"><value>Sembang</value></data>
+  <data name="Staff.Nav.Clients" xml:space="preserve"><value>Klien</value></data>
+  <data name="Staff.Nav.Dashboard" xml:space="preserve"><value>Papan pemuka</value></data>
+  <data name="Staff.Nav.PastCases" xml:space="preserve"><value>Kes lepas</value></data>
+  <data name="Staff.Nav.Settings" xml:space="preserve"><value>Tetapan</value></data>
+  <data name="Status.Active" xml:space="preserve"><value>Aktif</value></data>
+  <data name="Status.Cancelled" xml:space="preserve"><value>Dibatalkan</value></data>
+  <data name="Status.Completed" xml:space="preserve"><value>Selesai</value></data>
+  <data name="Status.DocumentsCollected" xml:space="preserve"><value>Dokumen dikumpul</value></data>
+  <data name="Status.Draft" xml:space="preserve"><value>Draf</value></data>
+  <data name="Status.Filed" xml:space="preserve"><value>Difailkan</value></data>
+  <data name="Status.Hearing" xml:space="preserve"><value>Perbicaraan</value></data>
+  <data name="Status.New" xml:space="preserve"><value>Baharu</value></data>
+  <data name="Status.Paid" xml:space="preserve"><value>Dibayar</value></data>
+  <data name="Status.Pending" xml:space="preserve"><value>Belum diterima</value></data>
+  <data name="Status.Received" xml:space="preserve"><value>Diterima</value></data>
+  <data name="Status.Rejected" xml:space="preserve"><value>Ditolak</value></data>
+  <data name="Status.Sent" xml:space="preserve"><value>Dihantar</value></data>
+  <data name="Validation.Email" xml:space="preserve"><value>Masukkan alamat e-mel yang sah.</value></data>
+  <data name="Validation.PasswordMismatch" xml:space="preserve"><value>Kata laluan tidak sepadan.</value></data>
+  <data name="Validation.Required" xml:space="preserve"><value>Ruangan ini wajib diisi.</value></data>
+  <data name="Common.Search" xml:space="preserve"><value>Cari</value></data>
+  <data name="Common.Open" xml:space="preserve"><value>Buka</value></data>
+  <data name="Common.Edit" xml:space="preserve"><value>Sunting</value></data>
+  <data name="Common.Saved" xml:space="preserve"><value>Disimpan.</value></data>
+  <data name="Common.Error" xml:space="preserve"><value>Berlaku ralat. Sila cuba lagi.</value></data>
+  <data name="Common.None" xml:space="preserve"><value>Tiada</value></data>
+  <data name="Common.Choose" xml:space="preserve"><value>Pilih…</value></data>
+  <data name="Common.Back" xml:space="preserve"><value>Kembali</value></data>
+  <data name="Common.Case.Opened" xml:space="preserve"><value>Dibuka</value></data>
+  <data name="Common.Case.LastUpdate" xml:space="preserve"><value>Kemas kini terakhir</value></data>
+  <data name="Common.Case.Progress" xml:space="preserve"><value>Kemajuan kes</value></data>
+  <data name="ClientType.Person" xml:space="preserve"><value>Individu</value></data>
+  <data name="ClientType.Company" xml:space="preserve"><value>Syarikat</value></data>
+  <data name="CaseType.Civil" xml:space="preserve"><value>Sivil</value></data>
+  <data name="CaseType.Criminal" xml:space="preserve"><value>Jenayah</value></data>
+  <data name="Status.Inactive" xml:space="preserve"><value>Tidak aktif</value></data>
+  <data name="Validation.EmailTaken" xml:space="preserve"><value>E-mel ini sudah digunakan oleh log masuk lain.</value></data>
+  <data name="Validation.TooLong" xml:space="preserve"><value>Ini terlalu panjang.</value></data>
+  <data name="Validation.InvalidChoice" xml:space="preserve"><value>Pilih pilihan yang sah.</value></data>
+  <data name="Staff.Clients.Title" xml:space="preserve"><value>Klien</value></data>
+  <data name="Staff.Clients.New" xml:space="preserve"><value>+ Klien baharu</value></data>
+  <data name="Staff.Clients.Search" xml:space="preserve"><value>Cari mengikut nama atau No. KP / No. pendaftaran</value></data>
+  <data name="Staff.Clients.Filter" xml:space="preserve"><value>Tapis klien</value></data>
+  <data name="Staff.Clients.Filter.All" xml:space="preserve"><value>Semua</value></data>
+  <data name="Staff.Clients.Filter.Person" xml:space="preserve"><value>Individu</value></data>
+  <data name="Staff.Clients.Filter.Company" xml:space="preserve"><value>Syarikat</value></data>
+  <data name="Staff.Clients.Filter.Inactive" xml:space="preserve"><value>Tidak aktif</value></data>
+  <data name="Staff.Clients.Empty" xml:space="preserve"><value>Tiada klien untuk dipaparkan.</value></data>
+  <data name="Staff.Clients.Col.Client" xml:space="preserve"><value>Klien</value></data>
+  <data name="Staff.Clients.Col.Type" xml:space="preserve"><value>Jenis</value></data>
+  <data name="Staff.Clients.Col.IcOrRegNo" xml:space="preserve"><value>No. KP / Pendaftaran</value></data>
+  <data name="Staff.Clients.Col.Phone" xml:space="preserve"><value>Telefon</value></data>
+  <data name="Staff.Clients.Col.ActiveCases" xml:space="preserve"><value>Kes aktif</value></data>
+  <data name="Staff.Clients.Col.Login" xml:space="preserve"><value>Log masuk</value></data>
+  <data name="Staff.Clients.Created" xml:space="preserve"><value>Klien dicipta. E-mel tetapan kata laluan telah dihantar.</value></data>
+  <data name="Staff.Clients.CreateSubmit" xml:space="preserve"><value>Cipta klien</value></data>
+  <data name="Staff.Clients.CreateIntro" xml:space="preserve"><value>Klien mendapat satu log masuk dan e-mel dengan pautan untuk menetapkan kata laluan.</value></data>
+  <data name="Staff.Clients.Edit" xml:space="preserve"><value>Sunting klien</value></data>
+  <data name="Staff.ClientForm.Type" xml:space="preserve"><value>Jenis klien</value></data>
+  <data name="Staff.ClientForm.Name" xml:space="preserve"><value>Nama</value></data>
+  <data name="Staff.ClientForm.IcOrRegNo" xml:space="preserve"><value>No. KP / No. pendaftaran syarikat</value></data>
+  <data name="Staff.ClientForm.Phone" xml:space="preserve"><value>Telefon</value></data>
+  <data name="Staff.ClientForm.Email" xml:space="preserve"><value>E-mel</value></data>
+  <data name="Staff.ClientForm.EmailHint" xml:space="preserve"><value>Ini juga e-mel log masuk klien.</value></data>
+  <data name="Staff.ClientForm.Address" xml:space="preserve"><value>Alamat</value></data>
+  <data name="Staff.ClientForm.ContactPerson" xml:space="preserve"><value>Orang yang bertanggungjawab</value></data>
+  <data name="Staff.ClientForm.ContactPersonName" xml:space="preserve"><value>Nama orang yang bertanggungjawab</value></data>
+  <data name="Staff.ClientForm.ContactPersonPhone" xml:space="preserve"><value>Telefon orang yang bertanggungjawab</value></data>
+  <data name="Staff.Client.Details" xml:space="preserve"><value>Butiran</value></data>
+  <data name="Staff.Client.Cases" xml:space="preserve"><value>Kes</value></data>
+  <data name="Staff.Client.NoCases" xml:space="preserve"><value>Tiada kes untuk dipaparkan.</value></data>
+  <data name="Staff.Client.OpenChat" xml:space="preserve"><value>Buka sembang</value></data>
+  <data name="Staff.Client.CreateCase" xml:space="preserve"><value>Cipta kes</value></data>
+  <data name="Staff.Client.Deactivate" xml:space="preserve"><value>Nyahaktifkan log masuk</value></data>
+  <data name="Staff.Client.DeactivateConfirm" xml:space="preserve"><value>Klien tidak lagi boleh log masuk. Rekod mereka kekal dalam sistem.</value></data>
+  <data name="Staff.Client.Reactivate" xml:space="preserve"><value>Aktifkan semula log masuk</value></data>
+  <data name="Staff.Client.Deactivated" xml:space="preserve"><value>Log masuk dinyahaktifkan.</value></data>
+  <data name="Staff.Client.Reactivated" xml:space="preserve"><value>Log masuk diaktifkan semula.</value></data>
+  <data name="Staff.CaseTable.Case" xml:space="preserve"><value>Kes</value></data>
+  <data name="Staff.CaseTable.Client" xml:space="preserve"><value>Klien</value></data>
+  <data name="Staff.CaseTable.Type" xml:space="preserve"><value>Jenis</value></data>
+  <data name="Staff.CaseTable.Status" xml:space="preserve"><value>Status</value></data>
+  <data name="Staff.CaseTable.Lawyer" xml:space="preserve"><value>Peguam</value></data>
+  <data name="Staff.Cases.Title" xml:space="preserve"><value>Kes</value></data>
+  <data name="Staff.Cases.Empty" xml:space="preserve"><value>Tiada kes aktif.</value></data>
+  <data name="Staff.Cases.New" xml:space="preserve"><value>Kes baharu</value></data>
+  <data name="Staff.Cases.CreateSubmit" xml:space="preserve"><value>Cipta kes</value></data>
+  <data name="Staff.Cases.Created" xml:space="preserve"><value>Kes dicipta.</value></data>
+  <data name="Staff.Cases.Edit" xml:space="preserve"><value>Sunting kes</value></data>
+  <data name="Staff.PastCases.Empty" xml:space="preserve"><value>Tiada kes lepas.</value></data>
+  <data name="Staff.CaseForm.Client" xml:space="preserve"><value>Klien</value></data>
+  <data name="Staff.CaseForm.Title" xml:space="preserve"><value>Tajuk kes</value></data>
+  <data name="Staff.CaseForm.Type" xml:space="preserve"><value>Jenis kes</value></data>
+  <data name="Staff.CaseForm.Description" xml:space="preserve"><value>Penerangan</value></data>
+  <data name="Staff.CaseForm.DescriptionHint" xml:space="preserve"><value>Pilihan. Klien boleh melihatnya.</value></data>
+  <data name="Staff.CaseForm.Lawyer" xml:space="preserve"><value>Peguam yang bertanggungjawab</value></data>
+  <data name="Staff.CaseForm.Staff" xml:space="preserve"><value>Kakitangan yang ditugaskan</value></data>
+  <data name="Staff.CaseForm.NoStaff" xml:space="preserve"><value>Belum ada akaun kakitangan.</value></data>
+  <data name="Staff.Case.PostUpdate" xml:space="preserve"><value>Hantar kemas kini</value></data>
+  <data name="Staff.Case.ChangeStatus" xml:space="preserve"><value>Tukar status</value></data>
+  <data name="Staff.Case.StatusChanged" xml:space="preserve"><value>Status ditukar.</value></data>
+  <data name="Staff.Case.UpdatePosted" xml:space="preserve"><value>Kemas kini dihantar.</value></data>
+  <data name="Staff.Case.Updates" xml:space="preserve"><value>Kemas kini</value></data>
+  <data name="Staff.Case.UpdatesVisible" xml:space="preserve"><value>Kemas kini boleh dilihat oleh klien.</value></data>
+  <data name="Staff.Case.UpdatePlaceholder" xml:space="preserve"><value>Tulis kemas kini untuk klien</value></data>
+  <data name="Staff.Case.NoUpdates" xml:space="preserve"><value>Belum ada kemas kini.</value></data>
+  <data name="Staff.Case.Details" xml:space="preserve"><value>Butiran kes</value></data>
+  <data name="Staff.Case.Closed" xml:space="preserve"><value>Ditutup</value></data>
+  <data name="Staff.Case.Client" xml:space="preserve"><value>Klien</value></data>
+  <data name="Staff.Case.Profile" xml:space="preserve"><value>Profil</value></data>
+  <data name="Staff.Dashboard.ActiveCases" xml:space="preserve"><value>Kes aktif</value></data>
+  <data name="Staff.Dashboard.PendingDocuments" xml:space="preserve"><value>Dokumen belum diterima daripada klien</value></data>
+  <data name="Staff.Dashboard.UnreadChats" xml:space="preserve"><value>Sembang belum dibaca</value></data>
+  <data name="Staff.Dashboard.BillsAwaiting" xml:space="preserve"><value>Bil menunggu bayaran</value></data>
+  <data name="Staff.Dashboard.ActiveCasesTable" xml:space="preserve"><value>Kes aktif</value></data>
+  <data name="Portal.Home.StillNeed" xml:space="preserve"><value>Kami masih memerlukan daripada anda</value></data>
+  <data name="Portal.Home.Upload" xml:space="preserve"><value>Muat naik</value></data>
+  <data name="Portal.Home.YourCases" xml:space="preserve"><value>Kes anda</value></data>
+  <data name="Portal.Home.Messages" xml:space="preserve"><value>Mesej</value></data>
+  <data name="Portal.Home.Unread" xml:space="preserve"><value>belum dibaca</value></data>
+  <data name="Portal.Home.Bills" xml:space="preserve"><value>Bil</value></data>
+  <data name="Portal.Home.Unpaid" xml:space="preserve"><value>belum dibayar</value></data>
+  <data name="Portal.Cases.Title" xml:space="preserve"><value>Kes anda</value></data>
+  <data name="Portal.Cases.Empty" xml:space="preserve"><value>Anda tiada kes aktif.</value></data>
+  <data name="Portal.Cases.Past" xml:space="preserve"><value>Kes lepas</value></data>
+  <data name="Portal.Cases.PastEmpty" xml:space="preserve"><value>Anda tiada kes lepas.</value></data>
+  <data name="Portal.Case.Lawyer" xml:space="preserve"><value>Peguam yang bertanggungjawab</value></data>
+  <data name="Portal.Case.About" xml:space="preserve"><value>Mengenai kes ini</value></data>
+  <data name="Portal.Case.Tab.Updates" xml:space="preserve"><value>Kemas kini</value></data>
+  <data name="Portal.Case.Tab.Documents" xml:space="preserve"><value>Dokumen</value></data>
+  <data name="Portal.Case.Tab.Bills" xml:space="preserve"><value>Bil</value></data>
+  <data name="Portal.Case.NoUpdates" xml:space="preserve"><value>Belum ada kemas kini.</value></data>
+  <data name="Email.AccountCreated.Subject" xml:space="preserve"><value>Akaun portal klien anda</value></data>
+  <data name="Email.AccountCreated.Body" xml:space="preserve"><value>Salam {0},
+
+Firma telah mencipta akaun portal klien anda. Gunakan pautan ini untuk menetapkan kata laluan anda. Pautan ini sah selama satu hari:
+{1}
+
+Jika pautan telah tamat tempoh, gunakan "Lupa kata laluan" di halaman log masuk.</value></data>
+  <data name="Staff.ClientForm.EmailLocked" xml:space="preserve"><value>Ini e-mel log masuk klien. Hanya peguam atau pengurus pejabat boleh menukarnya.</value></data>
+  <data name="Staff.Clients.EmailNotSent" xml:space="preserve"><value>Disimpan, tetapi e-mel tetapan kata laluan tidak dapat dihantar. Minta klien menggunakan "Lupa kata laluan" di halaman log masuk, atau cuba lagi kemudian.</value></data>
+  <data name="Staff.Clients.EmailChangedLinkSent" xml:space="preserve"><value>Disimpan. Pautan tetapan kata laluan baharu telah dihantar ke alamat e-mel baharu.</value></data>
+  <data name="Upload.Error.BadType" xml:space="preserve"><value>Hanya fail PDF, Word (.docx), JPG atau PNG boleh dimuat naik.</value></data>
+  <data name="Upload.Error.TooLarge" xml:space="preserve"><value>Fail melebihi 20 MB.</value></data>
+  <data name="Upload.Error.Empty" xml:space="preserve"><value>Fail itu kosong.</value></data>
+  <data name="Upload.Error.Missing" xml:space="preserve"><value>Fail tidak diterima. Sila cuba lagi.</value></data>
+  <data name="Upload.Error.Expired" xml:space="preserve"><value>Muat naik mengambil masa terlalu lama. Sila cuba lagi.</value></data>
+  <data name="Upload.Error.Failed" xml:space="preserve"><value>Muat naik gagal. Sila cuba lagi.</value></data>
+  <data name="Upload.Uploading" xml:space="preserve"><value>Memuat naik</value></data>
+  <data name="Common.Download" xml:space="preserve"><value>Muat turun</value></data>
+  <data name="Common.Request.Reason" xml:space="preserve"><value>Sebab</value></data>
+  <data name="Staff.Case.Requests" xml:space="preserve"><value>Permintaan dokumen</value></data>
+  <data name="Staff.Case.NoRequests" xml:space="preserve"><value>Belum ada permintaan dokumen.</value></data>
+  <data name="Staff.Case.NewRequest" xml:space="preserve"><value>Minta dokumen daripada klien</value></data>
+  <data name="Staff.Case.RequestName" xml:space="preserve"><value>Nama dokumen</value></data>
+  <data name="Staff.Case.RequestNamePlaceholder" xml:space="preserve"><value>cth. Salinan kad pengenalan</value></data>
+  <data name="Staff.Case.RequestNote" xml:space="preserve"><value>Nota kepada klien (pilihan)</value></data>
+  <data name="Staff.Case.AddRequest" xml:space="preserve"><value>Tambah permintaan</value></data>
+  <data name="Staff.Case.RequestAdded" xml:space="preserve"><value>Permintaan ditambah. Klien akan melihatnya di halaman Utama.</value></data>
+  <data name="Staff.Case.View" xml:space="preserve"><value>Lihat</value></data>
+  <data name="Staff.Case.Reject" xml:space="preserve"><value>Tolak</value></data>
+  <data name="Staff.Case.RejectReason" xml:space="preserve"><value>Sebab (klien akan melihat ini)</value></data>
+  <data name="Staff.Case.RejectReasonRequired" xml:space="preserve"><value>Berikan sebab supaya klien tahu apa yang perlu dihantar.</value></data>
+  <data name="Staff.Case.RequestRejected" xml:space="preserve"><value>Permintaan ditolak. Klien boleh memuat naik semula.</value></data>
+  <data name="Staff.Case.Documents" xml:space="preserve"><value>Dokumen</value></data>
+  <data name="Staff.Case.DocumentsVisible" xml:space="preserve"><value>Setiap dokumen di sini boleh dilihat oleh klien.</value></data>
+  <data name="Staff.Case.NoDocuments" xml:space="preserve"><value>Belum ada dokumen.</value></data>
+  <data name="Staff.Case.UploadDocument" xml:space="preserve"><value>Muat naik dokumen</value></data>
+  <data name="Staff.Case.Remove" xml:space="preserve"><value>Alih keluar</value></data>
+  <data name="Staff.Case.RemoveTitle" xml:space="preserve"><value>Alih keluar dokumen ini?</value></data>
+  <data name="Staff.Case.RemoveMessage" xml:space="preserve"><value>"{0}" akan disembunyikan daripada kes untuk semua orang. Fail itu disimpan dalam rekod.</value></data>
+  <data name="Staff.Case.DocumentRemoved" xml:space="preserve"><value>Dokumen dialih keluar. Fail itu disimpan dalam rekod.</value></data>
+  <data name="Portal.Case.Reupload" xml:space="preserve"><value>Muat naik semula</value></data>
+  <data name="Portal.Case.NoDocuments" xml:space="preserve"><value>Belum ada dokumen dikongsi.</value></data>
+  <data name="Portal.Case.ReceivedRequests" xml:space="preserve"><value>Dokumen yang telah anda hantar</value></data>
+  <data name="Staff.Chats.Title" xml:space="preserve"><value>Sembang</value></data>
+  <data name="Staff.Chats.Empty" xml:space="preserve"><value>Belum ada sembang pelanggan yang boleh anda buka.</value></data>
+  <data name="Staff.Chats.Choose" xml:space="preserve"><value>Pilih pelanggan untuk membuka sembang mereka.</value></data>
+  <data name="Portal.Chat.Title" xml:space="preserve"><value>Sembang dengan firma</value></data>
+  <data name="Portal.Chat.Intro" xml:space="preserve"><value>Peguam anda dan kakitangan firma membalas di sini.</value></data>
+  <data name="Chat.NoMessages" xml:space="preserve"><value>Belum ada mesej.</value></data>
+  <data name="Chat.Message" xml:space="preserve"><value>Mesej</value></data>
+  <data name="Chat.Placeholder" xml:space="preserve"><value>Tulis mesej</value></data>
+  <data name="Chat.Send" xml:space="preserve"><value>Hantar</value></data>
+  <data name="Chat.Attach" xml:space="preserve"><value>Lampirkan fail</value></data>
+  <data name="Chat.UnreadCount" xml:space="preserve"><value>{0} belum dibaca</value></data>
+  <data name="Chat.Error.Empty" xml:space="preserve"><value>Tulis mesej terlebih dahulu.</value></data>
+  <data name="Chat.Error.TooLong" xml:space="preserve"><value>Mesej boleh mengandungi sehingga 4,000 aksara.</value></data>
+  <data name="Staff.Chats.Profile" xml:space="preserve"><value>Profil pelanggan</value></data>
+  <data name="Staff.Settings.Firm" xml:space="preserve"><value>Butiran firma</value></data>
+  <data name="Staff.Settings.FirmName" xml:space="preserve"><value>Nama firma</value></data>
+  <data name="Staff.Settings.Bank" xml:space="preserve"><value>Akaun bank untuk bil</value></data>
+  <data name="Staff.Settings.BankIntro" xml:space="preserve"><value>Dipaparkan kepada klien pada setiap bil.</value></data>
+  <data name="Staff.Settings.BankName" xml:space="preserve"><value>Nama bank</value></data>
+  <data name="Staff.Settings.AccountName" xml:space="preserve"><value>Nama akaun</value></data>
+  <data name="Staff.Settings.AccountNo" xml:space="preserve"><value>Nombor akaun</value></data>
+  <data name="Staff.Settings.Smtp" xml:space="preserve"><value>E-mel (SMTP)</value></data>
+  <data name="Staff.Settings.SmtpIntro" xml:space="preserve"><value>Digunakan untuk menghantar e-mel kepada klien. Biarkan hos kosong untuk hanya merekod e-mel.</value></data>
+  <data name="Staff.Settings.SmtpHost" xml:space="preserve"><value>Hos SMTP</value></data>
+  <data name="Staff.Settings.SmtpHostHint" xml:space="preserve"><value>Contohnya smtp.gmail.com</value></data>
+  <data name="Staff.Settings.SmtpPort" xml:space="preserve"><value>Port</value></data>
+  <data name="Staff.Settings.SmtpPortHint" xml:space="preserve"><value>465 atau 587</value></data>
+  <data name="Staff.Settings.SmtpUser" xml:space="preserve"><value>Nama pengguna</value></data>
+  <data name="Staff.Settings.SmtpPassword" xml:space="preserve"><value>Kata laluan</value></data>
+  <data name="Staff.Settings.SmtpPasswordKeep" xml:space="preserve"><value>Kata laluan telah disimpan. Biarkan kosong untuk mengekalkannya.</value></data>
+  <data name="Staff.Settings.SmtpPasswordNone" xml:space="preserve"><value>Belum ada kata laluan disimpan.</value></data>
+  <data name="Staff.Settings.SmtpPasswordClear" xml:space="preserve"><value>Buang kata laluan yang disimpan</value></data>
+  <data name="Staff.Settings.SmtpFrom" xml:space="preserve"><value>Alamat pengirim</value></data>
+  <data name="Staff.Settings.Qr" xml:space="preserve"><value>QR DuitNow</value></data>
+  <data name="Staff.Settings.QrIntro" xml:space="preserve"><value>Dipaparkan kepada klien pada setiap bil.</value></data>
+  <data name="Staff.Settings.QrNone" xml:space="preserve"><value>Belum ada imej QR dimuat naik.</value></data>
+  <data name="Staff.Settings.QrUpload" xml:space="preserve"><value>Muat naik imej QR</value></data>
+  <data name="Staff.Settings.QrReplace" xml:space="preserve"><value>Ganti imej QR</value></data>
+  <data name="Staff.Settings.QrHint" xml:space="preserve"><value>JPG atau PNG, sehingga 20 MB</value></data>
+  <data name="Staff.Settings.StaffAccounts" xml:space="preserve"><value>Akaun kakitangan</value></data>
+  <data name="Staff.Settings.AddStaff" xml:space="preserve"><value>Tambah kakitangan</value></data>
+  <data name="Staff.Settings.Name" xml:space="preserve"><value>Nama</value></data>
+  <data name="Staff.Settings.Email" xml:space="preserve"><value>E-mel</value></data>
+  <data name="Staff.Settings.EmailHint" xml:space="preserve"><value>Pautan untuk menetapkan kata laluan dihantar ke alamat ini.</value></data>
+  <data name="Staff.Settings.Role" xml:space="preserve"><value>Peranan</value></data>
+  <data name="Staff.Settings.TwoFactor" xml:space="preserve"><value>Log masuk dua langkah</value></data>
+  <data name="Staff.Settings.TwoFactorOn" xml:space="preserve"><value>Hidup</value></data>
+  <data name="Staff.Settings.TwoFactorOff" xml:space="preserve"><value>Mati</value></data>
+  <data name="Staff.Settings.State" xml:space="preserve"><value>Akaun</value></data>
+  <data name="Staff.Settings.Actions" xml:space="preserve"><value>Tindakan</value></data>
+  <data name="Staff.Settings.Deactivate" xml:space="preserve"><value>Nyahaktifkan</value></data>
+  <data name="Staff.Settings.Reactivate" xml:space="preserve"><value>Aktifkan semula</value></data>
+  <data name="Staff.Settings.Deactivated" xml:space="preserve"><value>Akaun dinyahaktifkan. Pengguna tidak lagi boleh log masuk.</value></data>
+  <data name="Staff.Settings.Reactivated" xml:space="preserve"><value>Akaun diaktifkan semula.</value></data>
+  <data name="Staff.Settings.CannotDeactivateSelf" xml:space="preserve"><value>Anda tidak boleh menyahaktifkan akaun anda sendiri.</value></data>
+  <data name="Staff.Settings.CreateSubmit" xml:space="preserve"><value>Cipta akaun</value></data>
+  <data name="Staff.Settings.AccountCreated" xml:space="preserve"><value>Akaun dicipta. Pautan untuk menetapkan kata laluan telah dihantar ke {0}.</value></data>
+  <data name="Staff.Settings.EmailNotSent" xml:space="preserve"><value>Akaun dicipta, tetapi e-mel tidak dapat dihantar. Minta pengguna menggunakan Lupa kata laluan.</value></data>
+  <data name="Validation.Port" xml:space="preserve"><value>Masukkan port antara 1 hingga 65535.</value></data>
+  <data name="Upload.Error.ImageOnly" xml:space="preserve"><value>Pilih imej JPG atau PNG.</value></data>
+  <data name="Bill.Number" xml:space="preserve"><value>No. bil</value></data>
+  <data name="Bill.Type" xml:space="preserve"><value>Jenis</value></data>
+  <data name="Bill.Description" xml:space="preserve"><value>Keterangan</value></data>
+  <data name="Bill.Amount" xml:space="preserve"><value>Amaun (RM)</value></data>
+  <data name="Bill.Total" xml:space="preserve"><value>Jumlah</value></data>
+  <data name="Bill.Issued" xml:space="preserve"><value>Dikeluarkan</value></data>
+  <data name="Bill.PaidOn" xml:space="preserve"><value>Dibayar pada</value></data>
+  <data name="Bill.BankName" xml:space="preserve"><value>Bank</value></data>
+  <data name="Bill.AccountName" xml:space="preserve"><value>Nama akaun</value></data>
+  <data name="Bill.AccountNo" xml:space="preserve"><value>Nombor akaun</value></data>
+  <data name="Bill.Reference" xml:space="preserve"><value>Rujukan bayaran</value></data>
+  <data name="Bill.NotSet" xml:space="preserve"><value>Belum ditetapkan</value></data>
+  <data name="Bill.QrAlt" xml:space="preserve"><value>Kod QR DuitNow</value></data>
+  <data name="Bill.QrCaption" xml:space="preserve"><value>Imbas dengan aplikasi bank anda</value></data>
+  <data name="LineType.Fee" xml:space="preserve"><value>Fi</value></data>
+  <data name="LineType.Expense" xml:space="preserve"><value>Perbelanjaan</value></data>
+  <data name="Staff.Bill.Lines" xml:space="preserve"><value>Butiran</value></data>
+  <data name="Staff.Bill.AddLine" xml:space="preserve"><value>+ Tambah butiran</value></data>
+  <data name="Staff.Bill.RemoveLine" xml:space="preserve"><value>Padam</value></data>
+  <data name="Staff.Bill.NoLines" xml:space="preserve"><value>Belum ada butiran. Tambah fi atau perbelanjaan.</value></data>
+  <data name="Staff.Bill.TotalHint" xml:space="preserve"><value>Jumlah dikira oleh sistem.</value></data>
+  <data name="Staff.Bill.LineInvalid" xml:space="preserve"><value>Masukkan jenis, keterangan dan amaun melebihi RM 0.00.</value></data>
+  <data name="Staff.Bill.TotalTooLarge" xml:space="preserve"><value>Jumlah bil terlalu besar.</value></data>
+  <data name="Staff.Bill.Note" xml:space="preserve"><value>Nota kepada klien</value></data>
+  <data name="Staff.Bill.SaveNote" xml:space="preserve"><value>Simpan nota</value></data>
+  <data name="Staff.Bill.Status" xml:space="preserve"><value>Status</value></data>
+  <data name="Staff.Bill.SendFreezes" xml:space="preserve"><value>Menghantar akan membekukan butiran.</value></data>
+  <data name="Staff.Bill.MarkSent" xml:space="preserve"><value>Tandakan dihantar</value></data>
+  <data name="Staff.Bill.MarkPaid" xml:space="preserve"><value>Tandakan dibayar</value></data>
+  <data name="Staff.Bill.SentNotice" xml:space="preserve"><value>Bil dihantar. Klien kini boleh melihatnya.</value></data>
+  <data name="Staff.Bill.PaidNotice" xml:space="preserve"><value>Bil ditandakan dibayar.</value></data>
+  <data name="Staff.Bill.NeedsLine" xml:space="preserve"><value>Tambah sekurang-kurangnya satu butiran sebelum menghantar.</value></data>
+  <data name="Staff.Bill.BankPreview" xml:space="preserve"><value>Butiran bank dan QR</value></data>
+  <data name="Staff.Bill.BankMissing" xml:space="preserve"><value>Butiran bank dan QR ditetapkan dalam Tetapan oleh peguam.</value></data>
+  <data name="Staff.Bills.Intro" xml:space="preserve"><value>Bil bagi kes yang boleh anda buka.</value></data>
+  <data name="Staff.Bills.Empty" xml:space="preserve"><value>Belum ada bil. Cipta bil dari halaman kes.</value></data>
+  <data name="Staff.Bills.Client" xml:space="preserve"><value>Klien</value></data>
+  <data name="Staff.Bills.Case" xml:space="preserve"><value>Kes</value></data>
+  <data name="Staff.Bills.Status" xml:space="preserve"><value>Status</value></data>
+  <data name="Staff.Case.Bills" xml:space="preserve"><value>Bil</value></data>
+  <data name="Staff.Case.NoBills" xml:space="preserve"><value>Belum ada bil untuk kes ini.</value></data>
+  <data name="Staff.Case.NewBill" xml:space="preserve"><value>+ Bil baharu</value></data>
+  <data name="Portal.Bills.Empty" xml:space="preserve"><value>Belum ada bil.</value></data>
+  <data name="Portal.Bill.AmountDue" xml:space="preserve"><value>Amaun perlu dibayar</value></data>
+  <data name="Portal.Bill.AmountPaid" xml:space="preserve"><value>Amaun dibayar</value></data>
+  <data name="Portal.Bill.Details" xml:space="preserve"><value>Butiran bil</value></data>
+  <data name="Portal.Bill.Note" xml:space="preserve"><value>Nota daripada firma</value></data>
+  <data name="Portal.Bill.HowToPay" xml:space="preserve"><value>Cara membayar</value></data>
+  <data name="Portal.Bill.Print" xml:space="preserve"><value>Cetak / Simpan sebagai PDF</value></data>
+  <data name="Email.StaffAccountCreated.Subject" xml:space="preserve"><value>Akaun kakitangan Client Hub anda</value></data>
+  <data name="Email.StaffAccountCreated.Body" xml:space="preserve"><value>Salam {0},
+
+Seorang peguam telah mencipta akaun kakitangan anda di Client Hub firma. Gunakan pautan ini untuk menetapkan kata laluan anda. Pautan ini sah selama satu hari:
+{1}
+
+Jika pautan telah tamat tempoh, gunakan Lupa kata laluan di halaman log masuk.</value></data>
+  <data name="Notifications.Empty" xml:space="preserve"><value>Tiada pemberitahuan lagi.</value></data>
+  <data name="Notifications.MarkAllRead" xml:space="preserve"><value>Tanda semua telah dibaca</value></data>
+  <data name="Notifications.Unread" xml:space="preserve"><value>Belum dibaca</value></data>
+  <data name="Notify.CaseStatusChanged.Title" xml:space="preserve"><value>Status kes dikemas kini: {0}</value></data>
+  <data name="Notify.CaseUpdatePosted.Title" xml:space="preserve"><value>Kemas kini baharu bagi {0}</value></data>
+  <data name="Notify.DocumentRequested.Title" xml:space="preserve"><value>Dokumen diminta bagi {0}</value></data>
+  <data name="Notify.DocumentRejected.Title" xml:space="preserve"><value>Sila muat naik semula dokumen bagi {0}</value></data>
+  <data name="Notify.DocumentUploaded.Title" xml:space="preserve"><value>Klien memuat naik dokumen ke {0}</value></data>
+  <data name="Notify.FirmMessage.Title" xml:space="preserve"><value>Mesej baharu daripada firma</value></data>
+  <data name="Notify.ClientMessage.Title" xml:space="preserve"><value>Mesej baharu daripada {0}</value></data>
+  <data name="Notify.BillSent.Title" xml:space="preserve"><value>Bil baharu {0}</value></data>
+  <data name="Notify.BillPaid.Title" xml:space="preserve"><value>Bil {0} ditanda telah dibayar</value></data>
+  <data name="Email.CaseStatusChanged.Subject" xml:space="preserve"><value>Status kes anda telah berubah</value></data>
+  <data name="Email.CaseStatusChanged.Body" xml:space="preserve"><value>Salam {0},
+
+Ini untuk memaklumkan bahawa status salah satu kes anda telah berubah. Log masuk ke Client Hub firma untuk melihat butirannya:
+{1}</value></data>
+  <data name="Email.CaseUpdatePosted.Subject" xml:space="preserve"><value>Kemas kini baharu bagi kes anda</value></data>
+  <data name="Email.CaseUpdatePosted.Body" xml:space="preserve"><value>Salam {0},
+
+Ini untuk memaklumkan bahawa firma telah menyiarkan kemas kini baharu bagi salah satu kes anda. Log masuk ke Client Hub firma untuk melihat butirannya:
+{1}</value></data>
+  <data name="Email.DocumentRequested.Subject" xml:space="preserve"><value>Firma memerlukan dokumen daripada anda</value></data>
+  <data name="Email.DocumentRequested.Body" xml:space="preserve"><value>Salam {0},
+
+Ini untuk memaklumkan bahawa firma telah meminta satu dokumen daripada anda. Log masuk ke Client Hub firma untuk melihat butirannya:
+{1}</value></data>
+  <data name="Email.DocumentRejected.Subject" xml:space="preserve"><value>Sila muat naik semula dokumen</value></data>
+  <data name="Email.DocumentRejected.Body" xml:space="preserve"><value>Salam {0},
+
+Ini untuk memaklumkan bahawa firma meminta anda memuat naik semula satu dokumen. Log masuk ke Client Hub firma untuk melihat butirannya:
+{1}</value></data>
+  <data name="Email.FirmMessage.Subject" xml:space="preserve"><value>Mesej baharu daripada firma</value></data>
+  <data name="Email.FirmMessage.Body" xml:space="preserve"><value>Salam {0},
+
+Ini untuk memaklumkan bahawa anda menerima mesej baharu daripada firma. Log masuk ke Client Hub firma untuk melihat butirannya:
+{1}</value></data>
+  <data name="Email.BillSent.Subject" xml:space="preserve"><value>Anda menerima bil baharu</value></data>
+  <data name="Email.BillSent.Body" xml:space="preserve"><value>Salam {0},
+
+Ini untuk memaklumkan bahawa firma telah menghantar bil baharu kepada anda. Log masuk ke Client Hub firma untuk melihat butirannya:
+{1}</value></data>
+  <data name="Email.BillPaid.Subject" xml:space="preserve"><value>Bil anda telah ditanda dibayar</value></data>
+  <data name="Email.BillPaid.Body" xml:space="preserve"><value>Salam {0},
+
+Ini untuk memaklumkan bahawa firma telah menanda salah satu bil anda sebagai telah dibayar. Log masuk ke Client Hub firma untuk melihat butirannya:
+{1}</value></data>
+  <data name="Notifications.Newer" xml:space="preserve"><value>Lebih baharu</value></data>
+  <data name="Notifications.Older" xml:space="preserve"><value>Muat yang lebih lama</value></data>
+</root>

@@ -1,0 +1,31 @@
+@page
+@model ClientHub.Web.Pages.Staff.Cases.CreateModel
+@{
+    ViewData["Title"] = L["Staff.Cases.New"];
+    var save = new ButtonModel(L["Staff.Cases.CreateSubmit"]);
+    var back = Model.ClientId is { } cid ? $"/Staff/Clients/Details/{cid}" : "/Staff/Cases";
+    var cancel = new ButtonModel(L["Common.Cancel"], ButtonVariant.Ghost, Href: back);
+    var clientErr = ViewData.ModelState.TryGetValue("ClientId", out var ce) && ce.Errors.Count > 0 ? ce.Errors[0].ErrorMessage : null;
+}
+<div class="mx-auto max-w-2xl space-y-5">
+    <nav class="text-caption text-text-secondary"><a href="/Staff/Cases" class="hover:underline">@L["Staff.Cases.Title"]</a> / @L["Staff.Cases.New"]</nav>
+    <h1 class="text-h1">@L["Staff.Cases.New"]</h1>
+    <form method="post" class="card space-y-5" novalidate>
+        <div class="space-y-1">
+            <label for="ClientId" class="block text-badge text-text-secondary">@L["Staff.CaseForm.Client"]</label>
+            <select id="ClientId" name="ClientId" class="input @(clientErr is null ? "" : "input-error")">
+                <option value="">@L["Common.Choose"]</option>
+                @foreach (var c in Model.Clients)
+                {
+                    <option value="@c.Id" selected="@(Model.ClientId == c.Id)">@c.Name</option>
+                }
+            </select>
+            @if (clientErr is not null) { <p class="text-caption text-danger">@clientErr</p> }
+        </div>
+        <partial name="_CaseFields" model="Model.Fields" />
+        <div class="flex gap-2">
+            <partial name="Components/_Button" model="save" />
+            <partial name="Components/_Button" model="cancel" />
+        </div>
+    </form>
+</div>

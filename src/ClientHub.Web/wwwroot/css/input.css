@@ -1,0 +1,24 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body { @apply bg-bg-page text-text-primary font-sans; }
+
+/* Components from docs/UI-Design-Notes.md. Pages use the partials; these classes are their single style source. */
+@layer components {
+  .btn { @apply inline-flex min-h-[44px] items-center justify-center gap-2 rounded-control px-5 text-label transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-gold focus-visible:ring-offset-2 disabled:opacity-50; }
+  .btn-primary { @apply bg-brand-navy text-white hover:bg-brand-navy-dark active:bg-brand-navy-dark; }
+  .btn-accent { @apply bg-brand-gold text-brand-navy hover:brightness-95; }
+  .btn-secondary { @apply border border-border-strong bg-bg-surface text-text-primary hover:bg-bg-subtle; }
+  .btn-ghost { @apply bg-transparent text-brand-navy hover:bg-bg-subtle; }
+  .btn-danger { @apply bg-danger-bg text-danger hover:brightness-95; }
+  .badge { @apply inline-flex items-center gap-1.5 whitespace-nowrap rounded-full px-2.5 py-0.5 text-badge; }
+  .input { @apply block h-11 w-full rounded-control border border-border bg-bg-surface px-3 text-body text-text-primary placeholder:text-text-muted focus:border-border-strong focus:outline-none focus:ring-2 focus:ring-brand-gold/40; }
+  .input-error { @apply border-danger focus:border-danger; }
+  .card { @apply rounded-card border border-border bg-bg-surface p-4 shadow-card md:p-5; }
+  .page { @apply px-5 py-5 md:px-8 md:py-8; }
+  .nav-link { @apply flex min-h-[44px] items-center gap-3 rounded-control px-3 text-label text-white/80 hover:bg-brand-navy-dark hover:text-white; }
+  .nav-link-active { @apply bg-brand-navy-dark text-white; }
+}
+[x-cloak] { display: none !important; }

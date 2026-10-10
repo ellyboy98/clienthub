@@ -2,7 +2,7 @@
 
 Date: 10 October 2026 · Author: Fiqri Wilter
 
-Revised 10 October 2026: file storage moved from Vercel Blob to S3-compatible storage (Cloudflare R2, MinIO in development), added the Office Manager role, chat attachments, file removal and daily backups. The reasons are in `.claude/handoffs/decisions.md`.
+Revised 10 October 2026: file storage moved from Vercel Blob to S3-compatible storage (Cloudflare R2, SeaweedFS in development), added the Office Manager role, chat attachments, file removal and daily backups. SeaweedFS replaced MinIO in development and CI on 10 October 2026 because MinIO no longer publishes community container images. The reasons are in `.claude/handoffs/decisions.md`.
 
 This document describes how the system in the Functional Specification is built, stored, secured and deployed. The reader is the developer. Everything here is free to run at the firm's current size.
 
@@ -15,7 +15,7 @@ One ASP.NET Core application runs as a Docker container on Vercel and serves eve
 | Browser | Renders server-side pages. HTMX swaps parts of the page (chat, upload status) without a full reload. Uploads files straight to file storage with a presigned URL | Staff and client devices, mostly phones for clients |
 | App container | ASP.NET Core 10 with Razor Pages. Handles login, pages, access rules, notifications, email sending and bill totals | Vercel Functions, container runtime, scales to zero when idle |
 | Database | PostgreSQL. All records: users, clients, cases, documents, messages, bills, notifications | Neon, connected through the Vercel Marketplace |
-| File storage | The files themselves, in a private bucket. The database keeps only the object key and metadata | Cloudflare R2 (S3-compatible, free tier). MinIO in the dev container |
+| File storage | The files themselves, in a private bucket. The database keeps only the object key and metadata | Cloudflare R2 (S3-compatible, free tier). SeaweedFS in the dev container |
 | Backups | Daily encrypted database dump | GitHub Actions scheduled job, stored in a separate R2 bucket |
 | Email | Outgoing alerts to clients and the set-password link | Brevo or Gmail over SMTP, settings stored in the database |
 
@@ -30,7 +30,7 @@ Request path: browser → Vercel edge → app container → PostgreSQL. File dow
 | Login and security | ASP.NET Identity, email and password, two-factor with an authenticator app | Built in and free. Two-factor is required for the two lawyers and the Office Manager |
 | Database access | EF Core with Npgsql, code-first migrations | Standard .NET data access |
 | Database | PostgreSQL on Neon, free tier | Added through the Vercel Marketplace, connection string arrives as an environment variable |
-| File storage | S3 API through `AWSSDK.S3`: Cloudflare R2 in preview and production, MinIO in the dev container and CI. Presigned PUT for uploads, presigned GET for downloads | Vercel functions reject request bodies over 4.5 MB, so files never pass through the app. Presigned URLs are plain S3, fully supported by the .NET SDK, need no upload callback (so they work on localhost) and keep the bucket private. Vercel Blob was dropped because its client-upload handshake exists only in its JavaScript SDK |
+| File storage | S3 API through `AWSSDK.S3`: Cloudflare R2 in preview and production, SeaweedFS in the dev container and CI. Presigned PUT for uploads, presigned GET for downloads | Vercel functions reject request bodies over 4.5 MB, so files never pass through the app. Presigned URLs are plain S3, fully supported by the .NET SDK, need no upload callback (so they work on localhost) and keep the bucket private. Vercel Blob was dropped because its client-upload handshake exists only in its JavaScript SDK |
 | Email | Plain SMTP through MailKit. Brevo free tier (300 a day) or Gmail with an app password | Free. Host, port, user and password are set on the settings page |
 | Languages | ASP.NET localisation with .resx files, English and Bahasa Melayu | Built in, no package |
 | Bill PDF | Browser print of the bill page with a print stylesheet | Enough for version 1 |
@@ -90,7 +90,7 @@ File upload (case documents, document requests and chat attachments use the same
 4. The browser posts the ticket to the app's completion handler. The app checks the ticket, checks access again, and reads the object's real size and content type from storage (`HeadObject`). If either is not allowed, it deletes the object and returns an error.
 5. For a case target, the app writes the `documents` row, sets the document request to Received if there is one, writes the audit row and creates notifications. For a chat target, it writes the `messages` row with the attachment fields and creates notifications.
 
-There is no callback from storage to the app, so the same flow works on localhost against MinIO.
+There is no callback from storage to the app, so the same flow works on localhost against SeaweedFS.
 
 Save a chat file to a case:
 
@@ -125,7 +125,7 @@ Bill totals:
 All work happens inside containers. The laptop needs only Docker Desktop, VS Code and the Dev Containers extension.
 
 - `.devcontainer/devcontainer.json` opens the repository inside the app container, which has the .NET 10 SDK, Node (for Tailwind), the `dotnet-ef` tool and the Vercel CLI.
-- `docker-compose.yml` runs three services: `app` (the dev container), `db` (PostgreSQL 16 with a named volume) and `storage` (MinIO with a named volume, plus a one-shot step that creates the `clienthub-files` bucket). The app reaches the database at `db:5432` and storage at `storage:9000`. Presigned URLs for the browser are signed against `http://localhost:9000` (`S3_PUBLIC_ENDPOINT`), because the browser cannot resolve `storage`.
+- `docker-compose.yml` runs three services: `app` (the dev container), `db` (PostgreSQL 16 with a named volume) and `storage` (SeaweedFS `weed server -s3` with a named volume, plus a one-shot `storage-init` step that creates the `clienthub-files` and `clienthub-test` buckets and applies the CORS rules). The app reaches the database at `db:5432` and storage at `storage:9000`. Presigned URLs for the browser are signed against `http://localhost:9000` (`S3_PUBLIC_ENDPOINT`), because the browser cannot resolve `storage`.
 - `dotnet watch` runs the site with hot reload on port 5000; Tailwind runs in watch mode beside it.
 - `.env.example` lists every variable. `.env` is git-ignored.
 - Seed data: one command creates the firm settings, two lawyer accounts, one Office Manager account, one Staff account and one sample client with a case, so the app is usable immediately.
@@ -137,7 +137,7 @@ A push to `main` deploys to production. Nothing reaches `main` without a green p
 
 - Repository: Fiqri's personal GitHub, private. Branch protection on `main`: pull request required, CI must pass, only Fiqri can merge. Others may clone and push branches.
 - Version 1 is built on the `build/v1` branch, one commit per milestone, and reaches `main` through one pull request.
-- GitHub Actions on every push and pull request: restore, build, run xUnit tests against a PostgreSQL service container and a MinIO container (started with `docker run` in a step, because MinIO needs a start command), then build `Dockerfile.vercel` to prove the image compiles.
+- GitHub Actions on every push and pull request: restore, build, run xUnit tests against a PostgreSQL service container and a SeaweedFS container (started with `docker run` in a step, because it needs a start command), then build `Dockerfile.vercel` to prove the image compiles.
 - Vercel is connected to the repository. Every branch gets a preview URL; `main` is production. `vercel.json` declares one service with `runtime: "container"` and `Dockerfile.vercel`, and a catch-all rewrite to it.
 - `Dockerfile.vercel` is two-stage: SDK image restores and publishes, ASP.NET runtime image carries only the published output. The app binds to `0.0.0.0` on the `PORT` environment variable; `PORT` is set to 8080 in Vercel project settings to avoid the privileged-port problem.
 - Secrets (database connection string, S3 endpoint, bucket and access keys, SMTP password encryption key) are Vercel environment variables, separate for preview and production. Preview uses its own R2 bucket.

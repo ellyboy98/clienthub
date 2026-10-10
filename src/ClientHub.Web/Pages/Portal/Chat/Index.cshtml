@@ -1,0 +1,22 @@
+@page
+@model ClientHub.Web.Pages.Portal.Chat.IndexModel
+@{
+    ViewData["Title"] = L["Portal.Chat.Title"];
+    var messages = ChatMessagesModel.From(Model.Chat, Model.Thread.Messages);
+}
+@* Light header (utility screen). Firm messages white with sender name, own messages navy on the right (R-153). *@
+<section class="card -mx-1 flex h-[calc(100dvh-11rem)] min-h-[360px] flex-col overflow-hidden p-0" data-chat>
+    <header class="border-b border-border px-4 py-3">
+        <h1 class="text-h3">@L["Portal.Chat.Title"]</h1>
+        <p class="text-caption text-text-secondary">@L["Portal.Chat.Intro"]</p>
+    </header>
+    <div class="flex-1 space-y-3 overflow-y-auto bg-bg-page px-3 py-4" data-chat-list>
+        @if (Model.Thread.Messages.Count == 0)
+        {
+            <p class="py-8 text-center text-body-sm text-text-secondary" data-chat-empty>@L["Chat.NoMessages"]</p>
+        }
+        <partial name="Components/_ChatMessages" model="messages" />
+    </div>
+    <partial name="Components/_ChatComposer" model="Model.Chat" />
+</section>
+<script src="~/js/chat.js" asp-append-version="true" defer></script>

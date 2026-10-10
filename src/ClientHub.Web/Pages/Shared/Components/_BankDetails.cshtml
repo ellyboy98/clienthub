@@ -1,0 +1,21 @@
+@model BankDetailsModel
+@* Same block in the staff bill editor (preview) and the client bill page. Reference = bill number (R-154). *@
+@{
+    var b = Model.Bank;
+    var missing = L["Bill.NotSet"].Value;
+}
+<div class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between" data-bank>
+    <dl class="grid grid-cols-1 gap-3 text-body-sm">
+        <div><dt class="text-badge text-text-secondary">@L["Bill.BankName"]</dt><dd class="font-medium">@(b.BankName ?? missing)</dd></div>
+        <div><dt class="text-badge text-text-secondary">@L["Bill.AccountName"]</dt><dd class="font-medium">@(b.AccountName ?? missing)</dd></div>
+        <div><dt class="text-badge text-text-secondary">@L["Bill.AccountNo"]</dt><dd class="font-medium tabular-nums">@(b.AccountNo ?? missing)</dd></div>
+        <div><dt class="text-badge text-text-secondary">@L["Bill.Reference"]</dt><dd class="font-medium tabular-nums" data-bill-reference>@Model.Reference</dd></div>
+    </dl>
+    @if (b.QrUrl is not null)
+    {
+        <figure class="space-y-1">
+            <img src="@b.QrUrl" alt="@L["Bill.QrAlt"]" class="h-44 w-44 rounded-control border border-border bg-white object-contain" data-bill-qr />
+            <figcaption class="text-caption text-text-secondary">@L["Bill.QrCaption"]</figcaption>
+        </figure>
+    }
+</div>

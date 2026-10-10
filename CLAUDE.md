@@ -2,7 +2,7 @@
 
 A law-firm client portal for one small firm (2 lawyers, 1 Office Manager, 1–2 staff, under 10 clients).
 ASP.NET Core 10 Razor Pages + Tailwind + HTMX, PostgreSQL (Neon), S3-compatible file storage
-(Cloudflare R2; MinIO in dev) via presigned URLs, SMTP email, deployed as a Docker container on Vercel.
+(Cloudflare R2; SeaweedFS in dev) via presigned URLs, SMTP email, deployed as a Docker container on Vercel.
 English (default) and Bahasa Melayu. Roles: Lawyer, OfficeManager, Staff, Client.
 
 ## Source of truth

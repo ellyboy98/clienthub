@@ -1,0 +1,1 @@
+- [ASP.NET/Razor gotchas](gotchas_aspnet_razor.md) — resx trap, partial quoting, PORT, Secure cookie, 2FA in tests, EF record OrderBy, test token pages, S3 test setup (M4), HTMX poll sentinel (M5), EF child Add, antiforgery on literal action (M6), per-recipient culture + shared fake email in tests (M7)

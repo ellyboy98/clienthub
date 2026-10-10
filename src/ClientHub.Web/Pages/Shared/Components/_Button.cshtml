@@ -1,0 +1,20 @@
+@model ButtonModel
+@{
+    var variant = Model.Variant switch
+    {
+        ButtonVariant.Accent => "btn-accent",
+        ButtonVariant.Secondary => "btn-secondary",
+        ButtonVariant.Ghost => "btn-ghost",
+        ButtonVariant.Danger => "btn-danger",
+        _ => "btn-primary"
+    };
+    var cls = $"btn {variant}{(Model.FullWidth ? " w-full" : "")}";
+}
+@if (Model.Href is not null)
+{
+    <a href="@Model.Href" class="@cls">@Model.Text</a>
+}
+else
+{
+    <button type="@Model.Type" class="@cls" name="@Model.Name" value="@Model.Value" onclick="@Model.OnClick" formaction="@Model.FormAction">@Model.Text</button>
+}

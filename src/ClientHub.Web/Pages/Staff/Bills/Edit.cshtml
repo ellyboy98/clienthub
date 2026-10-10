@@ -1,0 +1,88 @@
+@page "{id:guid}"
+@model ClientHub.Web.Pages.Staff.Bills.EditModel
+@using ClientHub.Web.Data.Entities
+@{
+    var b = Model.Bill;
+    ViewData["Title"] = b.BillNo;
+    var url = $"/Staff/Bills/Edit/{b.Id}";
+    var saveNote = new ButtonModel(L["Staff.Bill.SaveNote"], ButtonVariant.Secondary);
+    var send = new ButtonModel(L["Staff.Bill.MarkSent"], ButtonVariant.Accent, FullWidth: true);
+    var paid = new ButtonModel(L["Staff.Bill.MarkPaid"], ButtonVariant.Accent, FullWidth: true);
+    var bank = new BankDetailsModel(Model.Bank, b.BillNo);
+    var settingsLink = Model.Bank.BankName is null && Model.Bank.QrUrl is null;
+}
+<div class="space-y-5">
+    <nav class="text-caption text-text-secondary">
+        <a href="/Staff/Clients/Details/@Model.ClientId" class="hover:underline">@Model.ClientName</a> /
+        <a href="/Staff/Cases/Details/@b.CaseId" class="hover:underline">@Model.CaseTitle</a> / @b.BillNo
+    </nav>
+    <div class="flex flex-wrap items-center gap-3">
+        <h1 class="text-h1 tabular-nums">@b.BillNo</h1>
+        <partial name="Components/_StatusBadge" model="b.Status" />
+    </div>
+    @if (Model.Notice is not null)
+    {
+        <p class="rounded-control bg-success-bg px-3 py-2 text-body-sm text-success" role="status">@Model.Notice</p>
+    }
+    @if (Model.Warning is not null)
+    {
+        <p class="rounded-control bg-warning-bg px-3 py-2 text-body-sm text-warning" role="alert">@Model.Warning</p>
+    }
+
+    <div class="grid gap-5 lg:grid-cols-3">
+        <div class="space-y-5 lg:col-span-2">
+            <partial name="_BillLines" model="Model" />
+
+            <section class="card space-y-3">
+                <h2 class="text-h3">@L["Staff.Bill.Note"]</h2>
+                @if (b.IsDraft)
+                {
+                    <form method="post" asp-page-handler="Note" asp-route-id="@b.Id" class="space-y-3">
+                        <label for="note" class="sr-only">@L["Staff.Bill.Note"]</label>
+                        <textarea id="note" name="note" rows="3" maxlength="@Bill.NoteMax" class="input h-auto py-2">@b.NoteToClient</textarea>
+                        <partial name="Components/_Button" model="saveNote" />
+                    </form>
+                }
+                else
+                {
+                    <p class="whitespace-pre-line text-body-sm">@(b.NoteToClient ?? L["Common.None"].Value)</p>
+                }
+            </section>
+        </div>
+
+        <aside class="space-y-5">
+            <section class="card space-y-3" data-status-card>
+                <h2 class="text-h3">@L["Staff.Bill.Status"]</h2>
+                <ol class="space-y-2 text-body-sm">
+                    @foreach (var s in new[] { BillStatus.Draft, BillStatus.Sent, BillStatus.Paid })
+                    {
+                        var current = s == b.Status;
+                        <li class="flex items-center gap-2 @(current ? "font-medium text-text-primary" : "text-text-muted")">
+                            <span class="h-2 w-2 rounded-full @(current ? StatusTone.DotClasses(StatusTone.For(s)) : "bg-border")" aria-hidden="true"></span>@L[StatusTone.Key(s)]
+                        </li>
+                    }
+                </ol>
+                @if (b.IssuedAt is not null) { <p class="text-caption text-text-secondary">@L["Bill.Issued"] @Format.Date(b.IssuedAt)</p> }
+                @if (b.PaidAt is not null) { <p class="text-caption text-text-secondary">@L["Bill.PaidOn"] @Format.Date(b.PaidAt)</p> }
+                @if (b.Status == BillStatus.Draft)
+                {
+                    <p class="text-caption text-text-secondary">@L["Staff.Bill.SendFreezes"]</p>
+                    <form method="post" asp-page-handler="Send" asp-route-id="@b.Id"><partial name="Components/_Button" model="send" /></form>
+                }
+                else if (b.Status == BillStatus.Sent)
+                {
+                    <form method="post" asp-page-handler="Paid" asp-route-id="@b.Id"><partial name="Components/_Button" model="paid" /></form>
+                }
+            </section>
+
+            <section class="card space-y-3">
+                <h2 class="text-h3">@L["Staff.Bill.BankPreview"]</h2>
+                <partial name="Components/_BankDetails" model="bank" />
+                @if (settingsLink)
+                {
+                    <p class="text-caption text-text-muted">@L["Staff.Bill.BankMissing"]</p>
+                }
+            </section>
+        </aside>
+    </div>
+</div>

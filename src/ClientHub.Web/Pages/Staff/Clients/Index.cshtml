@@ -1,0 +1,77 @@
+@page
+@model ClientHub.Web.Pages.Staff.Clients.IndexModel
+@{
+    ViewData["Title"] = L["Staff.Clients.Title"];
+    var chips = new[]
+    {
+        (IndexModel.FilterAll, "Staff.Clients.Filter.All"), (IndexModel.FilterPerson, "Staff.Clients.Filter.Person"),
+        (IndexModel.FilterCompany, "Staff.Clients.Filter.Company"), (IndexModel.FilterInactive, "Staff.Clients.Filter.Inactive")
+    };
+    var newClient = new ButtonModel(L["Staff.Clients.New"], Href: "/Staff/Clients/Create");
+    var search = new ButtonModel(L["Common.Search"], ButtonVariant.Secondary);
+    var empty = new EmptyStateModel(L["Staff.Clients.Empty"]);
+}
+<div class="space-y-5">
+    <div class="flex flex-wrap items-center justify-between gap-3">
+        <h1 class="text-h1">@L["Staff.Clients.Title"]</h1>
+        @if (Model.CanCreate)
+        {
+            <partial name="Components/_Button" model="newClient" />
+        }
+    </div>
+
+    <form method="get" class="flex flex-wrap items-center gap-3">
+        <input type="hidden" name="filter" value="@Model.Filter" />
+        <label for="q" class="sr-only">@L["Staff.Clients.Search"]</label>
+        <input id="q" name="q" value="@Model.Q" placeholder="@L["Staff.Clients.Search"]" class="input max-w-sm bg-bg-subtle" />
+        <partial name="Components/_Button" model="search" />
+    </form>
+
+    <nav class="flex flex-wrap gap-2" aria-label="@L["Staff.Clients.Filter"]">
+        @foreach (var (value, key) in chips)
+        {
+            var active = Model.Filter == value;
+            <a href="?filter=@value&q=@Uri.EscapeDataString(Model.Q ?? "")" aria-current="@(active ? "true" : null)"
+               class="inline-flex min-h-[44px] items-center rounded-full border px-4 text-label @(active ? "border-brand-navy bg-brand-navy text-white" : "border-border bg-bg-surface text-text-secondary hover:border-border-strong")">@L[key]</a>
+        }
+    </nav>
+
+    @if (Model.Rows.Count == 0)
+    {
+        <partial name="Components/_EmptyState" model="empty" />
+    }
+    else
+    {
+        <div class="card overflow-x-auto p-0 md:p-0">
+            <table class="w-full text-left text-body-sm">
+                <thead class="bg-bg-subtle text-badge text-text-secondary">
+                    <tr>
+                        <th class="px-4 py-3">@L["Staff.Clients.Col.Client"]</th>
+                        <th class="px-4 py-3">@L["Staff.Clients.Col.Type"]</th>
+                        <th class="px-4 py-3">@L["Staff.Clients.Col.IcOrRegNo"]</th>
+                        <th class="px-4 py-3">@L["Staff.Clients.Col.Phone"]</th>
+                        <th class="px-4 py-3">@L["Staff.Clients.Col.ActiveCases"]</th>
+                        <th class="px-4 py-3">@L["Staff.Clients.Col.Login"]</th>
+                        <th class="px-4 py-3"><span class="sr-only">@L["Common.Open"]</span></th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-border">
+                    @foreach (var r in Model.Rows)
+                    {
+                        var login = r.LoginActive ? StatusTone.Active : StatusTone.Inactive;
+                        var open = new ButtonModel(L["Common.Open"], ButtonVariant.Ghost, Href: $"/Staff/Clients/Details/{r.Id}");
+                        <tr>
+                            <td class="px-4 py-3 font-medium">@r.Name</td>
+                            <td class="px-4 py-3">@L["ClientType." + r.ClientType]</td>
+                            <td class="px-4 py-3">@r.IcOrRegNo</td>
+                            <td class="px-4 py-3">@r.Phone</td>
+                            <td class="px-4 py-3">@r.ActiveCases</td>
+                            <td class="px-4 py-3"><partial name="Components/_StatusBadge" model="login" /></td>
+                            <td class="px-4 py-3 text-right"><partial name="Components/_Button" model="open" /></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>

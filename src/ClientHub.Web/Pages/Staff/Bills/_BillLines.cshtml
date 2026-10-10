@@ -1,0 +1,91 @@
+@model ClientHub.Web.Pages.Staff.Bills.EditModel
+@using System.Globalization
+@using ClientHub.Web.Data.Entities
+@* Lines block of the bill editor, swapped by HTMX after add/edit/remove (R-077, R-078, R-147). The total is never an input. *@
+@{
+    var b = Model.Bill;
+    var url = $"/Staff/Bills/Edit/{b.Id}";
+    var addLine = new ButtonModel(L["Staff.Bill.AddLine"], ButtonVariant.Secondary);
+    string Amount(decimal a) => a.ToString("0.00", CultureInfo.InvariantCulture);
+}
+<section class="card space-y-4" id="bill-lines" data-bill-lines>
+    <h2 class="text-h3">@L["Staff.Bill.Lines"]</h2>
+    @if (b.IsDraft)
+    {
+        <div class="hidden grid-cols-12 gap-2 rounded-control bg-bg-subtle px-3 py-2 text-badge text-text-secondary md:grid">
+            <span class="col-span-2">@L["Bill.Type"]</span>
+            <span class="col-span-5">@L["Bill.Description"]</span>
+            <span class="col-span-2 text-right">@L["Bill.Amount"]</span>
+            <span class="col-span-3"><span class="sr-only">@L["Staff.Settings.Actions"]</span></span>
+        </div>
+        @foreach (var line in b.Lines)
+        {
+            var save = new ButtonModel(L["Common.Save"], ButtonVariant.Secondary);
+            <form method="post" asp-antiforgery="true" action="@url?handler=UpdateLine" hx-post="@url?handler=UpdateLine" hx-target="#bill-lines" hx-swap="outerHTML"
+                  class="grid grid-cols-1 gap-2 border-b border-border pb-3 md:grid-cols-12 md:items-center" data-line="@line.Id">
+                <input type="hidden" name="lineId" value="@line.Id" />
+                <label class="sr-only" for="type-@line.Id">@L["Bill.Type"]</label>
+                <select id="type-@line.Id" name="lineType" class="input md:col-span-2">
+                    @foreach (var t in new[] { LineType.Fee, LineType.Expense })
+                    {
+                        <option value="@t" selected="@(line.LineType == t)">@L["LineType." + t]</option>
+                    }
+                </select>
+                <label class="sr-only" for="desc-@line.Id">@L["Bill.Description"]</label>
+                <input id="desc-@line.Id" name="description" value="@line.Description" maxlength="@Bill.DescriptionMax" class="input md:col-span-5" required />
+                <label class="sr-only" for="amount-@line.Id">@L["Bill.Amount"]</label>
+                <input id="amount-@line.Id" name="amount" value="@Amount(line.Amount)" inputmode="decimal" class="input text-right tabular-nums md:col-span-2" required />
+                <div class="flex gap-2 md:col-span-3 md:justify-end">
+                    <partial name="Components/_Button" model="save" />
+                    <button type="submit" class="btn btn-danger" formaction="@url?handler=RemoveLine" hx-post="@url?handler=RemoveLine" hx-target="#bill-lines" hx-swap="outerHTML">@L["Staff.Bill.RemoveLine"]</button>
+                </div>
+                @if (Model.LineError is not null && Model.LineErrorFor == line.Id)
+                {
+                    <p class="text-caption text-danger md:col-span-12" role="alert">@Model.LineError</p>
+                }
+            </form>
+        }
+        @if (b.Lines.Count == 0)
+        {
+            <p class="text-body-sm text-text-secondary">@L["Staff.Bill.NoLines"]</p>
+        }
+        <form method="post" asp-antiforgery="true" action="@url?handler=AddLine" hx-post="@url?handler=AddLine" hx-target="#bill-lines" hx-swap="outerHTML"
+              class="grid grid-cols-1 gap-2 rounded-control bg-bg-subtle p-3 md:grid-cols-12 md:items-center" data-add-line>
+            <label class="sr-only" for="new-type">@L["Bill.Type"]</label>
+            <select id="new-type" name="lineType" class="input md:col-span-2">
+                <option value="@LineType.Fee">@L["LineType.Fee"]</option>
+                <option value="@LineType.Expense">@L["LineType.Expense"]</option>
+            </select>
+            <label class="sr-only" for="new-desc">@L["Bill.Description"]</label>
+            <input id="new-desc" name="description" maxlength="@Bill.DescriptionMax" placeholder="@L["Bill.Description"]" class="input md:col-span-5" required />
+            <label class="sr-only" for="new-amount">@L["Bill.Amount"]</label>
+            <input id="new-amount" name="amount" inputmode="decimal" placeholder="0.00" class="input text-right tabular-nums md:col-span-2" required />
+            <div class="md:col-span-3 md:flex md:justify-end"><partial name="Components/_Button" model="addLine" /></div>
+            @if (Model.LineError is not null && Model.LineErrorFor is null)
+            {
+                <p class="text-caption text-danger md:col-span-12" role="alert">@Model.LineError</p>
+            }
+        </form>
+    }
+    else
+    {
+        <ul class="divide-y divide-border">
+            @foreach (var line in b.Lines)
+            {
+                var typeBadge = new BadgeModel(L["LineType." + line.LineType], Tone.Neutral);
+                <li class="flex items-center justify-between gap-3 py-3" data-line="@line.Id">
+                    <div class="flex min-w-0 items-center gap-2">
+                        <partial name="Components/_Badge" model="typeBadge" />
+                        <span class="truncate text-body-sm">@line.Description</span>
+                    </div>
+                    <span class="shrink-0 text-body-sm tabular-nums">@Format.Rm(line.Amount)</span>
+                </li>
+            }
+        </ul>
+    }
+    <div class="flex items-center justify-between border-t border-border pt-3">
+        <span class="text-label">@L["Bill.Total"]</span>
+        <span class="text-h2 tabular-nums" data-bill-total>@Format.Rm(b.Total)</span>
+    </div>
+    <p class="text-caption text-text-muted">@L["Staff.Bill.TotalHint"]</p>
+</section>

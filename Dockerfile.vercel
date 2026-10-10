@@ -1,0 +1,24 @@
+# Stage 1: build (SDK image, plus Node for the Tailwind CSS build)
+FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
+RUN apt-get update && apt-get install -y --no-install-recommends nodejs npm && rm -rf /var/lib/apt/lists/*
+WORKDIR /src
+COPY ClientHub.sln ./
+COPY src/ClientHub.Web/ClientHub.Web.csproj src/ClientHub.Web/
+COPY tests/ClientHub.Tests/ClientHub.Tests.csproj tests/ClientHub.Tests/
+RUN dotnet restore src/ClientHub.Web/ClientHub.Web.csproj
+COPY src/ClientHub.Web/package*.json src/ClientHub.Web/
+RUN cd src/ClientHub.Web && npm ci --no-audit --no-fund
+COPY src/ src/
+RUN cd src/ClientHub.Web && npm run css:build
+RUN dotnet publish src/ClientHub.Web/ClientHub.Web.csproj -c Release -o /app --no-restore
+
+# Stage 2: runtime
+FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS runtime
+WORKDIR /app
+COPY --from=build /app ./
+ENV PORT=8080 \
+    DOTNET_gcServer=0
+EXPOSE 8080
+# Run as the non-root "app" user shipped in the aspnet image (port 8080 needs no privileges).
+USER app
+ENTRYPOINT ["dotnet", "ClientHub.Web.dll"]

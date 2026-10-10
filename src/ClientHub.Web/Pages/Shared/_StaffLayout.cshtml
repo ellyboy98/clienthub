@@ -1,0 +1,69 @@
+@using System.Security.Claims
+@using ClientHub.Web.Services.Access
+@using ClientHub.Web.Services.Chat
+@inject IAccessService Access
+@inject IChatService Chats
+@{
+    // R-136: chats with unread client messages, same count as the dashboard tile.
+    var unreadChats = await Chats.UnreadAsync(User);
+    var page = ViewContext.RouteData.Values["page"] as string ?? "";
+    string Active(string prefix, bool exact = false) =>
+        (exact ? page == prefix : page.StartsWith(prefix)) ? "nav-link nav-link-active" : "nav-link";
+    var role = User.FindFirstValue(ClaimTypes.Role) ?? "";
+    var name = User.FindFirstValue(AppClaimsPrincipalFactory.DisplayNameClaim) ?? User.Identity?.Name;
+}
+<!DOCTYPE html>
+<html lang="@System.Globalization.CultureInfo.CurrentUICulture.TwoLetterISOLanguageName">
+<head><partial name="_Head" /></head>
+<body class="min-h-screen" x-data="{ nav: false }">
+    <header class="sticky top-0 z-30 flex h-14 items-center justify-between bg-brand-navy px-4 lg:hidden">
+        <partial name="_Logo" model="true" />
+        <div class="flex items-center">
+            <partial name="Components/_Bell" model="@("text-white")" />
+            <button type="button" class="inline-flex h-11 w-11 items-center justify-center text-white" x-on:click="nav = !nav" aria-label="@L["Common.Menu"]">
+                <svg class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" d="M4 6h16M4 12h16M4 18h16"/></svg>
+            </button>
+        </div>
+    </header>
+    <aside class="fixed inset-y-0 left-0 z-40 flex w-[240px] -translate-x-full flex-col bg-brand-navy transition-transform lg:translate-x-0"
+           x-bind:class="nav ? 'translate-x-0' : ''">
+        <div class="flex h-16 items-center px-5"><partial name="_Logo" model="true" /></div>
+        <nav class="flex-1 space-y-1 px-3" aria-label="@L["Common.Menu"]">
+            <a href="/Staff" class="@Active("/Staff/Index", true)">@L["Staff.Nav.Dashboard"]</a>
+            <a href="/Staff/Clients" class="@Active("/Staff/Clients")">@L["Staff.Nav.Clients"]</a>
+            <a href="/Staff/Cases" class="@Active("/Staff/Cases")">@L["Staff.Nav.Cases"]</a>
+            <a href="/Staff/Chats" class="@Active("/Staff/Chats") justify-between">
+                <span>@L["Staff.Nav.Chats"]</span>
+                @if (unreadChats > 0)
+                {
+                    <span class="inline-flex min-w-[24px] items-center justify-center rounded-full bg-brand-gold px-2 text-badge text-brand-navy" data-nav-unread="@unreadChats"
+                          aria-label="@string.Format(L["Chat.UnreadCount"].Value, unreadChats)">@unreadChats</span>
+                }
+            </a>
+            <a href="/Staff/Bills" class="@Active("/Staff/Bills")">@L["Staff.Nav.Bills"]</a>
+            <a href="/Staff/PastCases" class="@Active("/Staff/PastCases")">@L["Staff.Nav.PastCases"]</a>
+            @if (Access.CanManageSettings(User))
+            {
+                <a href="/Staff/Settings" class="@Active("/Staff/Settings")">@L["Staff.Nav.Settings"]</a>
+            }
+        </nav>
+        <div class="border-t border-white/10 p-3">
+            <div class="flex items-center justify-between">
+                <a href="/Account/Manage" class="flex min-h-[44px] min-w-0 flex-col justify-center rounded-control px-2 hover:bg-brand-navy-dark">
+                    <span class="truncate text-label text-white">@name</span>
+                    <span class="text-caption text-white/60">@L["Role." + role]</span>
+                </a>
+                <span class="hidden lg:inline-flex"><partial name="Components/_Bell" model="@("text-white")" /></span>
+            </div>
+            <form method="post" action="/Account/Logout">
+                @Html.AntiForgeryToken()
+                <button type="submit" class="nav-link w-full">@L["Common.SignOut"]</button>
+            </form>
+        </div>
+    </aside>
+    <div class="fixed inset-0 z-30 bg-brand-navy/40 lg:hidden" x-show="nav" x-cloak x-on:click="nav = false"></div>
+    <main class="page lg:ml-[240px]">
+        @RenderBody()
+    </main>
+</body>
+</html>

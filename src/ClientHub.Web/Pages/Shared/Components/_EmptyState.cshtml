@@ -1,0 +1,8 @@
+@model EmptyStateModel
+<div class="card flex flex-col items-center gap-3 py-10 text-center">
+    <p class="text-body-sm text-text-secondary">@Model.Text</p>
+    @if (Model.ActionText is not null && Model.ActionHref is not null)
+    {
+        <partial name="Components/_Button" model="new ButtonModel(Model.ActionText, ButtonVariant.Secondary, Href: Model.ActionHref)" />
+    }
+</div>

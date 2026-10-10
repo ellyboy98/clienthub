@@ -1,0 +1,3 @@
+@model string
+@* Status value in, localised status word and tone out. Same in portal and staff area (R-157). *@
+<partial name="Components/_Badge" model="new BadgeModel(L[StatusTone.Key(Model)], StatusTone.For(Model))" />

@@ -1,0 +1,10 @@
+@using System.Globalization
+@{
+    var current = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+    var back = Context.Request.Path + Context.Request.QueryString;
+}
+<nav class="inline-flex items-center gap-1 text-label" aria-label="@L["Common.Language"]">
+    <a href="/Account/Culture?culture=en&returnUrl=@Uri.EscapeDataString(back)" class="inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded-control @(current == "en" ? "text-brand-navy font-semibold" : "text-text-muted")" lang="en">EN</a>
+    <span class="text-text-muted" aria-hidden="true">|</span>
+    <a href="/Account/Culture?culture=ms&returnUrl=@Uri.EscapeDataString(back)" class="inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded-control @(current == "ms" ? "text-brand-navy font-semibold" : "text-text-muted")" lang="ms">BM</a>
+</nav>

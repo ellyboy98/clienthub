@@ -1,0 +1,20 @@
+@page
+@model ClientHub.Web.Pages.NotFoundModel
+@{
+    Layout = null;
+    ViewData["Title"] = L["NotFound.Title"];
+    var home = new ButtonModel(L["NotFound.Home"], Href: "/");
+}
+<!DOCTYPE html>
+<html lang="@System.Globalization.CultureInfo.CurrentUICulture.TwoLetterISOLanguageName">
+<head><partial name="_Head" /></head>
+<body class="min-h-screen">
+    <main class="mx-auto flex min-h-screen max-w-md flex-col items-center justify-center gap-4 px-5 text-center">
+        <partial name="_Logo" model="false" />
+        <p class="text-display text-brand-navy">404</p>
+        <h1 class="text-h2">@L["NotFound.Title"]</h1>
+        <p class="text-body-sm text-text-secondary">@L["NotFound.Body"]</p>
+        <partial name="Components/_Button" model="home" />
+    </main>
+</body>
+</html>

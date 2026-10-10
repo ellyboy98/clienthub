@@ -1,0 +1,17 @@
+@page
+@model ClientHub.Web.Pages.Staff.Cases.IndexModel
+@{
+    ViewData["Title"] = L["Staff.Cases.Title"];
+    var empty = new EmptyStateModel(L["Staff.Cases.Empty"]);
+}
+<div class="space-y-5">
+    <h1 class="text-h1">@L["Staff.Cases.Title"]</h1>
+    @if (Model.Rows.Count == 0)
+    {
+        <partial name="Components/_EmptyState" model="empty" />
+    }
+    else
+    {
+        <partial name="_CaseTable" model="Model.Rows" />
+    }
+</div>

@@ -1,0 +1,31 @@
+@page "/Staff/Chats/{clientId:guid}"
+@model ClientHub.Web.Pages.Staff.Chats.ThreadModel
+@{
+    ViewData["Title"] = Model.Thread.ClientName;
+    var list = new ClientHub.Web.Pages.Staff.Chats.ChatListModel(Model.Items, Model.Thread.ClientId);
+    var messages = ChatMessagesModel.From(Model.Chat, Model.Thread.Messages);
+}
+<div class="space-y-5">
+    <h1 class="hidden text-h1 lg:block">@L["Staff.Chats.Title"]</h1>
+    <div class="grid gap-5 lg:grid-cols-[320px_1fr]">
+        <div class="hidden lg:block"><partial name="_ChatList" model="list" /></div>
+        <section class="card flex h-[calc(100dvh-8rem)] min-h-[420px] flex-col overflow-hidden p-0 lg:h-[calc(100dvh-10rem)]" data-chat>
+            <header class="flex items-center gap-2 border-b border-border px-3 py-2">
+                <a href="/Staff/Chats" class="inline-flex h-11 w-11 items-center justify-center rounded-full text-brand-navy lg:hidden" aria-label="@L["Common.Back"]">
+                    <svg class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M15 18l-6-6 6-6"/></svg>
+                </a>
+                <h2 class="min-w-0 flex-1 truncate px-1 text-h3">@Model.Thread.ClientName</h2>
+                <a href="/Staff/Clients/Details/@Model.Thread.ClientId" class="btn btn-ghost">@L["Staff.Chats.Profile"]</a>
+            </header>
+            <div class="flex-1 space-y-3 overflow-y-auto bg-bg-page px-4 py-4" data-chat-list>
+                @if (Model.Thread.Messages.Count == 0)
+                {
+                    <p class="py-8 text-center text-body-sm text-text-secondary" data-chat-empty>@L["Chat.NoMessages"]</p>
+                }
+                <partial name="Components/_ChatMessages" model="messages" />
+            </div>
+            <partial name="Components/_ChatComposer" model="Model.Chat" />
+        </section>
+    </div>
+</div>
+<script src="~/js/chat.js" asp-append-version="true" defer></script>

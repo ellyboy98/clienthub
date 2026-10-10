@@ -1,0 +1,3 @@
+@{
+    Layout = User.IsInRole(ClientHub.Web.Data.Entities.Roles.Client) ? "_PortalLayout" : "_StaffLayout";
+}

@@ -1,0 +1,129 @@
+@page
+@model ClientHub.Web.Pages.Staff.Settings.IndexModel
+@using ClientHub.Web.Data.Entities
+@* Lawyer only (folder policy LawyerOnly; others get 404). No language setting (R-149). Send test email (R-113) is cut. *@
+@{
+    ViewData["Title"] = L["Staff.Nav.Settings"];
+    var i = Model.Input;
+    var firmName = new InputModel("Input.FirmName", L["Staff.Settings.FirmName"], i.FirmName, Required: true);
+    var bankName = new InputModel("Input.BankName", L["Staff.Settings.BankName"], i.BankName);
+    var accountName = new InputModel("Input.BankAccountName", L["Staff.Settings.AccountName"], i.BankAccountName);
+    var accountNo = new InputModel("Input.BankAccountNo", L["Staff.Settings.AccountNo"], i.BankAccountNo, InputMode: "numeric");
+    var smtpHost = new InputModel("Input.SmtpHost", L["Staff.Settings.SmtpHost"], i.SmtpHost, Hint: L["Staff.Settings.SmtpHostHint"]);
+    var smtpPort = new InputModel("Input.SmtpPort", L["Staff.Settings.SmtpPort"], i.SmtpPort?.ToString(), "number", InputMode: "numeric", Hint: L["Staff.Settings.SmtpPortHint"]);
+    var smtpUser = new InputModel("Input.SmtpUser", L["Staff.Settings.SmtpUser"], i.SmtpUser, Autocomplete: "off");
+    var smtpPassword = new InputModel("Input.SmtpPassword", L["Staff.Settings.SmtpPassword"], null, "password", "new-password",
+        Hint: Model.HasSmtpPassword ? L["Staff.Settings.SmtpPasswordKeep"] : L["Staff.Settings.SmtpPasswordNone"]);
+    var smtpFrom = new InputModel("Input.SmtpFrom", L["Staff.Settings.SmtpFrom"], i.SmtpFrom, "email", InputMode: "email");
+    var save = new ButtonModel(L["Common.Save"]);
+    var qrUpload = FileUploadModel.ForSettingsQr("qr-upload", L[Model.QrUrl is null ? "Staff.Settings.QrUpload" : "Staff.Settings.QrReplace"], L["Staff.Settings.QrHint"]);
+    var addStaff = new ButtonModel(L["Staff.Settings.AddStaff"], ButtonVariant.Secondary, Href: "/Staff/Settings/StaffAccounts");
+}
+<div class="mx-auto max-w-3xl space-y-5">
+    <h1 class="text-h1">@L["Staff.Nav.Settings"]</h1>
+    @if (Model.Notice is not null)
+    {
+        <p class="rounded-control bg-success-bg px-3 py-2 text-body-sm text-success" role="status">@Model.Notice</p>
+    }
+    @if (Model.Warning is not null)
+    {
+        <p class="rounded-control bg-warning-bg px-3 py-2 text-body-sm text-warning" role="alert">@Model.Warning</p>
+    }
+
+    <form method="post" class="space-y-5" novalidate>
+        <section class="card space-y-4">
+            <h2 class="text-h3">@L["Staff.Settings.Firm"]</h2>
+            <partial name="Components/_Input" model="firmName" />
+        </section>
+
+        <section class="card space-y-4">
+            <div>
+                <h2 class="text-h3">@L["Staff.Settings.Bank"]</h2>
+                <p class="text-caption text-text-secondary">@L["Staff.Settings.BankIntro"]</p>
+            </div>
+            <partial name="Components/_Input" model="bankName" />
+            <partial name="Components/_Input" model="accountName" />
+            <partial name="Components/_Input" model="accountNo" />
+        </section>
+
+        <section class="card space-y-4">
+            <div>
+                <h2 class="text-h3">@L["Staff.Settings.Smtp"]</h2>
+                <p class="text-caption text-text-secondary">@L["Staff.Settings.SmtpIntro"]</p>
+            </div>
+            <partial name="Components/_Input" model="smtpHost" />
+            <partial name="Components/_Input" model="smtpPort" />
+            <partial name="Components/_Input" model="smtpUser" />
+            <partial name="Components/_Input" model="smtpPassword" />
+            @if (Model.HasSmtpPassword)
+            {
+                <label class="flex min-h-[44px] cursor-pointer items-center gap-2 text-body-sm">
+                    <input type="checkbox" name="Input.ClearSmtpPassword" value="true" class="h-4 w-4 accent-brand-navy" />@L["Staff.Settings.SmtpPasswordClear"]
+                </label>
+            }
+            <partial name="Components/_Input" model="smtpFrom" />
+        </section>
+
+        <partial name="Components/_Button" model="save" />
+    </form>
+
+    <section class="card space-y-4" id="qr" data-qr>
+        <div>
+            <h2 class="text-h3">@L["Staff.Settings.Qr"]</h2>
+            <p class="text-caption text-text-secondary">@L["Staff.Settings.QrIntro"]</p>
+        </div>
+        @if (Model.QrUrl is not null)
+        {
+            <img src="@Model.QrUrl" alt="@L["Bill.QrAlt"]" class="h-48 w-48 rounded-control border border-border object-contain" data-qr-image />
+        }
+        else
+        {
+            <p class="text-body-sm text-text-secondary">@L["Staff.Settings.QrNone"]</p>
+        }
+        <partial name="Components/_FileUpload" model="qrUpload" />
+    </section>
+
+    <section class="card space-y-4" id="staff">
+        <div class="flex flex-wrap items-center justify-between gap-3">
+            <h2 class="text-h3">@L["Staff.Settings.StaffAccounts"]</h2>
+            <partial name="Components/_Button" model="addStaff" />
+        </div>
+        <div class="overflow-x-auto">
+            <table class="w-full text-left text-body-sm">
+                <thead class="bg-bg-subtle text-badge text-text-secondary">
+                    <tr>
+                        <th class="px-3 py-2">@L["Staff.Settings.Name"]</th>
+                        <th class="px-3 py-2">@L["Staff.Settings.Role"]</th>
+                        <th class="px-3 py-2">@L["Staff.Settings.TwoFactor"]</th>
+                        <th class="px-3 py-2">@L["Staff.Settings.State"]</th>
+                        <th class="px-3 py-2"><span class="sr-only">@L["Staff.Settings.Actions"]</span></th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-border">
+                    @foreach (var a in Model.Accounts)
+                    {
+                        var stateTone = a.IsActive ? StatusTone.Active : StatusTone.Inactive;
+                        <tr data-account="@a.Id">
+                            <td class="px-3 py-2"><p class="font-medium">@a.DisplayName</p><p class="text-caption text-text-secondary">@a.Email</p></td>
+                            <td class="px-3 py-2">@L["Role." + a.Role]</td>
+                            <td class="px-3 py-2">@L[a.TwoFactorEnabled ? "Staff.Settings.TwoFactorOn" : "Staff.Settings.TwoFactorOff"]</td>
+                            <td class="px-3 py-2"><partial name="Components/_StatusBadge" model="stateTone" /></td>
+                            <td class="px-3 py-2 text-right">
+                                @if (a.Id != Model.Me)
+                                {
+                                    var toggle = new ButtonModel(L[a.IsActive ? "Staff.Settings.Deactivate" : "Staff.Settings.Reactivate"],
+                                        a.IsActive ? ButtonVariant.Danger : ButtonVariant.Secondary);
+                                    <form method="post" asp-page-handler="Active" class="inline">
+                                        <input type="hidden" name="userId" value="@a.Id" />
+                                        <input type="hidden" name="active" value="@(a.IsActive ? "false" : "true")" />
+                                        <partial name="Components/_Button" model="toggle" />
+                                    </form>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </section>
+</div>

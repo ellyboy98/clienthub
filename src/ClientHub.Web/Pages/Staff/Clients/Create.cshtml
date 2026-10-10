@@ -1,0 +1,20 @@
+@page
+@model ClientHub.Web.Pages.Staff.Clients.CreateModel
+@{
+    ViewData["Title"] = L["Staff.Clients.New"];
+    var save = new ButtonModel(L["Staff.Clients.CreateSubmit"]);
+    var cancel = new ButtonModel(L["Common.Cancel"], ButtonVariant.Ghost, Href: "/Staff/Clients");
+}
+<div class="mx-auto max-w-2xl space-y-5">
+    <nav class="text-caption text-text-secondary"><a href="/Staff/Clients" class="hover:underline">@L["Staff.Clients.Title"]</a> / @L["Staff.Clients.New"]</nav>
+    <h1 class="text-h1">@L["Staff.Clients.New"]</h1>
+    <p class="text-body-sm text-text-secondary">@L["Staff.Clients.CreateIntro"]</p>
+    <form method="post" class="card space-y-5" novalidate>
+        <div asp-validation-summary="ModelOnly" class="text-caption text-danger"></div>
+        <partial name="_ClientForm" model="Model.Input" />
+        <div class="flex gap-2">
+            <partial name="Components/_Button" model="save" />
+            <partial name="Components/_Button" model="cancel" />
+        </div>
+    </form>
+</div>

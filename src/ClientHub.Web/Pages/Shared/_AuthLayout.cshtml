@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="@System.Globalization.CultureInfo.CurrentUICulture.TwoLetterISOLanguageName">
+<head><partial name="_Head" /></head>
+<body class="min-h-screen">
+    <main class="mx-auto flex min-h-screen w-full max-w-md flex-col justify-center px-5 py-10">
+        <div class="mb-6 flex items-center justify-between">
+            <partial name="_Logo" model="false" />
+            <partial name="_LanguageSwitch" />
+        </div>
+        <div class="card space-y-5">
+            @RenderBody()
+        </div>
+    </main>
+</body>
+</html>

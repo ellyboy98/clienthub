@@ -1,0 +1,37 @@
+@page
+@model ClientHub.Web.Pages.Staff.Settings.StaffAccountsModel
+@using ClientHub.Web.Data.Entities
+@{
+    ViewData["Title"] = L["Staff.Settings.AddStaff"];
+    var name = new InputModel("Input.DisplayName", L["Staff.Settings.Name"], Model.Input.DisplayName, Required: true);
+    var email = new InputModel("Input.Email", L["Staff.Settings.Email"], Model.Input.Email, "email", "off", Required: true, InputMode: "email",
+        Hint: L["Staff.Settings.EmailHint"]);
+    var save = new ButtonModel(L["Staff.Settings.CreateSubmit"]);
+    var cancel = new ButtonModel(L["Common.Cancel"], ButtonVariant.Ghost, Href: "/Staff/Settings#staff");
+    var roleErrors = ViewData.ModelState.TryGetValue("Input.Role", out var re) ? re.Errors : null;
+}
+<div class="mx-auto max-w-2xl space-y-5">
+    <nav class="text-caption text-text-secondary"><a href="/Staff/Settings" class="hover:underline">@L["Staff.Nav.Settings"]</a> / @L["Staff.Settings.AddStaff"]</nav>
+    <h1 class="text-h1">@L["Staff.Settings.AddStaff"]</h1>
+    <form method="post" class="card space-y-5" novalidate>
+        <div asp-validation-summary="ModelOnly" class="text-caption text-danger"></div>
+        <partial name="Components/_Input" model="name" />
+        <partial name="Components/_Input" model="email" />
+        <fieldset class="space-y-1">
+            <legend class="text-badge text-text-secondary">@L["Staff.Settings.Role"]</legend>
+            <div class="flex flex-wrap gap-2">
+                @foreach (var r in Roles.Firm)
+                {
+                    <label class="inline-flex min-h-[44px] cursor-pointer items-center gap-2 rounded-control border border-border px-4 text-label has-[:checked]:border-brand-navy has-[:checked]:text-brand-navy">
+                        <input type="radio" name="Input.Role" value="@r" checked="@(Model.Input.Role == r)" class="accent-brand-navy" />@L["Role." + r]
+                    </label>
+                }
+            </div>
+            @if (roleErrors is { Count: > 0 }) { <p class="text-caption text-danger">@roleErrors[0].ErrorMessage</p> }
+        </fieldset>
+        <div class="flex gap-2">
+            <partial name="Components/_Button" model="save" />
+            <partial name="Components/_Button" model="cancel" />
+        </div>
+    </form>
+</div>

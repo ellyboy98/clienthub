@@ -1,0 +1,12 @@
+@model ChatMessagesModel
+@* Initial list and every poll response: new bubbles, then a fresh sentinel with the new cursor (it replaces the old one).
+   visible: only a visible page marks messages read (Q-05). queue last: a chat:refresh during a poll is not dropped. *@
+@foreach (var m in Model.Messages)
+{
+    var mine = Model.Chat.FirmSide ? !m.FromClient : m.FromClient;
+    var bubble = new MessageBubbleModel(m, mine, m.SenderId != Model.Chat.Me);
+    <partial name="/Pages/Shared/Components/_MessageBubble.cshtml" model="bubble" />
+}
+<div id="chat-poll" data-chat-poll hx-get="@(Model.Chat.PollUrl)&after=@Model.AfterSeq"
+     hx-vals='js:{visible: document.visibilityState === "visible" ? 1 : 0}'
+     hx-trigger="every 5s, chat:refresh from:body" hx-sync="this:queue last" hx-swap="outerHTML"></div>

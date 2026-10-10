@@ -1,0 +1,23 @@
+@page "{id:guid}"
+@model ClientHub.Web.Pages.Staff.Clients.EditModel
+@using Microsoft.AspNetCore.Mvc.ViewFeatures
+@{
+    ViewData["Title"] = L["Staff.Clients.Edit"];
+    var save = new ButtonModel(L["Common.Save"]);
+    var cancel = new ButtonModel(L["Common.Cancel"], ButtonVariant.Ghost, Href: $"/Staff/Clients/Details/{Model.Id}");
+}
+<div class="mx-auto max-w-2xl space-y-5">
+    <nav class="text-caption text-text-secondary">
+        <a href="/Staff/Clients" class="hover:underline">@L["Staff.Clients.Title"]</a> /
+        <a href="/Staff/Clients/Details/@Model.Id" class="hover:underline">@Model.Client.Name</a> / @L["Staff.Clients.Edit"]
+    </nav>
+    <h1 class="text-h1">@L["Staff.Clients.Edit"]</h1>
+    <form method="post" class="card space-y-5" novalidate>
+        <div asp-validation-summary="ModelOnly" class="text-caption text-danger"></div>
+        <partial name="_ClientForm" model="Model.Input" view-data="@(new ViewDataDictionary(ViewData) { ["EmailReadOnly"] = !Model.CanChangeEmail })" />
+        <div class="flex gap-2">
+            <partial name="Components/_Button" model="save" />
+            <partial name="Components/_Button" model="cancel" />
+        </div>
+    </form>
+</div>
