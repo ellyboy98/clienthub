@@ -19,7 +19,7 @@ Write `.claude/handoffs/plan.md`:
   - the tests to write (test class and the cases)
   - done-criteria the tester can check without reading code
   - a time box in minutes
-- Milestone 1 is always: dev container (app, db, MinIO storage), solution skeleton, EF Core + PostgreSQL,
+- Milestone 1 is always: dev container (app, db, SeaweedFS storage), solution skeleton, EF Core + PostgreSQL,
   Identity with the four roles (Lawyer, OfficeManager, Staff, Client), seed data, CI workflow, Tailwind config
   with the tokens from `docs/UI-Design-Notes.md` (read only its Tokens section), one passing test. Nothing else.
 - The first screen milestone also builds the two layouts (staff sidebar, portal bottom nav) and the shared

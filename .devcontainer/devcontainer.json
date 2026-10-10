@@ -4,7 +4,7 @@
   "service": "app",
   "runServices": ["app", "db", "storage", "storage-init"],
   "workspaceFolder": "/workspace",
-  "forwardPorts": [5000, 9000, 9001],
+  "forwardPorts": [5000, 9000],
   "customizations": {
     "vscode": {
       "extensions": [

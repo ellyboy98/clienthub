@@ -136,9 +136,9 @@ Sources: FSD, TSD, UI-Design-Notes, decisions.md (all 2026-10-10). Roles: Lawyer
 - R-114 No user action deletes a record or a stored object (except failed-validation uploads).
 - R-115 Every page works on a phone; every portal page is usable at 390px wide.
 - R-116 A seed command creates firm settings, 2 Lawyers, 1 OM, 1 Staff and 1 sample client with a case.
-- R-117 docker-compose runs `app`, `db` (PostgreSQL 16) and `storage` (MinIO, bucket `clienthub-files` created); presigned URLs signed against `S3_PUBLIC_ENDPOINT`.
+- R-117 docker-compose runs `app`, `db` (PostgreSQL 16) and `storage` (SeaweedFS, bucket `clienthub-files` created); presigned URLs signed against `S3_PUBLIC_ENDPOINT`.
 - R-118 EF Core migrations run at app startup.
-- R-119 CI on every push and PR: restore, build, xUnit against PostgreSQL and MinIO, build `Dockerfile.vercel`.
+- R-119 CI on every push and PR: restore, build, xUnit against PostgreSQL and SeaweedFS, build `Dockerfile.vercel`.
 - R-120 `Dockerfile.vercel` is two-stage and binds `0.0.0.0:$PORT`; `vercel.json` declares the container service with a catch-all rewrite.
 - R-121 Logs go to the console only; nothing persistent is written to the container file system.
 - R-122 `.env.example` lists every variable; no secret is committed.

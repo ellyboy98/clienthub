@@ -66,12 +66,12 @@ description: Coding conventions for the Client Management Hub (ASP.NET Core 10 R
 - Mobile first. Every portal page checked at 390px width.
 
 ## Files
-- `IStorageService` wraps `AWSSDK.S3`. Works against MinIO (dev, CI) and Cloudflare R2 (preview, prod);
+- `IStorageService` wraps `AWSSDK.S3`. Works against SeaweedFS (dev, CI) and Cloudflare R2 (preview, prod);
   only env vars differ: `S3_ENDPOINT`, `S3_PUBLIC_ENDPOINT`, `S3_REGION` (`auto` for R2), `S3_BUCKET`,
   `S3_ACCESS_KEY_ID`, `S3_SECRET_ACCESS_KEY`.
 - `AmazonS3Config`: `ServiceURL = S3_ENDPOINT`, `ForcePathStyle = true`,
   `RequestChecksumCalculation = WHEN_REQUIRED`, `ResponseChecksumValidation = WHEN_REQUIRED` (newer SDKs add
-  checksums by default, which R2 and MinIO reject on presigned requests).
+  checksums by default, which R2 and some S3-compatible servers reject on presigned requests).
 - Two clients: one on `S3_ENDPOINT` for server calls (`HeadObject`, `CopyObject`, `DeleteObject`), one on
   `S3_PUBLIC_ENDPOINT` only for signing URLs the browser uses. In dev the browser cannot reach `storage:9000`,
   so URLs are signed for `http://localhost:9000` (set `Protocol = HTTP` when the endpoint is http).
@@ -94,7 +94,7 @@ description: Coding conventions for the Client Management Hub (ASP.NET Core 10 R
 - Integration: `AccessIntegrationTests` (404 cases, Staff cannot create clients, OfficeManager sees all clients
   but not Settings), `PortalFlowTests` (client sees only own data).
 - Test DB: the `db` container with a `clienthub_test` database, reset per test class. Storage: the `storage`
-  (MinIO) container with a `clienthub-test` bucket.
+  (SeaweedFS) container with a `clienthub-test` bucket.
 
 ## Commands (inside the container)
 - `docker compose exec app dotnet watch --project src/ClientHub.Web`

@@ -14,15 +14,16 @@ Job A, dev container (start of build):
 - `.devcontainer/devcontainer.json`, `docker-compose.yml` with:
   - `app` (.NET 10 SDK, Node LTS, dotnet-ef, Vercel CLI),
   - `db` (postgres:16, named volume),
-  - `storage` (`minio/minio`, `server /data --console-address :9001`, ports 9000 and 9001, named volume),
-  - `storage-init` (`minio/mc`, one-shot: creates buckets `clienthub-files` and `clienthub-test`, then exits).
+  - `storage` (`chrislusf/seaweedfs:4.48`, `server -dir=/data -s3 -s3.port=9000`, port 9000, named volume),
+  - `storage-init` (`amazon/aws-cli`, one-shot: creates buckets `clienthub-files` and `clienthub-test`, applies
+    `.devcontainer/cors.json`, then exits).
 - `.env.example` with every variable, including `S3_ENDPOINT=http://storage:9000`,
   `S3_PUBLIC_ENDPOINT=http://localhost:9000`, `S3_REGION=us-east-1`, `S3_BUCKET=clienthub-files`,
   `S3_ACCESS_KEY_ID`, `S3_SECRET_ACCESS_KEY`. `.gitignore` already exists; add to it.
 - Verify: `docker compose up -d`, `docker compose exec app dotnet --version`, `docker compose exec db pg_isready`,
-  and that MinIO answers on `http://localhost:9000/minio/health/live` with both buckets present.
-- `.github/workflows/ci.yml`: on push and pull_request; postgres service container; a step that starts MinIO with
-  `docker run -d -p 9000:9000 ... minio/minio server /data` and creates the test bucket; restore, build, test,
+  and that SeaweedFS answers on `http://localhost:9000/healthz` with both buckets present.
+- `.github/workflows/ci.yml`: on push and pull_request; postgres service container; a step that starts SeaweedFS with
+  `docker run -d -p 9000:9000 ... chrislusf/seaweedfs:4.48 server -s3 -s3.port=9000` and creates the test bucket; restore, build, test,
   then `docker build -f Dockerfile.vercel .`.
 
 Job B, deploy and backups (end of build):

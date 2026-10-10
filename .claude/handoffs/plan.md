@@ -10,8 +10,8 @@ depends on one, it is listed under "Assumes".
 ### M1 Job A: foundation (deployer, not a feature milestone) · 20 min
 Goal: an empty but running app in the dev container, with data model, seed, CI and Tailwind tokens.
 Requirements: R-028, R-116, R-117, R-118, R-119, R-121, R-122.
-Files: `.devcontainer/devcontainer.json`, `docker-compose.yml` (app, db PostgreSQL 16, storage MinIO + bucket-init
-`clienthub-files`), `.env.example`, `.gitignore`, `ClientHub.sln`, `src/ClientHub.Web/{Program.cs,ClientHub.Web.csproj}`,
+Files: `.devcontainer/devcontainer.json`, `docker-compose.yml` (app, db PostgreSQL 16, storage SeaweedFS + bucket-init
+`clienthub-files`, `clienthub-test`), `.env.example`, `.gitignore`, `ClientHub.sln`, `src/ClientHub.Web/{Program.cs,ClientHub.Web.csproj}`,
 `src/ClientHub.Web/Data/{AppDbContext.cs,Entities/*.cs,Migrations/*,Seed/SeedData.cs}` (all 13 tables, because the seed
 needs clients and cases), Identity with roles Lawyer, OfficeManager, Staff, Client,
 `src/ClientHub.Web/{tailwind.config.js,package.json,wwwroot/css/input.css}` (tokens and font only),
@@ -19,11 +19,11 @@ needs clients and cases), Identity with roles Lawyer, OfficeManager, Staff, Clie
 `tests/ClientHub.Tests/{ClientHub.Tests.csproj,SmokeTests.cs}`.
 Tests: `SmokeTests.Database_MigrationsApplied_SeedUsersExist`.
 Done when:
-- `docker compose up -d` starts app, db, storage; MinIO console shows bucket `clienthub-files`.
+- `docker compose up -d` starts app, db, storage; SeaweedFS answers on `http://localhost:9000/healthz` and bucket `clienthub-files` exists.
 - `docker compose exec app dotnet run --project src/ClientHub.Web -- seed` creates 2 Lawyers, 1 OM, 1 Staff, 1 client with a case, firm settings (run twice: no duplicates).
 - `docker compose exec app dotnet test` passes (1 test). App starts on :5000 and migrations run at startup.
 - `tailwind.config.js` has every token from UI-Design-Notes Tokens with the same names and hex values.
-- CI workflow runs restore, build, tests with PostgreSQL and MinIO, and `docker build -f Dockerfile.vercel`.
+- CI workflow runs restore, build, tests with PostgreSQL and SeaweedFS, and `docker build -f Dockerfile.vercel`.
 - `.env.example` lists every variable; `git status` shows no `.env`.
 
 ### M2 Shell, sign-in and access rules · 30 min
@@ -72,7 +72,7 @@ Files: `Services/Storage/{IStorageService.cs,S3StorageService.cs,StorageOptions.
 `Pages/Uploads/{Start,Complete}.cshtml.cs` (one endpoint pair for all targets), `Pages/Files/Download.cshtml.cs`,
 `Services/Documents/DocumentService.cs`, `wwwroot/js/upload.js` (type/size check, PUT with progress, complete),
 case page sections in `Pages/Staff/Cases/Details` and `Pages/Portal/Cases/Details`, `Pages/Portal/Index` pending card.
-Tests: `StorageServiceTests` against MinIO (PresignedPut_ThenHead_ReturnsSizeAndType, PresignedGet_ExpiresIn5Min, Copy_CreatesNewObject).
+Tests: `StorageServiceTests` against SeaweedFS (PresignedPut_ThenHead_ReturnsSizeAndType, PresignedGet_ExpiresIn5Min, Copy_CreatesNewObject).
 `UploadTicketTests` (Tampered_Rejected, Expired_Rejected). `DocumentFlowTests` (Start_NoAccess_404, Key_GeneratedByServer,
 Complete_WithRequest_SetsReceivedAndLinks, Complete_Over20MB_DeletesObjectNoRow, Complete_BadType_DeletesObjectNoRow,
 Complete_AccessRevoked_404, Client_UploadWithoutRequest_Rejected, Reject_WithoutReason_Invalid, Remove_SetsInactiveAuditObjectStays,
@@ -80,7 +80,7 @@ Client_Remove_404, Download_Removed_404, Download_RedirectsAndWritesAudit).
 Done when:
 - As Staff: add a request; as Client: upload a PDF against it from Home; request shows Received in both areas.
 - Reject with reason; client sees reason and Re-upload; a 25 MB file or `.exe` is refused in the browser.
-- Remove asks for confirmation saying the file is kept; file disappears; its old download URL returns 404; object still in MinIO.
+- Remove asks for confirmation saying the file is kept; file disappears; its old download URL returns 404; object still in storage.
 - Browser network tab shows the PUT going to `localhost:9000`, never through the app.
 
 ### M5 Chat · 20 min
@@ -151,7 +151,7 @@ Done when:
 - UI: shared partials in `Pages/Shared/Components`; pages never restyle a button by hand. One `_Button` Accent per screen.
 - Dates `dd/MM/yyyy` via `Format.Date()`, money via `Format.Rm()` (Infrastructure/Format.cs); times shown in Asia/Kuala_Lumpur.
 - Seed logins: `lawyer1@`, `lawyer2@`, `om@`, `staff@`, `client@clienthub.test`, password from `SEED_PASSWORD`. Dev `.env` may set `REQUIRE_FIRM_2FA=false` for manual checks only; default and production are true (approved).
-- Tests: integration tests use the compose PostgreSQL and MinIO (CI services); each test class creates its own data in a fresh schema.
+- Tests: integration tests use the compose PostgreSQL and SeaweedFS (CI services); each test class creates its own data in a fresh schema.
 - Commits: `feat: M<n> <name>` on `build/v1`; tester and reviewer pass first.
 
 ## Cut list (drop in this order)
