@@ -19,9 +19,15 @@ Write `.claude/handoffs/plan.md`:
   - the tests to write (test class and the cases)
   - done-criteria the tester can check without reading code
   - a time box in minutes
-- Milestone 1 is always: dev container, solution skeleton, EF Core + PostgreSQL, Identity with the three
-  roles, seed data, CI workflow, one passing test. Nothing else.
-- Keep bills and notifications in the last two feature milestones, deploy last.
+- Milestone 1 is always: dev container (app, db, MinIO storage), solution skeleton, EF Core + PostgreSQL,
+  Identity with the four roles (Lawyer, OfficeManager, Staff, Client), seed data, CI workflow, Tailwind config
+  with the tokens from `docs/UI-Design-Notes.md` (read only its Tokens section), one passing test. Nothing else.
+- The first screen milestone also builds the two layouts (staff sidebar, portal bottom nav) and the shared
+  component partials, so later milestones reuse them.
+- Storage (`IStorageService`, presigned upload and download) lands in the first milestone that needs a file,
+  with its tests, so documents and chat reuse it.
+- Keep bills and notifications in the last two feature milestones, deploy and the backup workflow last.
+- All work is on the `build/v1` branch; each milestone is one commit there.
 - `## Shared decisions` — folder layout, naming, where `CanAccessCase` lives, how `Notify()` is called,
   how `.resx` keys are named. Short, declarative, so every developer run follows the same shape.
 - `## Cut list` — what to drop first if usage runs low, in order.

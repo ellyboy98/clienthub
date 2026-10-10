@@ -1,3 +1,13 @@
 # Decisions made during the build
 
 Format: date · who · decision · why. Newest first.
+
+- 2026-10-10 · Fiqri · Storage is S3-compatible (Cloudflare R2 in production and preview, MinIO in dev and CI) through `AWSSDK.S3` presigned PUT/GET, replacing Vercel Blob · Blob's client-upload handshake exists only in its JS SDK and needs a callback that cannot reach localhost. Presigned S3 is standard in .NET, private by default, and works the same in dev and prod.
+- 2026-10-10 · Fiqri · Daily backups: encrypted `pg_dump` plus a file-bucket mirror, uploaded to a separate R2 bucket by a GitHub Actions cron job, kept 30 days, with Neon point-in-time restore as the first layer · The FSD requires daily backups (PDPA) and the app has no background process.
+- 2026-10-10 · Fiqri · Chat attachments use the same presigned flow with an upload target of `Chat(clientId)`. "Save to case" copies the object server side into the case and writes a `documents` row · The upload-token design only covered cases; chat is per client.
+- 2026-10-10 · Fiqri · New role OfficeManager: sees all clients, cases, chats and bills; responsible for creating clients; can create cases and assign Staff; no Settings or staff accounts. Staff can no longer create clients or cases or assign staff. 2FA required for OfficeManager as for Lawyers · A Staff user who created a client could not see it, because only lawyers assign staff. 2FA because the role sees every client's personal data.
+- 2026-10-10 · Fiqri · Client-event notifications (upload, client chat message) go to the lawyer in charge and the assigned Staff of the case, or of all the client's cases for chat. The Office Manager is not notified. Fallback: all Lawyers when the client has no cases · "All staff" would send unassigned Staff to links that return 404.
+- 2026-10-10 · Fiqri · FSD aligned to the TSD: Staff see a client's chat only when assigned to one of that client's cases; files are removed with `is_active = false`, never deleted · The TSD rules were the consistent ones.
+- 2026-10-10 · Fiqri · Default language is English for new users and the login page. There is no firm-wide language setting; each user changes their own in My account · Simplest reading of "default language is English".
+- 2026-10-10 · Fiqri · Version 1 is built on branch `build/v1`, one commit per milestone, merged into `main` through one pull request · `main` has branch protection (PR plus green CI), so direct milestone commits to `main` would be rejected.
+- 2026-10-10 · Fiqri · Vercel Hobby plan accepted for now · Family project for the firm. The TSD's plan to move to Pro stays.

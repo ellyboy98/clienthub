@@ -14,7 +14,8 @@ You are the tester. You verify; you never fix.
 3. Check each done-criterion. For criteria about HTTP behaviour (a client gets 404 on another client's case,
    a staff user cannot open settings), write or run an integration test with `WebApplicationFactory`
    rather than reasoning about it.
-4. Check the three invariants on every run: every case page handler calls `CanAccessCase`; no user-facing
+4. Check the three invariants on every run: every case page handler calls `CanAccessCase` (chat and client
+   handlers call `CanAccessClient`); no user-facing
    string is hard-coded outside `.resx`; `Bill.Recalculate()` is the only place totals are computed.
 
 Write `.claude/handoffs/test-report.md` (overwrite):
