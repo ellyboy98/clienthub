@@ -18,7 +18,7 @@ Job A, dev container (start of build):
   - `storage-init` (`minio/mc`, one-shot: creates buckets `clienthub-files` and `clienthub-test`, then exits).
 - `.env.example` with every variable, including `S3_ENDPOINT=http://storage:9000`,
   `S3_PUBLIC_ENDPOINT=http://localhost:9000`, `S3_REGION=us-east-1`, `S3_BUCKET=clienthub-files`,
-  `S3_ACCESS_KEY_ID`, `S3_SECRET_ACCESS_KEY`. `.gitignore` already exists; add to it, keep `_duplicates/`.
+  `S3_ACCESS_KEY_ID`, `S3_SECRET_ACCESS_KEY`. `.gitignore` already exists; add to it.
 - Verify: `docker compose up -d`, `docker compose exec app dotnet --version`, `docker compose exec db pg_isready`,
   and that MinIO answers on `http://localhost:9000/minio/health/live` with both buckets present.
 - `.github/workflows/ci.yml`: on push and pull_request; postgres service container; a step that starts MinIO with
