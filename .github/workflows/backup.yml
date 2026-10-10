@@ -17,7 +17,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     env:
-      PGMAJOR: "17" # must match the Neon project's PostgreSQL major version
+      PGMAJOR: "18" # must match the Neon project's PostgreSQL major version
       AWS_DEFAULT_REGION: auto
       AWS_EC2_METADATA_DISABLED: "true"
       AWS_REQUEST_CHECKSUM_CALCULATION: when_required
