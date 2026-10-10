@@ -36,7 +36,7 @@ Nothing here has been done for you. Do the steps in order. Production origin bel
 ## 2. Neon
 
 Created from Vercel (step 3) via the Marketplace integration, which also sets `DATABASE_URL`. Afterwards, in the Neon console:
-- Note the PostgreSQL major version (Project > Settings). The backup workflow installs `postgresql-client-17` (`PGMAJOR` in `.github/workflows/backup.yml`). If your project is not 17, edit `PGMAJOR` before the first backup run.
+- Note the PostgreSQL major version (Project > Settings). The backup workflow installs `postgresql-client-18` (Neon project is on 18) (`PGMAJOR` in `.github/workflows/backup.yml`). If your project is not 18, edit `PGMAJOR` before the first backup run.
 - Copy the **direct (non-pooled)** connection string (turn off "Connection pooling" in the Connect dialog). That goes in the GitHub secret `BACKUP_DATABASE_URL`.
 - Previews must NEVER get production data. Do not enable "branch per preview deployment" and do not branch from the production branch. Give Preview its own `DATABASE_URL`: create a separate Neon project (for example `clienthub-preview`), or a new root branch created empty (not branched from production). It is filled only by the seed command. Set that URL as the Preview-only `DATABASE_URL` in Vercel.
 
