@@ -1,0 +1,64 @@
+@page
+@model ClientHub.Web.Pages.Account.Manage.TwoFactorModel
+@{
+    ViewData["Title"] = L["Account.TwoFactor.Title"];
+    var code = new InputModel("Code", L["Account.LoginWith2fa.Code"], Autocomplete: "one-time-code", Required: true, InputMode: "numeric");
+    var enable = new ButtonModel(L["Account.TwoFactor.Enable"]);
+    var done = new ButtonModel(L["Account.TwoFactor.Done"], Href: "/");
+    var disable = new ButtonModel(L["Account.TwoFactor.Disable"], ButtonVariant.Danger);
+}
+<div class="mx-auto max-w-2xl space-y-5">
+    <h1 class="text-h1">@L["Account.TwoFactor.Title"]</h1>
+
+    @if (Model.RecoveryCodes is not null)
+    {
+        <section class="card space-y-4">
+            <p class="rounded-control bg-success-bg px-3 py-2 text-body-sm text-success" role="status">@L["Account.TwoFactor.Enabled"]</p>
+            <h2 class="text-h3">@L["Account.TwoFactor.RecoveryTitle"]</h2>
+            <p class="text-body-sm text-text-secondary">@L["Account.TwoFactor.RecoveryIntro"]</p>
+            <ul class="grid grid-cols-2 gap-2 font-mono text-body-sm">
+                @foreach (var c in Model.RecoveryCodes)
+                {
+                    <li class="rounded-control bg-bg-subtle px-3 py-2">@c</li>
+                }
+            </ul>
+            <partial name="Components/_Button" model="done" />
+        </section>
+    }
+    else if (Model.Me.TwoFactorEnabled)
+    {
+        <section class="card space-y-4">
+            <p class="text-body-sm text-text-secondary">@L["Account.Manage.2faOn"]</p>
+            @if (!Model.Required)
+            {
+                <form method="post" asp-page-handler="Disable">
+                    <partial name="Components/_Button" model="disable" />
+                </form>
+            }
+        </section>
+    }
+    else
+    {
+        @if (Model.Required)
+        {
+            <p class="rounded-control bg-warning-bg px-3 py-2 text-body-sm text-warning" role="alert">@L["Account.TwoFactor.RequiredNotice"]</p>
+        }
+        <section class="card space-y-4">
+            <ol class="list-decimal space-y-2 pl-5 text-body-sm text-text-secondary">
+                <li>@L["Account.TwoFactor.Step1"]</li>
+                <li>@L["Account.TwoFactor.Step2"]</li>
+                <li>@L["Account.TwoFactor.Step3"]</li>
+            </ol>
+            <div class="w-48 max-w-full [&>svg]:h-auto [&>svg]:w-full">@Html.Raw(Model.QrSvg)</div>
+            <p class="text-body-sm">@L["Account.TwoFactor.KeyLabel"] <code class="rounded bg-bg-subtle px-2 py-1 font-mono">@Model.SharedKey</code></p>
+            @if (Model.Error is not null)
+            {
+                <p class="rounded-control bg-danger-bg px-3 py-2 text-body-sm text-danger" role="alert">@Model.Error</p>
+            }
+            <form method="post" asp-page-handler="Enable" class="space-y-4" novalidate>
+                <partial name="Components/_Input" model="code" />
+                <partial name="Components/_Button" model="enable" />
+            </form>
+        </section>
+    }
+</div>

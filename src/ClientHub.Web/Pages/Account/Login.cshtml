@@ -1,0 +1,26 @@
+@page
+@model ClientHub.Web.Pages.Account.LoginModel
+@{
+    ViewData["Title"] = L["Account.Login.Title"];
+    var email = new InputModel("Input.Email", L["Account.Login.Email"], Model.Input.Email, "email", "username", Required: true, InputMode: "email", Autofocus: true);
+    var password = new InputModel("Input.Password", L["Account.Login.Password"], Type: "password", Autocomplete: "current-password", Required: true);
+    var signIn = new ButtonModel(L["Account.Login.SignIn"], FullWidth: true);
+    var forgot = new ButtonModel(L["Account.Login.Forgot"], ButtonVariant.Ghost, Href: "/Account/ForgotPassword", FullWidth: true);
+}
+<h1 class="text-h1">@L["Account.Login.Title"]</h1>
+@if (Model.Notice is not null)
+{
+    <p class="rounded-control bg-success-bg px-3 py-2 text-body-sm text-success" role="status">@Model.Notice</p>
+}
+@if (Model.Error is not null)
+{
+    <p class="rounded-control bg-danger-bg px-3 py-2 text-body-sm text-danger" role="alert">@Model.Error</p>
+}
+<form method="post" class="space-y-4" novalidate>
+    <input type="hidden" name="ReturnUrl" value="@Model.ReturnUrl" />
+    <partial name="Components/_Input" model="email" />
+    <partial name="Components/_Input" model="password" />
+    <partial name="Components/_Button" model="signIn" />
+</form>
+<partial name="Components/_Button" model="forgot" />
+<p class="text-center text-caption text-text-secondary">@L["Account.Login.CreatedByFirm"]</p>

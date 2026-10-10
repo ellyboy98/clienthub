@@ -1,0 +1,6 @@
+@model bool
+@* Model: true on a navy background. *@
+<span class="inline-flex items-center gap-2">
+    <span class="inline-flex h-8 w-8 items-center justify-center rounded-control bg-brand-gold text-label font-bold text-brand-navy" aria-hidden="true">CH</span>
+    <span class="text-h3 @(Model ? "text-white" : "text-brand-navy")">@L["Common.AppName"]</span>
+</span>

@@ -1,0 +1,11 @@
+@model FileUploadModel
+@* Behaviour is wired by wwwroot/js/upload.js (M4). Allowed: pdf, docx, jpg, png, up to 20 MB. *@
+<div class="space-y-2" data-upload data-upload-start="@Model.StartUrl" data-upload-complete="@Model.CompleteUrl">
+    <label for="@Model.Id" class="btn @(Model.Accent ? "btn-accent" : "btn-secondary") cursor-pointer">@Model.Label</label>
+    <input id="@Model.Id" type="file" class="sr-only" accept=".pdf,.docx,.jpg,.jpeg,.png,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,image/jpeg,image/png" />
+    <p class="text-caption text-text-muted">@L["Common.Upload.Hint"]</p>
+    <div class="hidden h-2 w-full overflow-hidden rounded-full bg-bg-subtle" data-upload-progress>
+        <div class="h-full w-0 bg-brand-gold transition-all" data-upload-bar></div>
+    </div>
+    <p class="hidden text-caption text-danger" data-upload-error></p>
+</div>

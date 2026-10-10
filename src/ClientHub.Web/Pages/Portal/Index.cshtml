@@ -1,0 +1,25 @@
+@page
+@model ClientHub.Web.Pages.Portal.IndexModel
+@using System.Security.Claims
+@using ClientHub.Web.Services.Access
+@{
+    ViewData["Title"] = L["Portal.Nav.Home"];
+    var soon = new EmptyStateModel(L["Common.ComingSoon"]);
+    var name = User.FindFirstValue(AppClaimsPrincipalFactory.DisplayNameClaim);
+}
+@section Header {
+    <header class="bg-brand-navy px-5 pb-6 pt-4 text-white">
+        <div class="mx-auto flex max-w-2xl items-center justify-between">
+            <partial name="_Logo" model="true" />
+            <div class="flex items-center">
+                <partial name="Components/_Bell" model="@("text-white")" />
+                <a href="/Account/Manage" class="inline-flex h-11 w-11 items-center justify-center rounded-full text-white" aria-label="@L["Common.MyAccount"]">
+                    <svg class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path stroke-linecap="round" d="M4 20a8 8 0 0 1 16 0"/></svg>
+                </a>
+            </div>
+        </div>
+        <h1 class="mx-auto mt-4 max-w-2xl text-h1">@string.Format(L["Portal.Home.Greeting"].Value, name)</h1>
+    </header>
+}
+@* Placeholder until M3 adds requests, case cards and tiles. *@
+<partial name="Components/_EmptyState" model="soon" />

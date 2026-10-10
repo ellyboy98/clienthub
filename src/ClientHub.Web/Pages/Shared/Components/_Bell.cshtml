@@ -1,0 +1,17 @@
+@using ClientHub.Web.Data
+@using ClientHub.Web.Services.Access
+@using Microsoft.EntityFrameworkCore
+@inject AppDbContext Db
+@model string
+@* Model: extra classes for the icon colour. List and mark-read arrive in M7. *@
+@{
+    var uid = AccessService.UserId(User);
+    var unread = uid is null ? 0 : await Db.Notifications.CountAsync(n => n.UserId == uid && n.ReadAt == null);
+}
+<a href="/Notifications" class="relative inline-flex h-11 w-11 items-center justify-center rounded-full @Model" aria-label="@L["Common.Notifications"]">
+    <svg class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.4-1.4A2 2 0 0 1 18 14.2V11a6 6 0 1 0-12 0v3.2c0 .5-.2 1-.6 1.4L4 17h5m6 0a3 3 0 1 1-6 0"/></svg>
+    @if (unread > 0)
+    {
+        <span class="absolute right-1 top-1 min-w-[18px] rounded-full bg-brand-gold px-1 text-center text-badge text-brand-navy">@unread</span>
+    }
+</a>

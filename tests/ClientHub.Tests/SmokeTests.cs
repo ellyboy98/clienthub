@@ -54,6 +54,5 @@ public class SmokeTests : IAsyncLifetime
         Assert.Equal(1, await db.Clients.CountAsync());
         Assert.Equal(1, await db.Cases.CountAsync());
         Assert.Equal(1, await db.FirmSettings.CountAsync());
-        Assert.Equal(4, await db.Roles.CountAsync());
     }
 }

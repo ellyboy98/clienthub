@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Identity;
 using ClientHub.Web.Data.Entities;
 using Microsoft.EntityFrameworkCore;
@@ -15,11 +16,16 @@ public static class DataServiceExtensions
             {
                 o.Password.RequiredLength = 10;
                 o.Lockout.MaxFailedAccessAttempts = 5;
+                o.Lockout.AllowedForNewUsers = true;
                 o.User.RequireUniqueEmail = true;
             })
-            .AddRoles<AppRole>()
             .AddEntityFrameworkStores<AppDbContext>()
             .AddDefaultTokenProviders();
+        // Keys live in PostgreSQL: Vercel containers are ephemeral, so file-system keys would break
+        // cookies, 2FA and upload tickets on every deploy (decisions.md).
+        services.AddDataProtection()
+            .SetApplicationName("ClientHub")
+            .PersistKeysToDbContext<AppDbContext>();
         return services;
     }
 

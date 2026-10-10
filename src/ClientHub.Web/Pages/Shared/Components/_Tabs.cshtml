@@ -1,0 +1,8 @@
+@model TabsModel
+<nav class="flex gap-1 border-b border-border" role="tablist">
+    @foreach (var t in Model.Items)
+    {
+        <a href="@t.Href" role="tab" aria-selected="@(t.Active ? "true" : "false")"
+           class="inline-flex min-h-[44px] items-center px-4 text-label @(t.Active ? "border-b-2 border-brand-navy text-brand-navy" : "text-text-secondary hover:text-text-primary")">@t.Label</a>
+    }
+</nav>

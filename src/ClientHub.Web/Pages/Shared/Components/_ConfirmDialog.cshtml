@@ -1,0 +1,23 @@
+@model ConfirmDialogModel
+@{
+    var cancel = new ButtonModel(L["Common.Cancel"], ButtonVariant.Ghost, Type: "button", OnClick: "this.closest('dialog').close()");
+    var confirm = new ButtonModel(Model.ConfirmText, Model.ConfirmVariant);
+}
+<dialog id="@Model.Id" class="w-[min(92vw,420px)] rounded-card border border-border bg-bg-surface p-0 shadow-card backdrop:bg-brand-navy/40">
+    <form method="post" action="@Model.Action" class="space-y-4 p-5">
+        @Html.AntiForgeryToken()
+        @if (Model.Fields is not null)
+        {
+            foreach (var f in Model.Fields)
+            {
+                <input type="hidden" name="@f.Key" value="@f.Value" />
+            }
+        }
+        <h2 class="text-h3">@Model.Title</h2>
+        <p class="text-body-sm text-text-secondary">@Model.Message</p>
+        <div class="flex justify-end gap-2">
+            <partial name="Components/_Button" model="cancel" />
+            <partial name="Components/_Button" model="confirm" />
+        </div>
+    </form>
+</dialog>

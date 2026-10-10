@@ -12,17 +12,12 @@ public abstract class Entity
 public class AppUser : IdentityUser<Guid>
 {
     public string DisplayName { get; set; } = "";
+    /// <summary>Single source of truth for the role (no Identity role tables). Issued as a role claim at sign-in.</summary>
     public string Role { get; set; } = Roles.Staff;
     public string Language { get; set; } = "en";
     public bool IsActive { get; set; } = true;
     public DateTime CreatedAt { get; set; }
     public DateTime UpdatedAt { get; set; }
-}
-
-public class AppRole : IdentityRole<Guid>
-{
-    public AppRole() { }
-    public AppRole(string name) : base(name) { }
 }
 
 public static class Roles
@@ -32,6 +27,7 @@ public static class Roles
     public const string Staff = "Staff";
     public const string Client = "Client";
     public static readonly string[] All = { Lawyer, OfficeManager, Staff, Client };
+    public static readonly string[] Firm = { Lawyer, OfficeManager, Staff };
 }
 
 public static class ClientType { public const string Person = "Person", Company = "Company"; }

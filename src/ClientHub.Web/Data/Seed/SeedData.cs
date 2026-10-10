@@ -10,10 +10,6 @@ public static class SeedData
     {
         var db = sp.GetRequiredService<AppDbContext>();
         var users = sp.GetRequiredService<UserManager<AppUser>>();
-        var roles = sp.GetRequiredService<RoleManager<AppRole>>();
-
-        foreach (var r in Roles.All)
-            if (!await roles.RoleExistsAsync(r)) await roles.CreateAsync(new AppRole(r));
 
         if (!await db.FirmSettings.AnyAsync())
         {
@@ -73,7 +69,6 @@ public static class SeedData
         u = new AppUser { UserName = email, Email = email, EmailConfirmed = true, DisplayName = name, Role = role, Language = "en" };
         var res = await users.CreateAsync(u, password);
         if (!res.Succeeded) throw new InvalidOperationException("Seed user failed: " + string.Join("; ", res.Errors.Select(e => e.Description)));
-        await users.AddToRoleAsync(u, role);
         return u;
     }
 }

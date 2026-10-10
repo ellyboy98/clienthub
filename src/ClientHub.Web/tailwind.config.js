@@ -1,6 +1,6 @@
 /** Tokens from docs/UI-Design-Notes.md. Keep names and hex values identical. */
 module.exports = {
-  content: ['./Pages/**/*.cshtml', './wwwroot/js/**/*.js'],
+  content: ['./Pages/**/*.cshtml', './Pages/**/*.cs', './Infrastructure/**/*.cs', './wwwroot/js/**/*.js'],
   theme: {
     extend: {
       colors: {

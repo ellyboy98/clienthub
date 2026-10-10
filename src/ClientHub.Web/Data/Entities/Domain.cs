@@ -122,7 +122,7 @@ public class FirmSettings : Entity
     public string? SmtpHost { get; set; }
     public int? SmtpPort { get; set; }
     public string? SmtpUser { get; set; }
-    /// <summary>Stored encrypted (Data Protection / SMTP_ENCRYPTION_KEY), never plain text.</summary>
+    /// <summary>Stored encrypted with ASP.NET Data Protection (purpose SmtpEmailSender.ProtectorPurpose), never plain text.</summary>
     public string? SmtpPassword { get; set; }
     public string? SmtpFrom { get; set; }
 }

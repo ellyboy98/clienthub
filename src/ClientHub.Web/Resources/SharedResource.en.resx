@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="Account.Common.BackToLogin" xml:space="preserve"><value>Back to sign in</value></data>
+  <data name="Account.Forgot.Intro" xml:space="preserve"><value>Enter your email and we will send you a link to set a new password.</value></data>
+  <data name="Account.Forgot.Send" xml:space="preserve"><value>Send link</value></data>
+  <data name="Account.Forgot.Sent" xml:space="preserve"><value>If an account exists for that email, a link to set a new password is on its way.</value></data>
+  <data name="Account.Forgot.Title" xml:space="preserve"><value>Forgot password</value></data>
+  <data name="Account.Login.CreatedByFirm" xml:space="preserve"><value>Your account is created by the firm.</value></data>
+  <data name="Account.Login.Email" xml:space="preserve"><value>Email</value></data>
+  <data name="Account.Login.Forgot" xml:space="preserve"><value>Forgot password</value></data>
+  <data name="Account.Login.Invalid" xml:space="preserve"><value>The email or password is incorrect.</value></data>
+  <data name="Account.Login.LockedOut" xml:space="preserve"><value>Too many failed attempts. Try again in a few minutes.</value></data>
+  <data name="Account.Login.Password" xml:space="preserve"><value>Password</value></data>
+  <data name="Account.Login.PasswordSet" xml:space="preserve"><value>Your password is set. You can sign in now.</value></data>
+  <data name="Account.Login.SignIn" xml:space="preserve"><value>Sign in</value></data>
+  <data name="Account.Login.Title" xml:space="preserve"><value>Sign in</value></data>
+  <data name="Account.LoginWith2fa.Code" xml:space="preserve"><value>Code</value></data>
+  <data name="Account.LoginWith2fa.Hint" xml:space="preserve"><value>No phone? Enter one of your recovery codes instead.</value></data>
+  <data name="Account.LoginWith2fa.Intro" xml:space="preserve"><value>Enter the 6-digit code from your authenticator app.</value></data>
+  <data name="Account.LoginWith2fa.Invalid" xml:space="preserve"><value>The code is incorrect.</value></data>
+  <data name="Account.LoginWith2fa.Title" xml:space="preserve"><value>Two-step verification</value></data>
+  <data name="Account.LoginWith2fa.Verify" xml:space="preserve"><value>Verify</value></data>
+  <data name="Account.Manage.2faOff" xml:space="preserve"><value>Two-step verification is off.</value></data>
+  <data name="Account.Manage.2faOn" xml:space="preserve"><value>Two-step verification is on.</value></data>
+  <data name="Account.Manage.ChangePassword" xml:space="preserve"><value>Change password</value></data>
+  <data name="Account.Manage.CurrentPassword" xml:space="preserve"><value>Current password</value></data>
+  <data name="Account.Manage.Enable2fa" xml:space="preserve"><value>Set up two-step verification</value></data>
+  <data name="Account.Manage.Language" xml:space="preserve"><value>Language</value></data>
+  <data name="Account.Manage.Manage2fa" xml:space="preserve"><value>Manage two-step verification</value></data>
+  <data name="Account.Manage.PasswordChanged" xml:space="preserve"><value>Your password has been changed.</value></data>
+  <data name="Account.Manage.Title" xml:space="preserve"><value>My account</value></data>
+  <data name="Account.Manage.TwoFactor" xml:space="preserve"><value>Two-step verification</value></data>
+  <data name="Account.SetPassword.Confirm" xml:space="preserve"><value>Confirm new password</value></data>
+  <data name="Account.SetPassword.New" xml:space="preserve"><value>New password</value></data>
+  <data name="Account.SetPassword.Rules" xml:space="preserve"><value>At least 10 characters, with a capital letter, a small letter, a number and a symbol.</value></data>
+  <data name="Account.SetPassword.Save" xml:space="preserve"><value>Save password</value></data>
+  <data name="Account.SetPassword.Title" xml:space="preserve"><value>Set your password</value></data>
+  <data name="Account.TwoFactor.Disable" xml:space="preserve"><value>Turn off</value></data>
+  <data name="Account.TwoFactor.Done" xml:space="preserve"><value>Continue</value></data>
+  <data name="Account.TwoFactor.Enable" xml:space="preserve"><value>Turn on</value></data>
+  <data name="Account.TwoFactor.Enabled" xml:space="preserve"><value>Two-step verification is now on.</value></data>
+  <data name="Account.TwoFactor.KeyLabel" xml:space="preserve"><value>Key:</value></data>
+  <data name="Account.TwoFactor.RecoveryIntro" xml:space="preserve"><value>Keep these codes somewhere safe. Each one signs you in once if you lose your phone. They are shown only now.</value></data>
+  <data name="Account.TwoFactor.RecoveryTitle" xml:space="preserve"><value>Recovery codes</value></data>
+  <data name="Account.TwoFactor.RequiredNotice" xml:space="preserve"><value>Your role needs two-step verification. Set it up to continue.</value></data>
+  <data name="Account.TwoFactor.Step1" xml:space="preserve"><value>Install an authenticator app on your phone, such as Google Authenticator or Microsoft Authenticator.</value></data>
+  <data name="Account.TwoFactor.Step2" xml:space="preserve"><value>Scan the QR code, or type the key shown below.</value></data>
+  <data name="Account.TwoFactor.Step3" xml:space="preserve"><value>Enter the 6-digit code the app shows.</value></data>
+  <data name="Account.TwoFactor.Title" xml:space="preserve"><value>Two-step verification</value></data>
+  <data name="Common.AppName" xml:space="preserve"><value>Client Hub</value></data>
+  <data name="Common.Cancel" xml:space="preserve"><value>Cancel</value></data>
+  <data name="Common.ComingSoon" xml:space="preserve"><value>This screen is being built.</value></data>
+  <data name="Common.Language" xml:space="preserve"><value>Language</value></data>
+  <data name="Common.Language.English" xml:space="preserve"><value>English</value></data>
+  <data name="Common.Language.Malay" xml:space="preserve"><value>Bahasa Melayu</value></data>
+  <data name="Common.Menu" xml:space="preserve"><value>Menu</value></data>
+  <data name="Common.MyAccount" xml:space="preserve"><value>My account</value></data>
+  <data name="Common.Notifications" xml:space="preserve"><value>Notifications</value></data>
+  <data name="Common.Save" xml:space="preserve"><value>Save</value></data>
+  <data name="Common.SignOut" xml:space="preserve"><value>Sign out</value></data>
+  <data name="Common.Upload.Hint" xml:space="preserve"><value>PDF, Word (.docx), JPG or PNG, up to 20 MB.</value></data>
+  <data name="Email.ResetPassword.Body" xml:space="preserve"><value>Hello {0},
+
+Use this link to set a new password. It works for one day:
+{1}
+
+If you did not ask for this, you can ignore this email.</value></data>
+  <data name="Email.ResetPassword.Subject" xml:space="preserve"><value>Set your Client Hub password</value></data>
+  <data name="Identity.Generic" xml:space="preserve"><value>The password could not be saved. Try another password.</value></data>
+  <data name="Identity.InvalidToken" xml:space="preserve"><value>This link is invalid or has expired. Use Forgot password to get a new one.</value></data>
+  <data name="Identity.PasswordMismatch" xml:space="preserve"><value>The current password is incorrect.</value></data>
+  <data name="Identity.PasswordRequiresDigit" xml:space="preserve"><value>The password needs at least one number.</value></data>
+  <data name="Identity.PasswordRequiresLower" xml:space="preserve"><value>The password needs at least one small letter.</value></data>
+  <data name="Identity.PasswordRequiresNonAlphanumeric" xml:space="preserve"><value>The password needs at least one symbol.</value></data>
+  <data name="Identity.PasswordRequiresUniqueChars" xml:space="preserve"><value>The password needs more different characters.</value></data>
+  <data name="Identity.PasswordRequiresUpper" xml:space="preserve"><value>The password needs at least one capital letter.</value></data>
+  <data name="Identity.PasswordTooShort" xml:space="preserve"><value>The password must be at least 10 characters.</value></data>
+  <data name="NotFound.Body" xml:space="preserve"><value>This page does not exist or is no longer available.</value></data>
+  <data name="NotFound.Home" xml:space="preserve"><value>Go to home</value></data>
+  <data name="NotFound.Title" xml:space="preserve"><value>Page not found</value></data>
+  <data name="Portal.Home.Greeting" xml:space="preserve"><value>Hello, {0}</value></data>
+  <data name="Portal.Nav.Bills" xml:space="preserve"><value>Bills</value></data>
+  <data name="Portal.Nav.Cases" xml:space="preserve"><value>Cases</value></data>
+  <data name="Portal.Nav.Chat" xml:space="preserve"><value>Chat</value></data>
+  <data name="Portal.Nav.Home" xml:space="preserve"><value>Home</value></data>
+  <data name="Role.Client" xml:space="preserve"><value>Client</value></data>
+  <data name="Role.Lawyer" xml:space="preserve"><value>Lawyer</value></data>
+  <data name="Role.OfficeManager" xml:space="preserve"><value>Office Manager</value></data>
+  <data name="Role.Staff" xml:space="preserve"><value>Staff</value></data>
+  <data name="Staff.Nav.Bills" xml:space="preserve"><value>Bills</value></data>
+  <data name="Staff.Nav.Cases" xml:space="preserve"><value>Cases</value></data>
+  <data name="Staff.Nav.Chats" xml:space="preserve"><value>Chats</value></data>
+  <data name="Staff.Nav.Clients" xml:space="preserve"><value>Clients</value></data>
+  <data name="Staff.Nav.Dashboard" xml:space="preserve"><value>Dashboard</value></data>
+  <data name="Staff.Nav.PastCases" xml:space="preserve"><value>Past cases</value></data>
+  <data name="Staff.Nav.Settings" xml:space="preserve"><value>Settings</value></data>
+  <data name="Status.Active" xml:space="preserve"><value>Active</value></data>
+  <data name="Status.Cancelled" xml:space="preserve"><value>Cancelled</value></data>
+  <data name="Status.Completed" xml:space="preserve"><value>Completed</value></data>
+  <data name="Status.DocumentsCollected" xml:space="preserve"><value>Documents collected</value></data>
+  <data name="Status.Draft" xml:space="preserve"><value>Draft</value></data>
+  <data name="Status.Filed" xml:space="preserve"><value>Filed</value></data>
+  <data name="Status.Hearing" xml:space="preserve"><value>Hearing</value></data>
+  <data name="Status.New" xml:space="preserve"><value>New</value></data>
+  <data name="Status.Paid" xml:space="preserve"><value>Paid</value></data>
+  <data name="Status.Pending" xml:space="preserve"><value>Pending</value></data>
+  <data name="Status.Received" xml:space="preserve"><value>Received</value></data>
+  <data name="Status.Rejected" xml:space="preserve"><value>Rejected</value></data>
+  <data name="Status.Sent" xml:space="preserve"><value>Sent</value></data>
+  <data name="Validation.Email" xml:space="preserve"><value>Enter a valid email address.</value></data>
+  <data name="Validation.PasswordMismatch" xml:space="preserve"><value>The passwords do not match.</value></data>
+  <data name="Validation.Required" xml:space="preserve"><value>This field is required.</value></data>
+</root>

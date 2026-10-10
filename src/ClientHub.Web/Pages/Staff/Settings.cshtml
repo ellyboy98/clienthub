@@ -1,0 +1,11 @@
+@page
+@model ClientHub.Web.Pages.Staff.SettingsModel
+@{
+    ViewData["Title"] = L["Staff.Nav.Settings"];
+    var soon = new EmptyStateModel(L["Common.ComingSoon"]);
+}
+@* Placeholder until M6. Lawyer only (folder policy LawyerOnly); others get 404. *@
+<div class="space-y-5">
+    <h1 class="text-h1">@L["Staff.Nav.Settings"]</h1>
+    <partial name="Components/_EmptyState" model="soon" />
+</div>

@@ -1,11 +1,16 @@
 using ClientHub.Web.Data.Entities;
+using Microsoft.AspNetCore.DataProtection.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace ClientHub.Web.Data;
 
-public class AppDbContext : IdentityDbContext<AppUser, AppRole, Guid>
+/// <summary>
+/// Identity without role tables: the role lives only in users.role (TSD column) and is issued as a claim
+/// by <see cref="ClientHub.Web.Services.Access.AppClaimsPrincipalFactory"/>.
+/// </summary>
+public class AppDbContext : IdentityUserContext<AppUser, Guid>, IDataProtectionKeyContext
 {
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
@@ -21,18 +26,17 @@ public class AppDbContext : IdentityDbContext<AppUser, AppRole, Guid>
     public DbSet<Notification> Notifications => Set<Notification>();
     public DbSet<FirmSettings> FirmSettings => Set<FirmSettings>();
     public DbSet<AuditLog> AuditLog => Set<AuditLog>();
+    public DbSet<DataProtectionKey> DataProtectionKeys => Set<DataProtectionKey>();
 
     protected override void OnModelCreating(ModelBuilder b)
     {
         base.OnModelCreating(b);
 
         b.Entity<AppUser>().ToTable("users");
-        b.Entity<AppRole>().ToTable("roles");
-        b.Entity<IdentityUserRole<Guid>>().ToTable("user_roles");
         b.Entity<IdentityUserClaim<Guid>>().ToTable("user_claims");
         b.Entity<IdentityUserLogin<Guid>>().ToTable("user_logins");
         b.Entity<IdentityUserToken<Guid>>().ToTable("user_tokens");
-        b.Entity<IdentityRoleClaim<Guid>>().ToTable("role_claims");
+        b.Entity<DataProtectionKey>().ToTable("data_protection_keys");
 
         b.Entity<AppUser>(e =>
         {

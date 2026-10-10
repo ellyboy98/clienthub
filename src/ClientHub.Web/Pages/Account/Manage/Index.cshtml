@@ -1,0 +1,51 @@
+@page
+@model ClientHub.Web.Pages.Account.Manage.IndexModel
+@{
+    ViewData["Title"] = L["Account.Manage.Title"];
+    var current = new InputModel("Pw.Current", L["Account.Manage.CurrentPassword"], Type: "password", Autocomplete: "current-password", Required: true);
+    var newPw = new InputModel("Pw.New", L["Account.SetPassword.New"], Type: "password", Autocomplete: "new-password", Required: true, Hint: L["Account.SetPassword.Rules"]);
+    var confirm = new InputModel("Pw.Confirm", L["Account.SetPassword.Confirm"], Type: "password", Autocomplete: "new-password", Required: true);
+    var savePw = new ButtonModel(L["Account.Manage.ChangePassword"]);
+    var saveLang = new ButtonModel(L["Common.Save"], ButtonVariant.Secondary);
+    var twoFa = new ButtonModel(Model.Me.TwoFactorEnabled ? L["Account.Manage.Manage2fa"] : L["Account.Manage.Enable2fa"], ButtonVariant.Secondary, Href: "/Account/Manage/TwoFactor");
+}
+<div class="mx-auto max-w-2xl space-y-5">
+    <h1 class="text-h1">@L["Account.Manage.Title"]</h1>
+    <p class="text-body-sm text-text-secondary">@Model.Me.DisplayName · @Model.Me.Email</p>
+    @if (Model.Notice is not null)
+    {
+        <p class="rounded-control bg-success-bg px-3 py-2 text-body-sm text-success" role="status">@Model.Notice</p>
+    }
+
+    <section class="card space-y-4">
+        <h2 class="text-h3">@L["Account.Manage.Language"]</h2>
+        <form method="post" asp-page-handler="Language" class="flex flex-wrap items-end gap-3">
+            <fieldset class="flex gap-2">
+                <legend class="sr-only">@L["Account.Manage.Language"]</legend>
+                @foreach (var (code, key) in new[] { ("en", "Common.Language.English"), ("ms", "Common.Language.Malay") })
+                {
+                    <label class="inline-flex min-h-[44px] cursor-pointer items-center gap-2 rounded-control border border-border px-4 text-label has-[:checked]:border-brand-navy has-[:checked]:text-brand-navy">
+                        <input type="radio" name="Language" value="@code" checked="@(Model.Language == code)" class="accent-brand-navy" />@L[key]
+                    </label>
+                }
+            </fieldset>
+            <partial name="Components/_Button" model="saveLang" />
+        </form>
+    </section>
+
+    <section class="card space-y-4">
+        <h2 class="text-h3">@L["Account.Manage.TwoFactor"]</h2>
+        <p class="text-body-sm text-text-secondary">@(Model.Me.TwoFactorEnabled ? L["Account.Manage.2faOn"] : L["Account.Manage.2faOff"])</p>
+        <partial name="Components/_Button" model="twoFa" />
+    </section>
+
+    <section class="card space-y-4">
+        <h2 class="text-h3">@L["Account.Manage.ChangePassword"]</h2>
+        <form method="post" asp-page-handler="Password" class="space-y-4" novalidate>
+            <partial name="Components/_Input" model="current" />
+            <partial name="Components/_Input" model="newPw" />
+            <partial name="Components/_Input" model="confirm" />
+            <partial name="Components/_Button" model="savePw" />
+        </form>
+    </section>
+</div>

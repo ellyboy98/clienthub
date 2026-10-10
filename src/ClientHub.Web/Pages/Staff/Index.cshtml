@@ -1,0 +1,11 @@
+@page
+@model ClientHub.Web.Pages.Staff.IndexModel
+@{
+    ViewData["Title"] = L["Staff.Nav.Dashboard"];
+    var soon = new EmptyStateModel(L["Common.ComingSoon"]);
+}
+@* Placeholder until M3 builds the dashboard tiles and active cases table. *@
+<div class="space-y-5">
+    <h1 class="text-h1">@L["Staff.Nav.Dashboard"]</h1>
+    <partial name="Components/_EmptyState" model="soon" />
+</div>

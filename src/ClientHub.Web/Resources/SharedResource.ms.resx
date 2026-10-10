@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="Account.Common.BackToLogin" xml:space="preserve"><value>Kembali ke log masuk</value></data>
+  <data name="Account.Forgot.Intro" xml:space="preserve"><value>Masukkan e-mel anda dan kami akan menghantar pautan untuk menetapkan kata laluan baharu.</value></data>
+  <data name="Account.Forgot.Send" xml:space="preserve"><value>Hantar pautan</value></data>
+  <data name="Account.Forgot.Sent" xml:space="preserve"><value>Jika akaun wujud untuk e-mel itu, pautan untuk menetapkan kata laluan baharu sedang dihantar.</value></data>
+  <data name="Account.Forgot.Title" xml:space="preserve"><value>Lupa kata laluan</value></data>
+  <data name="Account.Login.CreatedByFirm" xml:space="preserve"><value>Akaun anda dicipta oleh firma.</value></data>
+  <data name="Account.Login.Email" xml:space="preserve"><value>E-mel</value></data>
+  <data name="Account.Login.Forgot" xml:space="preserve"><value>Lupa kata laluan</value></data>
+  <data name="Account.Login.Invalid" xml:space="preserve"><value>E-mel atau kata laluan tidak betul.</value></data>
+  <data name="Account.Login.LockedOut" xml:space="preserve"><value>Terlalu banyak cubaan gagal. Cuba lagi dalam beberapa minit.</value></data>
+  <data name="Account.Login.Password" xml:space="preserve"><value>Kata laluan</value></data>
+  <data name="Account.Login.PasswordSet" xml:space="preserve"><value>Kata laluan anda telah ditetapkan. Anda boleh log masuk sekarang.</value></data>
+  <data name="Account.Login.SignIn" xml:space="preserve"><value>Log masuk</value></data>
+  <data name="Account.Login.Title" xml:space="preserve"><value>Log masuk</value></data>
+  <data name="Account.LoginWith2fa.Code" xml:space="preserve"><value>Kod</value></data>
+  <data name="Account.LoginWith2fa.Hint" xml:space="preserve"><value>Tiada telefon? Masukkan salah satu kod pemulihan anda.</value></data>
+  <data name="Account.LoginWith2fa.Intro" xml:space="preserve"><value>Masukkan kod 6 digit daripada aplikasi pengesah anda.</value></data>
+  <data name="Account.LoginWith2fa.Invalid" xml:space="preserve"><value>Kod tidak betul.</value></data>
+  <data name="Account.LoginWith2fa.Title" xml:space="preserve"><value>Pengesahan dua langkah</value></data>
+  <data name="Account.LoginWith2fa.Verify" xml:space="preserve"><value>Sahkan</value></data>
+  <data name="Account.Manage.2faOff" xml:space="preserve"><value>Pengesahan dua langkah dimatikan.</value></data>
+  <data name="Account.Manage.2faOn" xml:space="preserve"><value>Pengesahan dua langkah dihidupkan.</value></data>
+  <data name="Account.Manage.ChangePassword" xml:space="preserve"><value>Tukar kata laluan</value></data>
+  <data name="Account.Manage.CurrentPassword" xml:space="preserve"><value>Kata laluan semasa</value></data>
+  <data name="Account.Manage.Enable2fa" xml:space="preserve"><value>Sediakan pengesahan dua langkah</value></data>
+  <data name="Account.Manage.Language" xml:space="preserve"><value>Bahasa</value></data>
+  <data name="Account.Manage.Manage2fa" xml:space="preserve"><value>Urus pengesahan dua langkah</value></data>
+  <data name="Account.Manage.PasswordChanged" xml:space="preserve"><value>Kata laluan anda telah ditukar.</value></data>
+  <data name="Account.Manage.Title" xml:space="preserve"><value>Akaun saya</value></data>
+  <data name="Account.Manage.TwoFactor" xml:space="preserve"><value>Pengesahan dua langkah</value></data>
+  <data name="Account.SetPassword.Confirm" xml:space="preserve"><value>Sahkan kata laluan baharu</value></data>
+  <data name="Account.SetPassword.New" xml:space="preserve"><value>Kata laluan baharu</value></data>
+  <data name="Account.SetPassword.Rules" xml:space="preserve"><value>Sekurang-kurangnya 10 aksara, dengan huruf besar, huruf kecil, nombor dan simbol.</value></data>
+  <data name="Account.SetPassword.Save" xml:space="preserve"><value>Simpan kata laluan</value></data>
+  <data name="Account.SetPassword.Title" xml:space="preserve"><value>Tetapkan kata laluan anda</value></data>
+  <data name="Account.TwoFactor.Disable" xml:space="preserve"><value>Matikan</value></data>
+  <data name="Account.TwoFactor.Done" xml:space="preserve"><value>Teruskan</value></data>
+  <data name="Account.TwoFactor.Enable" xml:space="preserve"><value>Hidupkan</value></data>
+  <data name="Account.TwoFactor.Enabled" xml:space="preserve"><value>Pengesahan dua langkah kini dihidupkan.</value></data>
+  <data name="Account.TwoFactor.KeyLabel" xml:space="preserve"><value>Kunci:</value></data>
+  <data name="Account.TwoFactor.RecoveryIntro" xml:space="preserve"><value>Simpan kod ini di tempat selamat. Setiap kod boleh digunakan sekali untuk log masuk jika telefon anda hilang. Kod ini hanya ditunjukkan sekarang.</value></data>
+  <data name="Account.TwoFactor.RecoveryTitle" xml:space="preserve"><value>Kod pemulihan</value></data>
+  <data name="Account.TwoFactor.RequiredNotice" xml:space="preserve"><value>Peranan anda memerlukan pengesahan dua langkah. Sediakannya untuk meneruskan.</value></data>
+  <data name="Account.TwoFactor.Step1" xml:space="preserve"><value>Pasang aplikasi pengesah pada telefon anda, seperti Google Authenticator atau Microsoft Authenticator.</value></data>
+  <data name="Account.TwoFactor.Step2" xml:space="preserve"><value>Imbas kod QR, atau taip kunci yang ditunjukkan di bawah.</value></data>
+  <data name="Account.TwoFactor.Step3" xml:space="preserve"><value>Masukkan kod 6 digit yang ditunjukkan oleh aplikasi.</value></data>
+  <data name="Account.TwoFactor.Title" xml:space="preserve"><value>Pengesahan dua langkah</value></data>
+  <data name="Common.AppName" xml:space="preserve"><value>Client Hub</value></data>
+  <data name="Common.Cancel" xml:space="preserve"><value>Batal</value></data>
+  <data name="Common.ComingSoon" xml:space="preserve"><value>Skrin ini sedang dibina.</value></data>
+  <data name="Common.Language" xml:space="preserve"><value>Bahasa</value></data>
+  <data name="Common.Language.English" xml:space="preserve"><value>English</value></data>
+  <data name="Common.Language.Malay" xml:space="preserve"><value>Bahasa Melayu</value></data>
+  <data name="Common.Menu" xml:space="preserve"><value>Menu</value></data>
+  <data name="Common.MyAccount" xml:space="preserve"><value>Akaun saya</value></data>
+  <data name="Common.Notifications" xml:space="preserve"><value>Pemberitahuan</value></data>
+  <data name="Common.Save" xml:space="preserve"><value>Simpan</value></data>
+  <data name="Common.SignOut" xml:space="preserve"><value>Log keluar</value></data>
+  <data name="Common.Upload.Hint" xml:space="preserve"><value>PDF, Word (.docx), JPG atau PNG, sehingga 20 MB.</value></data>
+  <data name="Email.ResetPassword.Body" xml:space="preserve"><value>Salam {0},
+
+Gunakan pautan ini untuk menetapkan kata laluan baharu. Pautan ini sah selama satu hari:
+{1}
+
+Jika anda tidak memintanya, abaikan e-mel ini.</value></data>
+  <data name="Email.ResetPassword.Subject" xml:space="preserve"><value>Tetapkan kata laluan Client Hub anda</value></data>
+  <data name="Identity.Generic" xml:space="preserve"><value>Kata laluan tidak dapat disimpan. Cuba kata laluan lain.</value></data>
+  <data name="Identity.InvalidToken" xml:space="preserve"><value>Pautan ini tidak sah atau telah tamat tempoh. Gunakan Lupa kata laluan untuk mendapatkan pautan baharu.</value></data>
+  <data name="Identity.PasswordMismatch" xml:space="preserve"><value>Kata laluan semasa tidak betul.</value></data>
+  <data name="Identity.PasswordRequiresDigit" xml:space="preserve"><value>Kata laluan perlu sekurang-kurangnya satu nombor.</value></data>
+  <data name="Identity.PasswordRequiresLower" xml:space="preserve"><value>Kata laluan perlu sekurang-kurangnya satu huruf kecil.</value></data>
+  <data name="Identity.PasswordRequiresNonAlphanumeric" xml:space="preserve"><value>Kata laluan perlu sekurang-kurangnya satu simbol.</value></data>
+  <data name="Identity.PasswordRequiresUniqueChars" xml:space="preserve"><value>Kata laluan perlu lebih banyak aksara berlainan.</value></data>
+  <data name="Identity.PasswordRequiresUpper" xml:space="preserve"><value>Kata laluan perlu sekurang-kurangnya satu huruf besar.</value></data>
+  <data name="Identity.PasswordTooShort" xml:space="preserve"><value>Kata laluan mesti sekurang-kurangnya 10 aksara.</value></data>
+  <data name="NotFound.Body" xml:space="preserve"><value>Halaman ini tidak wujud atau tidak lagi tersedia.</value></data>
+  <data name="NotFound.Home" xml:space="preserve"><value>Ke laman utama</value></data>
+  <data name="NotFound.Title" xml:space="preserve"><value>Halaman tidak dijumpai</value></data>
+  <data name="Portal.Home.Greeting" xml:space="preserve"><value>Salam, {0}</value></data>
+  <data name="Portal.Nav.Bills" xml:space="preserve"><value>Bil</value></data>
+  <data name="Portal.Nav.Cases" xml:space="preserve"><value>Kes</value></data>
+  <data name="Portal.Nav.Chat" xml:space="preserve"><value>Sembang</value></data>
+  <data name="Portal.Nav.Home" xml:space="preserve"><value>Utama</value></data>
+  <data name="Role.Client" xml:space="preserve"><value>Klien</value></data>
+  <data name="Role.Lawyer" xml:space="preserve"><value>Peguam</value></data>
+  <data name="Role.OfficeManager" xml:space="preserve"><value>Pengurus Pejabat</value></data>
+  <data name="Role.Staff" xml:space="preserve"><value>Kakitangan</value></data>
+  <data name="Staff.Nav.Bills" xml:space="preserve"><value>Bil</value></data>
+  <data name="Staff.Nav.Cases" xml:space="preserve"><value>Kes</value></data>
+  <data name="Staff.Nav.Chats" xml:space="preserve"><value>Sembang</value></data>
+  <data name="Staff.Nav.Clients" xml:space="preserve"><value>Klien</value></data>
+  <data name="Staff.Nav.Dashboard" xml:space="preserve"><value>Papan pemuka</value></data>
+  <data name="Staff.Nav.PastCases" xml:space="preserve"><value>Kes lepas</value></data>
+  <data name="Staff.Nav.Settings" xml:space="preserve"><value>Tetapan</value></data>
+  <data name="Status.Active" xml:space="preserve"><value>Aktif</value></data>
+  <data name="Status.Cancelled" xml:space="preserve"><value>Dibatalkan</value></data>
+  <data name="Status.Completed" xml:space="preserve"><value>Selesai</value></data>
+  <data name="Status.DocumentsCollected" xml:space="preserve"><value>Dokumen dikumpul</value></data>
+  <data name="Status.Draft" xml:space="preserve"><value>Draf</value></data>
+  <data name="Status.Filed" xml:space="preserve"><value>Difailkan</value></data>
+  <data name="Status.Hearing" xml:space="preserve"><value>Perbicaraan</value></data>
+  <data name="Status.New" xml:space="preserve"><value>Baharu</value></data>
+  <data name="Status.Paid" xml:space="preserve"><value>Dibayar</value></data>
+  <data name="Status.Pending" xml:space="preserve"><value>Belum diterima</value></data>
+  <data name="Status.Received" xml:space="preserve"><value>Diterima</value></data>
+  <data name="Status.Rejected" xml:space="preserve"><value>Ditolak</value></data>
+  <data name="Status.Sent" xml:space="preserve"><value>Dihantar</value></data>
+  <data name="Validation.Email" xml:space="preserve"><value>Masukkan alamat e-mel yang sah.</value></data>
+  <data name="Validation.PasswordMismatch" xml:space="preserve"><value>Kata laluan tidak sepadan.</value></data>
+  <data name="Validation.Required" xml:space="preserve"><value>Ruangan ini wajib diisi.</value></data>
+</root>

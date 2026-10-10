@@ -1,0 +1,1 @@
+- [ASP.NET/Razor gotchas](gotchas_aspnet_razor.md) — resx DependentUpon trap, partial model quoting, PORT=5000, Secure cookie + curl, 2FA redirect in tests

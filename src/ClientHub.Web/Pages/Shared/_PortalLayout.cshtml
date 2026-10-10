@@ -1,0 +1,47 @@
+@{
+    var page = ViewContext.RouteData.Values["page"] as string ?? "";
+    string Item(bool active) => active ? "text-brand-navy" : "text-text-muted";
+    var home = page == "/Portal/Index";
+    var cases = page.StartsWith("/Portal/Case") || page.StartsWith("/Portal/PastCases");
+    var chat = page.StartsWith("/Portal/Chat");
+    var bills = page.StartsWith("/Portal/Bill");
+}
+<!DOCTYPE html>
+<html lang="@System.Globalization.CultureInfo.CurrentUICulture.TwoLetterISOLanguageName">
+<head><partial name="_Head" /></head>
+<body class="min-h-screen">
+    @if (IsSectionDefined("Header"))
+    {
+        @* Navy header: inside a case or a bill. *@
+        @RenderSection("Header")
+    }
+    else
+    {
+        @* Light header: utility screens. *@
+        <header class="sticky top-0 z-20 flex h-14 items-center justify-between border-b border-border bg-bg-surface px-4">
+            <partial name="_Logo" model="false" />
+            <div class="flex items-center">
+                <partial name="Components/_Bell" model="@("text-brand-navy")" />
+                <a href="/Account/Manage" class="inline-flex h-11 w-11 items-center justify-center rounded-full text-brand-navy" aria-label="@L["Common.MyAccount"]">
+                    <svg class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path stroke-linecap="round" d="M4 20a8 8 0 0 1 16 0"/></svg>
+                </a>
+            </div>
+        </header>
+    }
+    <main class="mx-auto w-full max-w-2xl px-5 pb-28 pt-5">
+        @RenderBody()
+    </main>
+    <nav class="fixed inset-x-0 bottom-0 z-30 border-t border-border bg-bg-surface pb-[env(safe-area-inset-bottom)]" aria-label="@L["Common.Menu"]">
+        <ul class="mx-auto grid max-w-2xl grid-cols-4">
+            <li><a href="/Portal" class="flex min-h-[56px] flex-col items-center justify-center gap-0.5 text-badge @Item(home)" aria-current="@(home ? "page" : null)">
+                <svg class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linejoin="round" d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>@L["Portal.Nav.Home"]</a></li>
+            <li><a href="/Portal/Cases" class="flex min-h-[56px] flex-col items-center justify-center gap-0.5 text-badge @Item(cases)" aria-current="@(cases ? "page" : null)">
+                <svg class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linejoin="round" d="M4 7h16v12H4zM9 7V5h6v2"/></svg>@L["Portal.Nav.Cases"]</a></li>
+            <li><a href="/Portal/Chat" class="flex min-h-[56px] flex-col items-center justify-center gap-0.5 text-badge @Item(chat)" aria-current="@(chat ? "page" : null)">
+                <svg class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linejoin="round" d="M4 5h16v11H8l-4 4z"/></svg>@L["Portal.Nav.Chat"]</a></li>
+            <li><a href="/Portal/Bills" class="flex min-h-[56px] flex-col items-center justify-center gap-0.5 text-badge @Item(bills)" aria-current="@(bills ? "page" : null)">
+                <svg class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linejoin="round" d="M6 3h12v18l-3-2-3 2-3-2-3 2zM9 8h6M9 12h6"/></svg>@L["Portal.Nav.Bills"]</a></li>
+        </ul>
+    </nav>
+</body>
+</html>

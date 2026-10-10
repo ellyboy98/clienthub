@@ -1,0 +1,8 @@
+@model CardModel
+<section class="card">
+    @if (Model.Title is not null)
+    {
+        <h2 class="mb-3 text-h3">@Model.Title</h2>
+    }
+    @Model.Body
+</section>
