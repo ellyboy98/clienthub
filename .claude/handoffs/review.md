@@ -1,27 +1,28 @@
-# Review: M7 Notifications and email (uncommitted, build/v1)
+# Review: M8 Deploy and backups (uncommitted on build/v1, 2026-10-10)
 
-Scope: `git diff` plus the untracked Pages/Notifications, Services/Notifications and tests/ClientHub.Tests/Notifications. Checked against plan.md M7, requirements R-086..R-103 and R-134 (R-113 is cut), and decisions.md.
+Scope: `git diff` (Dockerfile.vercel, .env.example, status.md) plus untracked `vercel.json`, `.github/workflows/backup.yml`, `.claude/handoffs/deploy.md`, checked against plan.md M8, TSD "CI and deployment" / "Backups", R-109, R-120..R-131.
 
-Checked with no findings:
-- Recipients match each trigger. The client gets only links it can open. The case lawyer and assigned Staff get client uploads. The lawyers and Staff of the client's cases (or all active Lawyers when it has none) get client messages. The OM is never included.
-- Open and Mark all are scoped to the signed-in user. The LinkUrl is checked to be local when it is written and checked with IsLocalUrl when it is opened.
-- The email's ReturnUrl is escaped, and Login and LoginWith2fa redirect through IsLocalUrl.
-- Emails are plain text with the subject taken only from resx, contain no case details, and use the recipient's language.
-- An SMTP failure is caught and logged.
-- Notifications are sent after commit.
-- en and ms each have 26 new keys.
-- The UI uses the shared partials, has no gold action, and has 56px rows.
+Checked and fine: no `set -x`; there are no third-party actions; the passphrase goes in on fd 3, never in argv; `umask 077`; the plaintext dump is deleted; `pg_dump --format=custom`; cron, `workflow_dispatch` and the five secret names match the spec; the container runs as the non-root `app` user; no secrets are baked into the image (only `src/` and project files are copied, and `.env` is ignored); `npm ci`; `.env.example` holds only dev placeholders; the deploy.md SMTP 587/465 text matches `SmtpEmailSender.cs:48-50`; CORS `content-type` matches `upload.js:26`; the `staging/` lifecycle prefix matches `UploadRules.cs:84`; the APP_BASE_URL and AllowedHosts text matches `WebServiceExtensions.cs:30-37` and `Program.cs:11-13`.
 
-## Critical
-None.
+## Critical (must fix before commit)
 
-## Should fix
-1. src/ClientHub.Web/Services/Chat/ChatService.cs:141,162; Services/Cases/CaseService.cs:97,106; Services/Documents/DocumentService.cs:67,78,120-126; Services/Bills/BillService.cs:162-166. Problem: a failure inside the post-commit notify step (DB error, FirstAsync, or the request being cancelled via `ct`) still throws. The user's action is already committed, but they get a 500 and may retry, which duplicates a chat message. For uploads the throw also skips the staging cleanup in UploadService.cs:107-121. Fix: wrap post-commit Notify calls in a try/catch that logs and swallows the error, and pass `CancellationToken.None`, so the committed action always succeeds.
-2. src/ClientHub.Web/Services/Access/AccessService.cs:73-76. Problem: when a client has cases but every lawyer in charge is deactivated and no Staff is assigned, a client message reaches no active user. Q-18 only covers the no-cases fallback. Fix: ask Fiqri whether to fall back to all active Lawyers in that case, then implement and record the decision.
-3. src/ClientHub.Web/Services/Notifications/NotificationService.cs:67 and Pages/Notifications/Index.cshtml.cs:20. Problem: the list shows only the latest 100, but the bell counts every unread row, so older unread items can never be opened. Fix: add paging, or make the 100 cap a decision Fiqri confirms.
+1. `.claude/handoffs/deploy.md:39` and `:44`, `:66`: Neon "branch per preview deployment" branches from production. So every preview gets real client data (IC numbers, case details) and `data_protection_keys`. Under decision 50 that lets preview code decrypt the live SMTP password and email real clients, from unreviewed branch code on a public URL. The `:66` reason for `AllowedHosts=*` ("previews hold no real data") is also false. Fix: give Preview its own `DATABASE_URL`, pointing at a separate Neon project or a branch built only by the seed command (never branched from production), and rewrite the `:39`, `:44` and `:66` text to match.
+2. `.github/workflows/backup.yml:56-58` with `.claude/handoffs/deploy.md:30`: the bucket-to-bucket `aws s3 sync` uses one credential, so the backup token needs read on `clienthub-files` and write on `clienthub-backups`. The R2 dashboard token form gives one permission level per token, so in practice this ends as an Object Read & Write token on production documents, stored in GitHub, able to overwrite or delete client files. That breaks R-127 and the TSD ("token that can only write to that bucket"). Fix: either document an exact Cloudflare API-token recipe that scopes Read on `clienthub-files` and Read & Write on `clienthub-backups` in one token (keeping the five secrets), or split it: a read-only token syncs the files to `$RUNNER_TEMP`, then the backup-only token syncs them up, recorded in decisions.md as an addition to the spec's five secrets.
+
+## Should fix (next milestone)
+
+1. `.github/workflows/backup.yml:47-50`: nothing proves the uploaded file can be restored; `test -s` only checks it is non-empty. Fix: after encryption, decrypt to `$RUNNER_TEMP` with the same passphrase, run `pg_restore --list` on it, then delete it, so every run fails loudly if the artifact cannot be used.
+2. `.github/workflows/backup.yml:47` / `.claude/handoffs/deploy.md:96`: GnuPG 2.4 (ubuntu-latest) may write AEAD/OCB packets for `--symmetric` that GnuPG 2.2 (Debian 12, the official `postgres` images) cannot decrypt. Fix: add `--rfc4880` (or an equivalent legacy-format flag) to the encrypt command, or state in deploy.md that restore needs GnuPG 2.4 or later, and test that once.
+3. `.claude/handoffs/deploy.md:97-99`: the restore test goes into a Neon branch of production, which already holds the same rows, and `pg_restore` without `--exit-on-error` keeps going after errors. Matching counts therefore prove nothing. Fix: restore into an empty database (`CREATE DATABASE restore_test` in the branch, or a fresh Neon project) with `--exit-on-error --single-transaction`.
+4. `.claude/handoffs/deploy.md:99`: tables use snake_case (`UseSnakeCaseNamingConvention`, plan.md shared decisions), so `"Clients"` does not exist. Fix: query `clients` (and the snake_case names of cases, documents and messages) in the check step.
+5. `vercel.json:9`: the catch-all rewrite to destination `"/"` has not been tested on the container runtime (status.md says so). If Vercel passes the rewritten path on, every request reaches the app as `/`. Fix: on the first preview deploy, confirm that `/Account/Login` and `/health` reach the container with their original paths, switch to the service-targeted rewrite form if they do not, and record the result in status.md.
+6. `.claude/handoffs/deploy.md:27`: anyone holding the backup token can also delete backups (R2 Read & Write includes delete), so one leaked GitHub secret wipes both layers' off-Neon copy. Fix: add an R2 bucket lock (retention rule) on `clienthub-backups/db/` matching the 30-day lifecycle, and on `files/`.
 
 ## Nice to have
-1. src/ClientHub.Web/Services/Notifications/NotificationService.cs:52. Problem: `LogError(ex, ...)` logs the full MailKit exception, and the SMTP server's reply can echo the recipient address. Fix: log the exception type and SMTP status code without the message.
-2. src/ClientHub.Web/Services/Notifications/NotificationService.cs:49-53. Problem: email is sent inside the request (5 s timeout per recipient), so a slow SMTP server delays the user's action. Fix: acceptable for one recipient; move sending to a background queue only if latency is seen.
-3. tests/ClientHub.Tests/Notifications/NotificationTriggerTests.cs. Problem: no test shows that NotifyAsync rejects a non-local or `//host` link, or that an unassigned Staff user gets no client-message notification (R-097). Fix: add both tests.
-4. .claude/handoffs/plan.md:145. Problem: the plan says Notify is called from page handlers with a three-argument signature, but it is now called from services with a context argument. The decision is recorded, but the plan text is stale. Fix: update the plan line.
+
+1. `.github/workflows/backup.yml:8-9`: the job never checks out the repo. Fix: use `permissions: {}`.
+2. `.github/workflows/backup.yml:44`: `DATE` is the UTC date, one day behind the Malaysian date of the 02:00 MYT run. Fix: use `TZ=Asia/Kuala_Lumpur date +%F`, or note in deploy.md that file names are UTC dates.
+3. `.github/workflows/backup.yml:58`: the mirror copies `staging/` (unverified, abandoned uploads). Fix: add `--exclude "staging/*"`.
+4. `.dockerignore:5`: only the root `.env` is excluded. Fix: add `**/.env*` so a stray `src/**/.env.local` never reaches the build context.
+5. `.claude/handoffs/deploy.md:53`: if production is reached through both a custom domain and the `*.vercel.app` alias, the alias gets HTTP 400 from host filtering. Fix: say to set `AllowedHosts=PROD_HOST;<project>.vercel.app` when both are used.
+6. `.claude/handoffs/deploy.md:37`: "must match" overstates it. pg_dump must be at least Neon's major version (it refuses newer servers), and pg_restore must be at least the dump's version. Fix: reword so it is clear 17 also covers a Neon 16 project.

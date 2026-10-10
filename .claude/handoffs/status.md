@@ -1,26 +1,48 @@
 # Build status
 
-Nothing built yet. Branch: `build/v1`. Specs revised on 2026-10-10 (see decisions.md).
-Start with Prompt 1 in KICKOFF.md once the 5-hour usage window has reset.
+Branch `build/v1`. All milestones built, reviewed and tested locally: 180/180 tests green. M8 is not yet committed. Nothing pushed or deployed.
 
 ## Milestones
-(planner fills this from plan.md; developer updates after each run)
 
-| # | Milestone | Time box | State |
+| # | Milestone | Commit | State |
 | --- | --- | --- | --- |
-| M1 | Job A: foundation (deployer) | 20 min | built and verified (dev storage is SeaweedFS), not committed |
-| M2 | Shell, sign-in and access rules | 30 min | built, review fixes applied, 39/39 tests green, not committed |
-| M3 | Clients and cases | 30 min | built, review fixes applied, 75/75 tests green, not committed |
-| M4 | Storage and documents | 30 min | built, review fixes applied, 119/119 tests green, not committed |
-| M5 | Chat | 20 min | built, review fixes applied, 133/133 tests green, not committed |
-| M6 | Bills and Settings | 25 min | built, 157/157 tests green, not committed |
-| M7 | Notifications and email | 20 min | built, review fixes applied, 180/180 tests green, not committed |
-| M8 | Deploy and backups (deployer) | 10 min | not started |
+| M1 | Job A: foundation (deployer) | b2baa13 | done; dev storage is SeaweedFS |
+| M2 | Shell, sign-in and access rules | 278895a | done |
+| M3 | Clients and cases | 459c029 | done |
+| M4 | Storage and documents | 065166e | done |
+| M5 | Chat (with file messages) | 18ff3f0 | done |
+| M6 | Bills and Settings | 3e1da36 | done |
+| M7 | Notifications and email | 2e2c5e2 | done |
+| M8 | Deploy and backups (deployer) | pending commit | built; image and workflow verified locally only |
 
 Open questions Q-01..Q-22: defaults approved (decisions.md).
 
-## Decisions
-See decisions.md.
+## Cut items (plan.md cut list)
+
+- Cut for v1 (Fiqri): 1 Save to case from chat (R-070..R-072), 2 dashboard "Needs your attention" feed (R-138 second half), 3 Settings "Send test email" (R-113).
+- Item 4 (Staff/Cases, Staff/Bills, portal Bills lists) was built. Chat file attachments (item 5) were built in M5. No cut was recorded for items 6-8.
+
+## Known open items
+
+- Not browser-checked: the 390px layouts of every portal page (each milestone section lists its "Check at 390px" pages). No manual browser pass was done.
+- Unresolved review items, left on purpose (details in the milestone sections below):
+  - M2: Data Protection key ring is not encrypted at rest (Should fix 6, needs Fiqri's call); Nice to have items.
+  - M3: status/update and audit row not saved in one transaction (Should fix 1); Nice to have 1-6.
+  - M4: Content-Length binding on presigned PUT (Should fix 2; staging plus the 1-day lifecycle rule covers orphans); magic-byte check (NtH 1); stale reject shows 400 (NtH 3).
+  - M7: SMTP failure log includes the full MailKit exception (NtH 1); no background email queue (NtH 2); missing tests for non-local link and unassigned Staff on client message (NtH 3); plan.md line 145 is stale (NtH 4).
+- Tester watch: M3 `CaseTests.Create_StatusNew_OpenedAtSet` failed once under load (1-second window); passed in every other run.
+- Not verified without cloud accounts: backup workflow against Neon and R2, Vercel container runtime, restore drill, `PGMAJOR` (17) matching Neon.
+
+## Steps for Fiqri by hand
+
+Full detail in `.claude/handoffs/deploy.md`.
+1. Commit M8, push `build/v1`, open one PR into `main`, merge when CI is green.
+2. Cloudflare R2: three private buckets, CORS on the two files buckets, lifecycle rules (`staging/` 1 day on files buckets, `db/` 30 days on backups), app and backup API tokens.
+3. Neon via Vercel Marketplace; confirm the PostgreSQL major version matches `PGMAJOR` in `backup.yml`.
+4. Vercel: import repo, set env vars (separate Production and Preview values; `PORT=8080`; `APP_BASE_URL` mandatory in Production; preview needs its own `APP_BASE_URL` or `AllowedHosts`), first deploy, run seed once.
+5. Sign in, enter SMTP on Settings, set up 2FA, change seeded passwords.
+6. GitHub: five backup secrets, branch protection on `main`, run the Backup workflow once by hand, then do one restore test.
+7. Decisions only you can make: Data Protection key encryption at rest; Vercel Pro once in daily use.
 
 ## M2 Shell, sign-in and access rules (developer, 2026-10-10)
 
@@ -285,3 +307,9 @@ Review fixes (M7 review, 2026-10-10):
 - Left (Nice to have): 1 (SMTP failure log still includes the full MailKit exception), 2 (background email queue), 3 (non-local link test, unassigned Staff on client message), 4 (plan.md line 145 is
   stale; it still describes the 3-argument, page-handler Notify).
 
+
+## M8 Deploy and backups (deployer, 2026-10-10)
+
+Files: `Dockerfile.vercel` (npm ci, USER app), `vercel.json`, `.github/workflows/backup.yml`, `.env.example` (added DATABASE_URL, AllowedHosts, SECURITY_STAMP_INTERVAL_SECONDS; removed unused S3_FORCE_PATH_STYLE), `.claude/handoffs/deploy.md`.
+Verified: image builds, serves /health 200 as uid 1654 (app) on PORT=8080 against compose db; backup.yml parses as YAML (no actionlint available); 180/180 tests.
+Not verified: backup workflow against real Neon/R2, Vercel container runtime, restore drill (need cloud accounts).
