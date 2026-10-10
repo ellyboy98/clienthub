@@ -2,6 +2,8 @@
 
 Date: 10 October 2026 · Author: Fiqri Wilter
 
+Revised 10 October 2026: added the Office Manager role, aligned chat access and file removal with the Technical Specification, narrowed staff notifications to the people on the case, set English as the default language. The reasons are in `.claude/handoffs/decisions.md`.
+
 ## Purpose
 
 The Client Management Hub is a website where one small law firm and its clients manage their cases in one place. It replaces the firm's current mix of Excel files and WhatsApp chats, which the firm describes as inefficient and unorganised.
@@ -12,26 +14,30 @@ Version 1 must let a client do four things: see case updates from the lawyer, se
 
 ## Users and access
 
-There are three types of user. Lawyers see everything. Other staff see only the cases they are assigned to. A client sees only their own cases.
+There are four types of user. Lawyers and the Office Manager see everything. Staff see only the cases they are assigned to. A client sees only their own cases.
+
+In this document, "staff" in lower case means any firm user (Lawyer, Office Manager or Staff). "Staff" with a capital letter means the Staff role.
 
 | User type | Who | What they can see | What they can do |
 | --- | --- | --- | --- |
 | Lawyer | The firm's 2 lawyers | All clients, all cases, all documents, all chats, all bills | Everything: create and edit clients and cases, assign staff to cases, change case status, upload documents, request documents, chat with clients, create bills, mark bills as paid, manage settings and staff accounts |
-| Staff | The 1 to 2 staff who are not lawyers | Only the cases assigned to them, plus those cases' client details, documents, bills and the client's chat | The same actions as a lawyer, but only on their assigned cases. Cannot manage settings or staff accounts |
+| Office Manager | One non-lawyer who runs the office | All clients, all cases, all documents, all chats, all bills | Responsible for creating clients. The same actions as a lawyer on every client and case, including creating clients and cases and assigning staff. Cannot manage settings or staff accounts |
+| Staff | The other non-lawyer staff | Only the cases assigned to them, plus those cases' client details, documents, bills and the client's chat | The same actions as a lawyer, but only on their assigned cases. Cannot create clients or cases, assign staff, or manage settings or staff accounts |
 | Client | One login per client (a person or a company) | Only their own cases, documents, chat and bills | Read case status and updates, upload requested documents, download shared documents, chat with the firm, view bills |
 
 Rules:
 
-- A lawyer assigns staff to a case when creating or editing it. A staff member with no assigned cases sees an empty list.
-- Because the chat is per client, a staff member assigned to any of a client's cases can read and reply in that client's chat.
-- A client logs in with their email address and a password. A lawyer or assigned staff creates the client's account and the system emails the client a link to set their password.
+- A lawyer or the Office Manager assigns Staff to a case when creating or editing it. A Staff user with no assigned cases sees an empty list.
+- Because the chat is per client, a Staff user assigned to any of a client's cases can read and reply in that client's chat.
+- A client logs in with their email address and a password. A lawyer or the Office Manager creates the client's account and the system emails the client a link to set their password.
+- A lawyer creates the Office Manager and Staff accounts on the Settings page.
 - A company client gets one shared login. The company's person in charge uses it. The firm does not need separate logins for several people in the same company.
 - A client never sees another client's data, and never sees documents, notes or chats that are not part of their own cases.
 - A lawyer can deactivate a client login when the relationship ends. The data stays; the client can no longer log in.
 
 ## Clients
 
-A client is a person or a company the firm works for. Staff create the client record first, then open cases under it.
+A client is a person or a company the firm works for. A lawyer or the Office Manager creates the client record first, then opens cases under it.
 
 | Field | Required | Notes |
 | --- | --- | --- |
@@ -47,7 +53,7 @@ Rules:
 
 - One client can have many cases.
 - One case belongs to exactly one client. Joint clients (for example, husband and wife on one case) are not needed in version 1.
-- Staff can edit a client's details at any time. The client cannot edit their own details; they ask the firm.
+- Lawyers, the Office Manager and Staff assigned to one of the client's cases can edit a client's details at any time. The client cannot edit their own details; they ask the firm.
 
 ## Cases
 
@@ -96,8 +102,8 @@ Document requests (what the firm still needs from the client):
 
 Shared documents:
 
-- Staff upload files to a case. Every file on a case is visible to that case's client.
-- Staff can delete a file. The client cannot delete files.
+- Staff upload files to a case. Every active file on a case is visible to that case's client.
+- Staff can remove a file from a case. A removed file disappears from the case page for staff and the client, but it is never deleted: it stays in storage and the audit log records who removed it and when. The client cannot remove files.
 
 Signing:
 
@@ -111,12 +117,12 @@ File rules:
 
 ## Chat
 
-Each client has one chat with the firm. The chat is not split by case. All staff can read and reply in any client's chat.
+Each client has one chat with the firm. The chat is not split by case. Lawyers and the Office Manager can read and reply in any client's chat. A Staff user can read and reply only in the chat of a client with at least one case assigned to them.
 
 - Messages are text, and can carry files or photos (same file rules as Documents).
 - Each message shows the sender's name and the time. The client sees staff names; staff see the client's name.
-- When a client sends a message, all staff get a notification. When staff send a message, the client gets an in-system notification and an email.
-- A file sent in chat stays in the chat. It is not added to the case documents automatically. If staff want it as a case document, they save it to the case.
+- When a client sends a message, the lawyers in charge of that client's cases and the Staff assigned to them get a notification (see Notifications). When staff send a message, the client gets an in-system notification and an email.
+- A file sent in chat stays in the chat. It is not added to the case documents automatically. If staff want it as a case document, they choose "Save to case" on the message and pick one of that client's cases they can open. The file is copied to the case documents; the chat message keeps its copy.
 - The chat does not need to be real time. Refreshing the page or polling every few seconds is enough for a firm of this size.
 - Clients may still contact the firm on WhatsApp. The system does not try to stop or capture that.
 
@@ -164,15 +170,16 @@ Staff get in-system notifications only. Clients get an in-system notification an
 | Case update posted | Client | Yes |
 | Document request added | Client | Yes |
 | Document request rejected | Client | Yes |
-| Client uploaded a document | All staff | No |
+| Client uploaded a document | Lawyer in charge of the case and Staff assigned to it | No |
 | New chat message from staff | Client | Yes |
-| New chat message from client | All staff | No |
+| New chat message from client | Lawyers in charge of any of the client's cases and Staff assigned to any of them | No |
 | Bill sent | Client | Yes |
 | Bill marked paid | Client | Yes |
 | Client account created | Client | Yes, with a set-password link |
 
 Rules:
 
+- The Office Manager is not notified of client uploads or messages unless the event matches no one above. If a client with no cases sends a message, both lawyers are notified.
 - An email says what happened and gives a link to log in. It does not include case details, documents or message text, so nothing private sits in the client's inbox.
 - Several events within a few minutes can be grouped into one email. This is nice to have, not required.
 - In-system notifications show as a bell icon with a count. Clicking one opens the related case, chat or bill and marks it read.
@@ -181,12 +188,13 @@ Rules:
 
 The system is a website that works well on a phone. No native mobile app is needed.
 
-- Language: English and Bahasa Melayu. Each user picks their language. All screen text, emails and notifications exist in both. Data typed by users (case titles, updates, messages) is shown as typed.
+- Language: English and Bahasa Melayu. English is the default: new accounts start in English and the login page shows English until the visitor switches. Each user can change their language in My account. All screen text, emails and notifications exist in both. Data typed by users (case titles, updates, messages) is shown as typed.
 - Scale: fewer than 10 clients and under 50 cases in the first year. Simple hosting is enough. Design for a small team, not for high traffic.
 - Security: all pages over HTTPS. Passwords stored hashed. A client can only ever open their own records, enforced on the server, not only hidden in the screen. Files are stored outside the public web folder and served only to users allowed to see them.
 - Personal data: the system holds IC numbers, addresses and case details, so it must be treated as sensitive under Malaysia's Personal Data Protection Act. Keep access logs for logins and file downloads, and keep daily backups.
-- Settings page for lawyers: firm name, bank account details for bills, DuitNow QR image, staff accounts, and the email setup for alerts (the sender address and the mail server details). All of these are typed into the settings page, not into code or config files.
-- Audit: every case status change, update, document upload and bill status change records who did it and when.
+- Settings page for lawyers: firm name, bank account details for bills, DuitNow QR image, staff accounts (Lawyer, Office Manager, Staff), and the email setup for alerts (the sender address and the mail server details). All of these are typed into the settings page, not into code or config files.
+- Audit: every case status change, update, document upload, document removal and bill status change records who did it and when.
+- Backups: the database is backed up every day and the backups are kept for 30 days, so the firm can recover from a mistake or an outage.
 
 ## Screens
 
@@ -205,13 +213,13 @@ Staff area:
 
 | Screen | Who | What it shows |
 | --- | --- | --- |
-| Dashboard | Lawyer, Staff | Active cases the user can open, pending document requests, unread chats, bills awaiting payment |
-| Clients list | Lawyer, Staff | All clients (Lawyer) or clients with an assigned case (Staff), search by name or IC |
-| Client page | Lawyer, Staff | Client details, their cases, link to the chat, button to create a case |
-| Case page | Lawyer, Staff | Status with change control, updates, document requests, documents, bills, assigned staff. Tabs on phone |
-| Chat | Lawyer, Staff | One thread per client, send text and files |
-| Bill editor | Lawyer, Staff | Add and edit lines while Draft, see total, mark Sent or Paid |
-| Past cases | Lawyer, Staff | Completed and Cancelled cases |
+| Dashboard | Lawyer, Office Manager, Staff | Active cases the user can open, pending document requests, unread chats, bills awaiting payment |
+| Clients list | Lawyer, Office Manager, Staff | All clients (Lawyer, Office Manager) or clients with an assigned case (Staff), search by name or IC. New client button for Lawyer and Office Manager |
+| Client page | Lawyer, Office Manager, Staff | Client details, their cases, link to the chat, button to create a case (Lawyer, Office Manager) |
+| Case page | Lawyer, Office Manager, Staff | Status with change control, updates, document requests, documents, bills, assigned staff. Tabs on phone |
+| Chat | Lawyer, Office Manager, Staff | One thread per client, send text and files, save a file to a case |
+| Bill editor | Lawyer, Office Manager, Staff | Add and edit lines while Draft, see total, mark Sent or Paid |
+| Past cases | Lawyer, Office Manager, Staff | Completed and Cancelled cases |
 | Settings | Lawyer | Firm details, bank account, QR image, SMTP, staff accounts |
 
 Client portal:
@@ -238,4 +246,4 @@ These were in the original request or the firm's answers, but are left out of ve
 
 ## Open questions
 
-None. The firm answered the last five questions on 10 October 2026 and the answers are in the sections above. New questions go here as they come up.
+None. The firm answered the last five questions on 10 October 2026, and the review questions were settled the same day. The answers are in the sections above. New questions go here as they come up.

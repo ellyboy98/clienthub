@@ -15,7 +15,9 @@ Before coding:
 1. Read `.claude/handoffs/plan.md` (your milestone and Shared decisions only) and
    `.claude/handoffs/status.md`. If `.claude/handoffs/test-report.md` has open failures for your
    milestone, fix those first.
-2. Check your agent memory for patterns from earlier milestones.
+2. If the milestone builds or changes screens, read the matching sections of `docs/UI-Design-Notes.md`
+   (Tokens and Components once, then only the screens in your milestone). Build to those notes.
+3. Check your agent memory for patterns from earlier milestones.
 
 While coding:
 - Follow the preloaded conventions skill. Match the Shared decisions in the plan.
@@ -29,7 +31,7 @@ After coding:
 - Update `.claude/handoffs/status.md`: milestone name, what was built (file list), what was skipped and why,
   anything the tester should look at.
 - Save new patterns, gotchas and library quirks to your agent memory.
-- Do NOT commit. The main conversation commits after review.
+- Do NOT commit. The main conversation commits to `build/v1` after review.
 
 Return a summary under 15 lines: milestone, files changed, tests added, test result, open items.
 Never paste build or test logs; paste only the failing test names and the one-line error.
