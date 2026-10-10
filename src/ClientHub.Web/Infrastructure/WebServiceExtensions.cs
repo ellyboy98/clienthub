@@ -8,6 +8,7 @@ using ClientHub.Web.Services.Chat;
 using ClientHub.Web.Services.Clients;
 using ClientHub.Web.Services.Documents;
 using ClientHub.Web.Services.Email;
+using ClientHub.Web.Services.Notifications;
 using ClientHub.Web.Services.Settings;
 using ClientHub.Web.Services.Storage;
 using Microsoft.AspNetCore.HostFiltering;
@@ -82,6 +83,7 @@ public static class WebServiceExtensions
                 o.Conventions.AuthorizeFolder("/Account/Manage");
                 o.Conventions.AuthorizeFolder("/Uploads");
                 o.Conventions.AuthorizeFolder("/Files");
+                o.Conventions.AuthorizeFolder("/Notifications");
             })
             .AddViewLocalization()
             .AddDataAnnotationsLocalization(o =>
@@ -122,6 +124,7 @@ public static class WebServiceExtensions
         services.AddScoped<IAccountEmails, AccountEmails>();
         services.AddScoped<IFirmSettingsService, FirmSettingsService>();
         services.AddScoped<IBillService, BillService>();
+        services.AddScoped<INotificationService, NotificationService>();
         return services;
     }
 }

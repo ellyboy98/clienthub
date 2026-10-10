@@ -3,6 +3,7 @@ using ClientHub.Web.Data;
 using ClientHub.Web.Data.Entities;
 using ClientHub.Web.Services.Access;
 using ClientHub.Web.Services.Audit;
+using ClientHub.Web.Services.Notifications;
 using ClientHub.Web.Services.Storage;
 using Microsoft.EntityFrameworkCore;
 
@@ -65,10 +66,11 @@ public class ChatService : IChatService
     private readonly IAccessService _access;
     private readonly IStorageService _storage;
     private readonly IAuditService _audit;
+    private readonly INotificationService _notify;
 
-    public ChatService(AppDbContext db, IAccessService access, IStorageService storage, IAuditService audit)
+    public ChatService(AppDbContext db, IAccessService access, IStorageService storage, IAuditService audit, INotificationService notify)
     {
-        _db = db; _access = access; _storage = storage; _audit = audit;
+        _db = db; _access = access; _storage = storage; _audit = audit; _notify = notify;
     }
 
     public async Task<Guid?> OwnClientIdAsync(ClaimsPrincipal user, CancellationToken ct = default)
@@ -136,7 +138,7 @@ public class ChatService : IChatService
         _db.Messages.Add(new Message { ClientId = clientId, SenderId = me.Value, Body = text, SentAt = DateTime.UtcNow });
         await _db.SaveChangesAsync(ct);
         await tx.CommitAsync(ct);
-        // NOTIFY: ChatMessage R-091/R-092 (client sender: FirmRecipientsForClientMessageAsync, in-system only; firm sender: the client login, in-system + email) — M7
+        await _notify.AfterCommitAsync("ChatMessage", t => NotifyMessageAsync(clientId, me.Value, t));
         return SendError.None;
     }
 
@@ -157,8 +159,22 @@ public class ChatService : IChatService
         await _audit.LogAsync(AuditActions.MessageFileUploaded, nameof(Message), m.Id,
             new { ClientId = clientId, FileName = t.FileName, SizeBytes = stored.Size }, t.UserId, ct);
         await tx.CommitAsync(ct);
-        // NOTIFY: ChatMessage R-091/R-092 (file message; same recipients as a text message) — M7
+        await _notify.AfterCommitAsync("ChatMessage", nt => NotifyMessageAsync(clientId, t.UserId, nt));
         return m.Id;
+    }
+
+    /// <summary>
+    /// After commit. Client sender: firm recipients from IAccessService (R-092, R-093), in-system only. Firm sender: the client's
+    /// login (R-091), in-system + email. No message text goes into the notification or the email (R-099).
+    /// </summary>
+    private async Task NotifyMessageAsync(Guid clientId, Guid senderId, CancellationToken ct)
+    {
+        var client = await _db.Clients.AsNoTracking().Where(c => c.Id == clientId).Select(c => new { c.Name, c.UserId }).FirstAsync(ct);
+        if (client.UserId == senderId)
+            await _notify.NotifyAsync(await _access.FirmRecipientsForClientMessageAsync(clientId, ct), NotificationKinds.ClientMessage,
+                $"/Staff/Chats/{clientId}", client.Name, ct);
+        else if (client.UserId is { } clientUser)
+            await _notify.NotifyAsync(new[] { clientUser }, NotificationKinds.FirmMessage, "/Portal/Chat", client.Name, ct);
     }
 
     public async Task<string?> DownloadUrlAsync(ClaimsPrincipal user, Guid messageId, CancellationToken ct = default)

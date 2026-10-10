@@ -28,6 +28,7 @@ metadata:
 - (M5) Tailwind v3 emits `.hidden` after `.flex`, so `class="hidden flex"` + JS removing `hidden` works. Test hooks on counts need `data-tile-count>N<` (TestData.Tile regex).
 
 - (M5 review) Reviewer treats a timestamp poll cursor as Critical (late commits skipped AND marked read). Pattern: identity `seq` cursor + `pg_advisory_xact_lock(<id as bigint>)` in the insert transaction (identity values are assigned at insert, not commit), and mark read only `seq <=` what the viewer was shown; background-tab polls must not mark read (`hx-vals='js:{visible:...}'`). Migrations generated in the container are root-owned: edit/chown them via `docker compose exec app`. Drop EF's `defaultValue: 0L` on an added identity column.
+- (M7) Per-recipient language for titles/emails: swap `CultureInfo.CurrentUICulture` around the `IStringLocalizer` lookup and restore in finally (NotificationService.InLanguage, AccountEmails). Test hooks: `data-bell-count>N<`; FakeEmailSender is shared per class fixture, so filter `Emails.Sent` by the recipient address and assert link-specific notification counts (seeded lawyer1 collects rows from every test).
 **Why:** each cost a debug cycle in M2/M3.
 **How to apply:** check before adding resx, partials, manual curl checks or Lawyer-only integration tests in later milestones.
 

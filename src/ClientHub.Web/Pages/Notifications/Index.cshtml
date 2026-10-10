@@ -1,0 +1,53 @@
+@page
+@model ClientHub.Web.Pages.Notifications.IndexModel
+@using ClientHub.Web.Infrastructure
+@{
+    ViewData["Title"] = L["Common.Notifications"];
+    var empty = new EmptyStateModel(L["Notifications.Empty"]);
+    var markAll = new ButtonModel(L["Notifications.MarkAllRead"], ButtonVariant.Secondary);
+    var anyUnread = await Model.HasUnreadAsync();
+    var newer = new ButtonModel(L["Notifications.Newer"], ButtonVariant.Secondary, Href: Model.PageNo <= 2 ? "/Notifications" : $"/Notifications?p={Model.PageNo - 1}");
+    var older = new ButtonModel(L["Notifications.Older"], ButtonVariant.Secondary, Href: $"/Notifications?p={Model.PageNo + 1}");
+}
+<div class="mx-auto max-w-2xl space-y-4">
+    <div class="flex flex-wrap items-center justify-between gap-3">
+        <h1 class="text-h1">@L["Common.Notifications"]</h1>
+        @if (anyUnread)
+        {
+            <form method="post" asp-page-handler="MarkAll">
+                <partial name="Components/_Button" model="markAll" />
+            </form>
+        }
+    </div>
+    @if (Model.Items.Count == 0)
+    {
+        <partial name="Components/_EmptyState" model="empty" />
+    }
+    else
+    {
+        <ul class="card divide-y divide-border p-0 md:p-0">
+            @foreach (var n in Model.Items)
+            {
+                var unread = n.ReadAt == null;
+                <li>
+                    <form method="post" action="/Notifications/Open/@n.Id" asp-antiforgery="true">
+                        <button type="submit" class="flex min-h-[56px] w-full items-start gap-3 px-4 py-3 text-left hover:bg-bg-subtle" data-notification="@n.Id" data-unread="@(unread ? "true" : "false")">
+                            <span class="mt-1.5 h-2.5 w-2.5 flex-none rounded-full @(unread ? "bg-brand-gold" : "bg-transparent")" aria-hidden="true"></span>
+                            <span class="min-w-0 flex-1">
+                                <span class="block break-words text-body-sm @(unread ? "font-semibold text-text-primary" : "text-text-secondary")">@n.Title</span>
+                                <span class="block text-caption text-text-muted">@Format.DateTime(n.CreatedAt)@if (unread) {<span class="sr-only"> · @L["Notifications.Unread"]</span>}</span>
+                            </span>
+                        </button>
+                    </form>
+                </li>
+            }
+        </ul>
+    }
+    @if (Model.PageNo > 1 || Model.HasOlder)
+    {
+        <nav class="flex justify-between gap-3" aria-label="@L["Common.Notifications"]">
+            <span>@if (Model.PageNo > 1) { <partial name="Components/_Button" model="newer" /> }</span>
+            <span>@if (Model.HasOlder) { <partial name="Components/_Button" model="older" /> }</span>
+        </nav>
+    }
+</div>

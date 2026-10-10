@@ -25,4 +25,16 @@ public interface IAccessService
 
     /// <summary>Lawyer, OfficeManager or Staff (uploads without a request, request handling, removal).</summary>
     bool IsFirm(ClaimsPrincipal user);
+
+    /// <summary>
+    /// R-090, R-096, R-097, R-101: firm users to notify of a client upload on the case = its lawyer in charge + its assigned Staff.
+    /// Active users only; when none remain, all active Lawyers. The Office Manager is never included. Every id returned can open the case.
+    /// </summary>
+    Task<List<Guid>> FirmRecipientsForUploadAsync(Guid caseId, CancellationToken ct = default);
+
+    /// <summary>
+    /// R-092, R-093, R-096, R-097, R-101: lawyers in charge + assigned Staff of all the client's cases (deduplicated); all active
+    /// Lawyers when no active recipient remains (no cases, or all deactivated). The Office Manager is never included. Every id returned can open the chat.
+    /// </summary>
+    Task<List<Guid>> FirmRecipientsForClientMessageAsync(Guid clientId, CancellationToken ct = default);
 }

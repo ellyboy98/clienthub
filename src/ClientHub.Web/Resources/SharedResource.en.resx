@@ -385,4 +385,53 @@ A lawyer has created your staff account on the firm's Client Hub. Use this link 
 {1}
 
 If the link has expired, use Forgot password on the sign-in page.</value></data>
+  <data name="Notifications.Empty" xml:space="preserve"><value>No notifications yet.</value></data>
+  <data name="Notifications.MarkAllRead" xml:space="preserve"><value>Mark all read</value></data>
+  <data name="Notifications.Unread" xml:space="preserve"><value>Unread</value></data>
+  <data name="Notify.CaseStatusChanged.Title" xml:space="preserve"><value>Case status updated: {0}</value></data>
+  <data name="Notify.CaseUpdatePosted.Title" xml:space="preserve"><value>New update on {0}</value></data>
+  <data name="Notify.DocumentRequested.Title" xml:space="preserve"><value>Document requested for {0}</value></data>
+  <data name="Notify.DocumentRejected.Title" xml:space="preserve"><value>Please upload a document again for {0}</value></data>
+  <data name="Notify.DocumentUploaded.Title" xml:space="preserve"><value>Client uploaded a document to {0}</value></data>
+  <data name="Notify.FirmMessage.Title" xml:space="preserve"><value>New message from the firm</value></data>
+  <data name="Notify.ClientMessage.Title" xml:space="preserve"><value>New message from {0}</value></data>
+  <data name="Notify.BillSent.Title" xml:space="preserve"><value>New bill {0}</value></data>
+  <data name="Notify.BillPaid.Title" xml:space="preserve"><value>Bill {0} marked paid</value></data>
+  <data name="Email.CaseStatusChanged.Subject" xml:space="preserve"><value>Your case status has changed</value></data>
+  <data name="Email.CaseStatusChanged.Body" xml:space="preserve"><value>Hello {0},
+
+This is to let you know that the status of one of your cases has changed. Sign in to the firm's Client Hub to see the details:
+{1}</value></data>
+  <data name="Email.CaseUpdatePosted.Subject" xml:space="preserve"><value>New update on your case</value></data>
+  <data name="Email.CaseUpdatePosted.Body" xml:space="preserve"><value>Hello {0},
+
+This is to let you know that the firm has posted a new update on one of your cases. Sign in to the firm's Client Hub to see the details:
+{1}</value></data>
+  <data name="Email.DocumentRequested.Subject" xml:space="preserve"><value>The firm needs a document from you</value></data>
+  <data name="Email.DocumentRequested.Body" xml:space="preserve"><value>Hello {0},
+
+This is to let you know that the firm has asked you for a document. Sign in to the firm's Client Hub to see the details:
+{1}</value></data>
+  <data name="Email.DocumentRejected.Subject" xml:space="preserve"><value>Please upload a document again</value></data>
+  <data name="Email.DocumentRejected.Body" xml:space="preserve"><value>Hello {0},
+
+This is to let you know that the firm has asked you to upload a document again. Sign in to the firm's Client Hub to see the details:
+{1}</value></data>
+  <data name="Email.FirmMessage.Subject" xml:space="preserve"><value>New message from the firm</value></data>
+  <data name="Email.FirmMessage.Body" xml:space="preserve"><value>Hello {0},
+
+This is to let you know that you have a new message from the firm. Sign in to the firm's Client Hub to see the details:
+{1}</value></data>
+  <data name="Email.BillSent.Subject" xml:space="preserve"><value>You have a new bill</value></data>
+  <data name="Email.BillSent.Body" xml:space="preserve"><value>Hello {0},
+
+This is to let you know that the firm has sent you a new bill. Sign in to the firm's Client Hub to see the details:
+{1}</value></data>
+  <data name="Email.BillPaid.Subject" xml:space="preserve"><value>Your bill has been marked paid</value></data>
+  <data name="Email.BillPaid.Body" xml:space="preserve"><value>Hello {0},
+
+This is to let you know that the firm has marked one of your bills as paid. Sign in to the firm's Client Hub to see the details:
+{1}</value></data>
+  <data name="Notifications.Newer" xml:space="preserve"><value>Newer</value></data>
+  <data name="Notifications.Older" xml:space="preserve"><value>Load older</value></data>
 </root>

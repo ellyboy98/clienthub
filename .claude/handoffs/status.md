@@ -14,7 +14,7 @@ Start with Prompt 1 in KICKOFF.md once the 5-hour usage window has reset.
 | M4 | Storage and documents | 30 min | built, review fixes applied, 119/119 tests green, not committed |
 | M5 | Chat | 20 min | built, review fixes applied, 133/133 tests green, not committed |
 | M6 | Bills and Settings | 25 min | built, 157/157 tests green, not committed |
-| M7 | Notifications and email | 20 min | not started |
+| M7 | Notifications and email | 20 min | built, review fixes applied, 180/180 tests green, not committed |
 | M8 | Deploy and backups (deployer) | 10 min | not started |
 
 Open questions Q-01..Q-22: defaults approved (decisions.md).
@@ -236,3 +236,52 @@ Tester notes:
 - Draft bill URL as the client -> 404. Settings as lawyer1: save firm/bank/SMTP (password field never filled back), upload a PNG QR,
   Add staff (set-password email in console log), Deactivate/Reactivate. OM/Staff get 404 on `/Staff/Settings*`.
 - Check at 390px: `/Portal/Bills`, `/Portal/Bills/Details/{id}`, `/Portal/Cases/Details/{id}?tab=bills`.
+
+## M7 Notifications and email (developer, 2026-10-10)
+
+Built:
+- `Services/Notifications/{NotificationKinds,INotificationService,NotificationService}.cs`: the single Notify service. Writes one row per
+  distinct recipient (title from `Notify.<Kind>.Title` in the recipient's language, {0} = case title / client name / bill no), saves, then
+  emails active Client recipients only for emailed kinds (`Email.<Kind>.{Subject,Body}`, recipient's language, body = greeting + "what
+  happened" + `APP_BASE_URL/Account/Login?ReturnUrl=<target>` via `IAppLinks`). Email failures are caught and logged (R-100).
+  Also `NotifyCaseClientAsync`, `UnreadCountAsync`, `ListAsync`, `OpenAsync`, `MarkAllReadAsync` (all scoped to a user id).
+- `IAccessService`/`AccessService`: `FirmRecipientsForUploadAsync(caseId)` (lawyer in charge + case_staff) and
+  `FirmRecipientsForClientMessageAsync(clientId)` (lawyers + case_staff of all the client's cases, deduplicated; all active Lawyers when
+  no cases). OM never included.
+- All 8 `// NOTIFY:` markers replaced (none left): `CaseService` (status R-086, update R-087), `DocumentService` (request R-088,
+  reject R-089, client upload R-090; firm uploads notify nobody), `ChatService` (text + file message: client sender -> firm recipients,
+  firm sender -> client login, R-091..R-093), `BillService` (Sent/Paid R-094). Each call runs after the action's commit.
+- Pages: `Pages/Notifications/{_ViewStart,Index,Open}` (folder requires sign-in; layout by role). List with gold unread dot,
+  "Mark all read" (POST `?handler=MarkAll`), each item is a POST form to `/Notifications/Open/{id}` (marks read, LocalRedirect to the
+  target; others' ids 404; GET 404). `_Bell` uses `INotificationService.UnreadCountAsync` and has a `data-bell-count` hook.
+- DI: `INotificationService` registered; `/Notifications` authorised. Resx: 26 new keys en + ms (`Notifications.*`, `Notify.*.Title`,
+  `Email.<Kind>.*` for 7 client kinds).
+- Tests: `tests/ClientHub.Tests/Notifications/NotificationTriggerTests.cs` (19): every trigger with who does / does not get it, OM and
+  unassigned Staff excluded, dedup across cases, no-cases fallback (inactive lawyer excluded), firm never emailed, SMTP failure keeps
+  the action and the row, inactive client not emailed, email in `ms` without case details, Open marks read, others' notification 404,
+  Mark all read only touches own rows, anonymous redirect. Full suite 176/176. `FakeEmailSender` already existed (M2).
+
+Skipped:
+- Settings "Send test email" (R-113): CUT for v1 (cut list items 1-3), not built. `SaveToCase_SendsNoNotification`: Save to case is cut.
+- No digests (Q-22).
+
+Tester notes:
+- Run `npm run css:build` (new classes). Dev console shows the email (no SMTP host, Development) after e.g. a status change as Staff.
+- Wrong SMTP host: set it on Settings, post an update -> page succeeds; the error is logged (MailKit connect fails within 5 s, so the
+  request takes up to ~5 s per client email).
+- Check at 390px: `/Notifications` as a Client (portal layout, light header); bell count in the portal header and staff sidebar.
+
+Review fixes (M7 review, 2026-10-10):
+- Should fix 1: every trigger runs its post-commit work through `INotificationService.AfterCommitAsync(kind, work)`. It uses
+  CancellationToken.None, catches and logs any failure (DB, recipients lookup, cancellation; it logs the exception type only), and discards unsaved notification rows. A
+  failing Notify step never fails the saved action, and upload staging cleanup still runs.
+- Should fix 2 (Fiqri): firm recipients are active users only. When none remain (no cases, or the lawyers in charge are deactivated and
+  no active Staff is assigned), uploads and client messages go to all active Lawyers (`AccessService.ActiveOrAllLawyersAsync`).
+- Should fix 3: `/Notifications` shows 50 per page (`?p=N`) with "Load older" / "Newer" buttons. "Mark all read" shows whenever any
+  notification is unread, on any page.
+- New tests: `ClientEvents_NoActiveRecipient_FallBackToAllActiveLawyers`, `List_Pages_OlderNotificationsReachable` (in
+  NotificationTriggerTests). `Notifications/NotifyFailureTests.cs` uses a factory whose NotifyAsync throws:
+  `NotifyThrows_ChatSend_SucceedsAndSavesOneMessage`, `NotifyThrows_StatusChange_Succeeds`. 2 new resx keys en + ms. Suite 180/180.
+- Left (Nice to have): 1 (SMTP failure log still includes the full MailKit exception), 2 (background email queue), 3 (non-local link test, unassigned Staff on client message), 4 (plan.md line 145 is
+  stale; it still describes the 3-argument, page-handler Notify).
+

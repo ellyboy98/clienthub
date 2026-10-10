@@ -5,6 +5,7 @@ using ClientHub.Web.Data.Entities;
 using ClientHub.Web.Infrastructure;
 using ClientHub.Web.Services.Access;
 using ClientHub.Web.Services.Audit;
+using ClientHub.Web.Services.Notifications;
 using Microsoft.EntityFrameworkCore;
 
 namespace ClientHub.Web.Services.Bills;
@@ -51,8 +52,12 @@ public class BillService : IBillService
     private readonly AppDbContext _db;
     private readonly IAccessService _access;
     private readonly IAuditService _audit;
+    private readonly INotificationService _notify;
 
-    public BillService(AppDbContext db, IAccessService access, IAuditService audit) { _db = db; _access = access; _audit = audit; }
+    public BillService(AppDbContext db, IAccessService access, IAuditService audit, INotificationService notify)
+    {
+        _db = db; _access = access; _audit = audit; _notify = notify;
+    }
 
     private IQueryable<Bill> Visible(ClaimsPrincipal user)
     {
@@ -153,7 +158,15 @@ public class BillService : IBillService
         }, ct, async bill => await _audit.LogAsync(AuditActions.BillStatusChanged, "Bill", bill.Id, new { bill.BillNo, from, to }, actorId, ct));
         if (result == BillError.None)
         {
-            // NOTIFY: BillSent / BillPaid R-094 (M7): the case's client, link /Portal/Bills/Details/{billId}
+            // R-094, after commit: the case's client, with the bill number as context.
+            await _notify.AfterCommitAsync(to, async t =>
+            {
+                var bill = await _db.Bills.AsNoTracking().Where(b => b.Id == billId)
+                    .Join(_db.Cases, b => b.CaseId, c => c.Id, (b, c) => new { b.BillNo, c.Client!.UserId }).FirstAsync(t);
+                if (bill.UserId is { } uid)
+                    await _notify.NotifyAsync(new[] { uid }, to == BillStatus.Sent ? NotificationKinds.BillSent : NotificationKinds.BillPaid,
+                        $"/Portal/Bills/Details/{billId}", bill.BillNo, t);
+            });
         }
         return result;
     }

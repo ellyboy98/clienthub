@@ -1,6 +1,7 @@
 using ClientHub.Web.Data;
 using ClientHub.Web.Data.Entities;
 using ClientHub.Web.Services.Audit;
+using ClientHub.Web.Services.Notifications;
 using Microsoft.EntityFrameworkCore;
 
 namespace ClientHub.Web.Services.Cases;
@@ -30,8 +31,9 @@ public class CaseService : ICaseService
 {
     private readonly AppDbContext _db;
     private readonly IAuditService _audit;
+    private readonly INotificationService _notify;
 
-    public CaseService(AppDbContext db, IAuditService audit) { _db = db; _audit = audit; }
+    public CaseService(AppDbContext db, IAuditService audit, INotificationService notify) { _db = db; _audit = audit; _notify = notify; }
 
     public async Task<(Case? Case, CaseError Error)> CreateAsync(CaseInput input, CancellationToken ct = default)
     {
@@ -92,7 +94,8 @@ public class CaseService : ICaseService
         c.SetStatus(status, DateTime.UtcNow);
         await _db.SaveChangesAsync(ct);
         await _audit.LogAsync(AuditActions.CaseStatusChanged, "Case", c.Id, new { from, to = status }, actorId, ct);
-        // NOTIFY: CaseStatusChanged R-1xx (M7)
+        await _notify.AfterCommitAsync(NotificationKinds.CaseStatusChanged, t =>
+            _notify.NotifyCaseClientAsync(c.Id, NotificationKinds.CaseStatusChanged, $"/Portal/Cases/Details/{c.Id}", t)); // R-086
     }
 
     public async Task<CaseUpdate> PostUpdateAsync(Guid caseId, Guid authorId, string body, CancellationToken ct = default)
@@ -101,7 +104,8 @@ public class CaseService : ICaseService
         _db.CaseUpdates.Add(u);
         await _db.SaveChangesAsync(ct);
         await _audit.LogAsync(AuditActions.CaseUpdatePosted, "CaseUpdate", u.Id, new { caseId }, authorId, ct);
-        // NOTIFY: CaseUpdatePosted R-1xx (M7)
+        await _notify.AfterCommitAsync(NotificationKinds.CaseUpdatePosted, t =>
+            _notify.NotifyCaseClientAsync(caseId, NotificationKinds.CaseUpdatePosted, $"/Portal/Cases/Details/{caseId}", t)); // R-087
         return u;
     }
 

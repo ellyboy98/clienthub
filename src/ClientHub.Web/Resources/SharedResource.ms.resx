@@ -385,4 +385,53 @@ Seorang peguam telah mencipta akaun kakitangan anda di Client Hub firma. Gunakan
 {1}
 
 Jika pautan telah tamat tempoh, gunakan Lupa kata laluan di halaman log masuk.</value></data>
+  <data name="Notifications.Empty" xml:space="preserve"><value>Tiada pemberitahuan lagi.</value></data>
+  <data name="Notifications.MarkAllRead" xml:space="preserve"><value>Tanda semua telah dibaca</value></data>
+  <data name="Notifications.Unread" xml:space="preserve"><value>Belum dibaca</value></data>
+  <data name="Notify.CaseStatusChanged.Title" xml:space="preserve"><value>Status kes dikemas kini: {0}</value></data>
+  <data name="Notify.CaseUpdatePosted.Title" xml:space="preserve"><value>Kemas kini baharu bagi {0}</value></data>
+  <data name="Notify.DocumentRequested.Title" xml:space="preserve"><value>Dokumen diminta bagi {0}</value></data>
+  <data name="Notify.DocumentRejected.Title" xml:space="preserve"><value>Sila muat naik semula dokumen bagi {0}</value></data>
+  <data name="Notify.DocumentUploaded.Title" xml:space="preserve"><value>Klien memuat naik dokumen ke {0}</value></data>
+  <data name="Notify.FirmMessage.Title" xml:space="preserve"><value>Mesej baharu daripada firma</value></data>
+  <data name="Notify.ClientMessage.Title" xml:space="preserve"><value>Mesej baharu daripada {0}</value></data>
+  <data name="Notify.BillSent.Title" xml:space="preserve"><value>Bil baharu {0}</value></data>
+  <data name="Notify.BillPaid.Title" xml:space="preserve"><value>Bil {0} ditanda telah dibayar</value></data>
+  <data name="Email.CaseStatusChanged.Subject" xml:space="preserve"><value>Status kes anda telah berubah</value></data>
+  <data name="Email.CaseStatusChanged.Body" xml:space="preserve"><value>Salam {0},
+
+Ini untuk memaklumkan bahawa status salah satu kes anda telah berubah. Log masuk ke Client Hub firma untuk melihat butirannya:
+{1}</value></data>
+  <data name="Email.CaseUpdatePosted.Subject" xml:space="preserve"><value>Kemas kini baharu bagi kes anda</value></data>
+  <data name="Email.CaseUpdatePosted.Body" xml:space="preserve"><value>Salam {0},
+
+Ini untuk memaklumkan bahawa firma telah menyiarkan kemas kini baharu bagi salah satu kes anda. Log masuk ke Client Hub firma untuk melihat butirannya:
+{1}</value></data>
+  <data name="Email.DocumentRequested.Subject" xml:space="preserve"><value>Firma memerlukan dokumen daripada anda</value></data>
+  <data name="Email.DocumentRequested.Body" xml:space="preserve"><value>Salam {0},
+
+Ini untuk memaklumkan bahawa firma telah meminta satu dokumen daripada anda. Log masuk ke Client Hub firma untuk melihat butirannya:
+{1}</value></data>
+  <data name="Email.DocumentRejected.Subject" xml:space="preserve"><value>Sila muat naik semula dokumen</value></data>
+  <data name="Email.DocumentRejected.Body" xml:space="preserve"><value>Salam {0},
+
+Ini untuk memaklumkan bahawa firma meminta anda memuat naik semula satu dokumen. Log masuk ke Client Hub firma untuk melihat butirannya:
+{1}</value></data>
+  <data name="Email.FirmMessage.Subject" xml:space="preserve"><value>Mesej baharu daripada firma</value></data>
+  <data name="Email.FirmMessage.Body" xml:space="preserve"><value>Salam {0},
+
+Ini untuk memaklumkan bahawa anda menerima mesej baharu daripada firma. Log masuk ke Client Hub firma untuk melihat butirannya:
+{1}</value></data>
+  <data name="Email.BillSent.Subject" xml:space="preserve"><value>Anda menerima bil baharu</value></data>
+  <data name="Email.BillSent.Body" xml:space="preserve"><value>Salam {0},
+
+Ini untuk memaklumkan bahawa firma telah menghantar bil baharu kepada anda. Log masuk ke Client Hub firma untuk melihat butirannya:
+{1}</value></data>
+  <data name="Email.BillPaid.Subject" xml:space="preserve"><value>Bil anda telah ditanda dibayar</value></data>
+  <data name="Email.BillPaid.Body" xml:space="preserve"><value>Salam {0},
+
+Ini untuk memaklumkan bahawa firma telah menanda salah satu bil anda sebagai telah dibayar. Log masuk ke Client Hub firma untuk melihat butirannya:
+{1}</value></data>
+  <data name="Notifications.Newer" xml:space="preserve"><value>Lebih baharu</value></data>
+  <data name="Notifications.Older" xml:space="preserve"><value>Muat yang lebih lama</value></data>
 </root>

@@ -3,6 +3,7 @@ using ClientHub.Web.Data;
 using ClientHub.Web.Data.Entities;
 using ClientHub.Web.Services.Access;
 using ClientHub.Web.Services.Audit;
+using ClientHub.Web.Services.Notifications;
 using ClientHub.Web.Services.Storage;
 using Microsoft.EntityFrameworkCore;
 
@@ -36,10 +37,11 @@ public class DocumentService : IDocumentService
     private readonly IAccessService _access;
     private readonly IAuditService _audit;
     private readonly IStorageService _storage;
+    private readonly INotificationService _notify;
 
-    public DocumentService(AppDbContext db, IAccessService access, IAuditService audit, IStorageService storage)
+    public DocumentService(AppDbContext db, IAccessService access, IAuditService audit, IStorageService storage, INotificationService notify)
     {
-        _db = db; _access = access; _audit = audit; _storage = storage;
+        _db = db; _access = access; _audit = audit; _storage = storage; _notify = notify;
     }
 
     public Task<List<RequestRow>> RequestsAsync(Guid caseId, bool openOnly = false, CancellationToken ct = default) =>
@@ -62,7 +64,8 @@ public class DocumentService : IDocumentService
         var r = new DocumentRequest { CaseId = caseId, Name = name.Trim(), Note = string.IsNullOrWhiteSpace(note) ? null : note.Trim() };
         _db.DocumentRequests.Add(r);
         await _db.SaveChangesAsync(ct);
-        // NOTIFY: DocumentRequested R-088 (case's client, in-system + email) — M7
+        await _notify.AfterCommitAsync(NotificationKinds.DocumentRequested, t =>
+            _notify.NotifyCaseClientAsync(caseId, NotificationKinds.DocumentRequested, $"/Portal/Cases/Details/{caseId}", t)); // R-088
         return r.Id;
     }
 
@@ -73,7 +76,8 @@ public class DocumentService : IDocumentService
         r.Status = RequestStatus.Rejected;
         r.RejectionReason = reason.Trim();
         await _db.SaveChangesAsync(ct);
-        // NOTIFY: DocumentRejected R-089 (case's client, in-system + email) — M7
+        await _notify.AfterCommitAsync(NotificationKinds.DocumentRejected, t =>
+            _notify.NotifyCaseClientAsync(caseId, NotificationKinds.DocumentRejected, $"/Portal/Cases/Details/{caseId}", t)); // R-089
         return true;
     }
 
@@ -115,7 +119,14 @@ public class DocumentService : IDocumentService
         }
         await _audit.LogAsync(AuditActions.DocumentUploaded, nameof(Document), doc.Id,
             new { CaseId = caseId, t.Target.RequestId, doc.FileName, doc.SizeBytes }, t.UserId, ct);
-        // NOTIFY: DocumentUploaded R-090 (client uploads only: case lawyer + assigned Staff, in-system, no email) — M7
+        // R-090: client uploads only; the lawyer in charge and assigned Staff (never the OM), in-system only.
+        await _notify.AfterCommitAsync(NotificationKinds.DocumentUploaded, async nt =>
+        {
+            if (!await _db.Users.AnyAsync(u => u.Id == t.UserId && u.Role == Roles.Client, nt)) return;
+            var title = await _db.Cases.Where(c => c.Id == caseId).Select(c => c.Title).FirstAsync(nt);
+            await _notify.NotifyAsync(await _access.FirmRecipientsForUploadAsync(caseId, nt), NotificationKinds.DocumentUploaded,
+                $"/Staff/Cases/Details/{caseId}", title, nt);
+        });
         return doc.Id;
     }
 }

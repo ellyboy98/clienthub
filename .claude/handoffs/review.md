@@ -1,29 +1,27 @@
-# Review: M6 Bills and Settings (uncommitted, build/v1)
+# Review: M7 Notifications and email (uncommitted, build/v1)
 
-Scope: `git diff` plus untracked files for M6, checked against plan.md M6 and requirements.md (R-113 cut).
-Checked and clean: CanAccessCase/404 on every bill handler and list (IBillService.FindAsync/ListFor via CasesFor; portal Draft = 404;
-line ids resolved only inside the access-checked bill); frozen lines after Send (all mutations go through MutateAsync with
-`SELECT ... FOR UPDATE` and Draft checks; no other write path to bills/bill_lines); bill number (per-year advisory xact lock +
-unique index); Settings Lawyer-only (folder policy + CanManageSettings on every handler, SettingsQr upload start and completion);
-SMTP password protected with Data Protection and never rendered back (`_Input` drops password values); staff set-password link via
-IAppLinks; QR upload keeps staging -> copy -> re-check, JPG/PNG only (no SVG); no Html.Raw on bill or print pages (descriptions,
-note, firm and bank fields are Razor-encoded); en/ms resx parity (all used keys present in both).
+Scope: `git diff` plus the untracked Pages/Notifications, Services/Notifications and tests/ClientHub.Tests/Notifications. Checked against plan.md M7, requirements R-086..R-103 and R-134 (R-113 is cut), and decisions.md.
 
-## Critical (must fix before commit)
+Checked with no findings:
+- Recipients match each trigger. The client gets only links it can open. The case lawyer and assigned Staff get client uploads. The lawyers and Staff of the client's cases (or all active Lawyers when it has none) get client messages. The OM is never included.
+- Open and Mark all are scoped to the signed-in user. The LinkUrl is checked to be local when it is written and checked with IsLocalUrl when it is opened.
+- The email's ReturnUrl is escaped, and Login and LoginWith2fa redirect through IsLocalUrl.
+- Emails are plain text with the subject taken only from resx, contain no case details, and use the recipient's language.
+- An SMTP failure is caught and logged.
+- Notifications are sent after commit.
+- en and ms each have 26 new keys.
+- The UI uses the shared partials, has no gold action, and has 56px rows.
 
+## Critical
 None.
 
-## Should fix (next milestone)
-
-1. src/ClientHub.Web/Services/Bills/BillService.cs:92 and :104 (also Data/Entities/Bill.cs:57 and :74), problem: amounts are summed outside `Bill.Recalculate()` for the "too large" pre-check, against R-078 and the plan rule. Fix: drop the service pre-checks, let `Bill.AddLine/UpdateLine` raise BillRuleException, map it to `BillError.TooLarge`, and compute the candidate total through one Bill method that Recalculate also uses.
-2. src/ClientHub.Web/Services/Bills/BillService.cs:115, problem: removing a Draft line hard-deletes the `bill_lines` row. R-077 says "delete lines" but R-114 says no user action deletes a record, and decisions.md now settles this without a ruling. Fix: get Fiqri to choose between keeping the hard delete (and recording that R-077 overrides R-114 for draft lines) and adding `is_active` to bill_lines.
-3. src/ClientHub.Web/Services/Bills/BillService.cs:41-46, problem: the mutation methods take a bill id but no user, so access depends on every caller running FindAsync first. Fix: pass the ClaimsPrincipal and load the bill through `Visible(user)` inside MutateAsync.
-4. src/ClientHub.Web/Pages/Staff/Settings/Index.cshtml:116 and src/ClientHub.Web/Pages/Staff/Bills/_BillLines.cshtml:40, problem: Deactivate and Remove line act on one tap with no confirmation (status.md lists this as skipped). Fix: wrap both in the shared `_ConfirmDialog` partial.
+## Should fix
+1. src/ClientHub.Web/Services/Chat/ChatService.cs:141,162; Services/Cases/CaseService.cs:97,106; Services/Documents/DocumentService.cs:67,78,120-126; Services/Bills/BillService.cs:162-166. Problem: a failure inside the post-commit notify step (DB error, FirstAsync, or the request being cancelled via `ct`) still throws. The user's action is already committed, but they get a 500 and may retry, which duplicates a chat message. For uploads the throw also skips the staging cleanup in UploadService.cs:107-121. Fix: wrap post-commit Notify calls in a try/catch that logs and swallows the error, and pass `CancellationToken.None`, so the committed action always succeeds.
+2. src/ClientHub.Web/Services/Access/AccessService.cs:73-76. Problem: when a client has cases but every lawyer in charge is deactivated and no Staff is assigned, a client message reaches no active user. Q-18 only covers the no-cases fallback. Fix: ask Fiqri whether to fall back to all active Lawyers in that case, then implement and record the decision.
+3. src/ClientHub.Web/Services/Notifications/NotificationService.cs:67 and Pages/Notifications/Index.cshtml.cs:20. Problem: the list shows only the latest 100, but the bell counts every unread row, so older unread items can never be opened. Fix: add paging, or make the 100 cap a decision Fiqri confirms.
 
 ## Nice to have
-
-1. src/ClientHub.Web/Services/Storage/UploadService.cs:151, problem: the QR type check only reads the declared Content-Type, not the file bytes. The low risk is that the image is served as image/jpeg or image/png. Fix: check the JPG/PNG magic bytes with a ranged GET before recording the QR.
-2. src/ClientHub.Web/Services/Settings/FirmSettingsService.cs:92-99, problem: GetAsync inserts a firm_settings row on a GET, and two first-time requests at once can create two rows. Fix: seed the single row in migrations or seeding, and make GetAsync read only.
-3. src/ClientHub.Web/Pages/Staff/Cases/Details.cshtml.cs:148, problem: a double-click on "+ New bill" creates two Drafts, which can never be deleted (Q-07). Fix: disable the button on submit (`hx-disabled-elt` or a small JS guard).
-4. src/ClientHub.Web/Data/Entities/Bill.cs:23-29, problem: `Total`, `Status`, `IssuedAt`, `PaidAt` and `Lines` have public setters, so any code could bypass Recalculate, MarkSent and MarkPaid. Fix: make the setters private or internal (EF can map backing fields).
-5. src/ClientHub.Web/Services/Settings/FirmSettingsService.cs:23, problem: a non-numeric SMTP port gives the default English model-binding message. Fix: set localized `ModelBindingMessageProvider` accessors from resx.
+1. src/ClientHub.Web/Services/Notifications/NotificationService.cs:52. Problem: `LogError(ex, ...)` logs the full MailKit exception, and the SMTP server's reply can echo the recipient address. Fix: log the exception type and SMTP status code without the message.
+2. src/ClientHub.Web/Services/Notifications/NotificationService.cs:49-53. Problem: email is sent inside the request (5 s timeout per recipient), so a slow SMTP server delays the user's action. Fix: acceptable for one recipient; move sending to a background queue only if latency is seen.
+3. tests/ClientHub.Tests/Notifications/NotificationTriggerTests.cs. Problem: no test shows that NotifyAsync rejects a non-local or `//host` link, or that an unassigned Staff user gets no client-message notification (R-097). Fix: add both tests.
+4. .claude/handoffs/plan.md:145. Problem: the plan says Notify is called from page handlers with a three-argument signature, but it is now called from services with a context argument. The decision is recorded, but the plan text is stale. Fix: update the plan line.
