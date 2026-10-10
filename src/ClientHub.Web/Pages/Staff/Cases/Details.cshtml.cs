@@ -1,6 +1,7 @@
 using ClientHub.Web.Data;
 using ClientHub.Web.Data.Entities;
 using ClientHub.Web.Services.Access;
+using ClientHub.Web.Services.Bills;
 using ClientHub.Web.Services.Cases;
 using ClientHub.Web.Services.Documents;
 using Microsoft.AspNetCore.Mvc;
@@ -10,18 +11,20 @@ using Microsoft.Extensions.Localization;
 
 namespace ClientHub.Web.Pages.Staff.Cases;
 
-/// <summary>Case page (R-142, R-145): status, progress, updates, details, assigned staff, client card.</summary>
+/// <summary>Case page (R-142, R-143, R-145): status, progress, requests, updates, documents, details, assigned staff, client card, bills.</summary>
 public class DetailsModel : PageModel
 {
     private readonly AppDbContext _db;
     private readonly IAccessService _access;
     private readonly ICaseService _cases;
     private readonly IDocumentService _documents;
+    private readonly IBillService _bills;
     private readonly IStringLocalizer<SharedResource> _l;
 
-    public DetailsModel(AppDbContext db, IAccessService access, ICaseService cases, IDocumentService documents, IStringLocalizer<SharedResource> l)
+    public DetailsModel(AppDbContext db, IAccessService access, ICaseService cases, IDocumentService documents, IBillService bills,
+        IStringLocalizer<SharedResource> l)
     {
-        _db = db; _access = access; _cases = cases; _documents = documents; _l = l;
+        _db = db; _access = access; _cases = cases; _documents = documents; _bills = bills; _l = l;
     }
 
     [BindProperty(SupportsGet = true)] public Guid Id { get; set; }
@@ -34,6 +37,7 @@ public class DetailsModel : PageModel
     public string? UpdateError { get; private set; }
     public List<RequestRow> Requests { get; private set; } = new();
     public List<DocumentRow> Documents { get; private set; } = new();
+    public List<BillRow> Bills { get; private set; } = new();
     public string? RequestError { get; private set; }
     public Guid? RejectFor { get; private set; }
     public string? RejectError { get; private set; }
@@ -56,6 +60,7 @@ public class DetailsModel : PageModel
             .ToListAsync();
         Requests = await _documents.RequestsAsync(Id);
         Documents = await _documents.DocumentsAsync(Id);
+        Bills = await _bills.ListFor(User, Id).ToListAsync();
         if (CanAssign)
         {
             var assigned = Case.StaffLinks.Select(s => s.UserId).ToHashSet();
@@ -137,6 +142,14 @@ public class DetailsModel : PageModel
         if (!await _documents.RejectAsync(Id, requestId, reason)) return BadRequest();
         Notice = _l["Staff.Case.RequestRejected"].Value;
         return RedirectToPage(new { id = Id });
+    }
+
+    /// <summary>R-075: any firm user who can open the case creates a Draft bill (number assigned now, Q-06) and lands in the editor.</summary>
+    public async Task<IActionResult> OnPostNewBillAsync()
+    {
+        if (!await LoadAsync() || !_access.IsFirm(User)) return NotFound();
+        var bill = await _bills.CreateDraftAsync(Id);
+        return RedirectToPage("/Staff/Bills/Edit", new { id = bill.Id });
     }
 
     /// <summary>R-051, R-052: remove after confirmation; is_active = false, audit row, the stored object stays.</summary>

@@ -30,3 +30,8 @@ metadata:
 - (M5 review) Reviewer treats a timestamp poll cursor as Critical (late commits skipped AND marked read). Pattern: identity `seq` cursor + `pg_advisory_xact_lock(<id as bigint>)` in the insert transaction (identity values are assigned at insert, not commit), and mark read only `seq <=` what the viewer was shown; background-tab polls must not mark read (`hx-vals='js:{visible:...}'`). Migrations generated in the container are root-owned: edit/chown them via `docker compose exec app`. Drop EF's `defaultValue: 0L` on an added identity column.
 **Why:** each cost a debug cycle in M2/M3.
 **How to apply:** check before adding resx, partials, manual curl checks or Lawyer-only integration tests in later milestones.
+
+- (M6) EF: entities get `Id = Guid.NewGuid()` client side, so a child added only through a tracked parent's collection is treated as existing (UPDATE, 0 rows). Always `_db.X.Add(child)` explicitly. Removing a required child with DeleteBehavior.Restrict: `_db.Remove(child)` explicitly too.
+- (M6) FormTagHelper adds no antiforgery token when the form has a literal `action="..."`; add `asp-antiforgery="true"` (HTMX forms with hx-post need it).
+- (M6) Filtering after a positional-record projection fails at runtime (not compile time): pass filters into the query method before `select new Row(...)`.
+- (M6) Renaming `/Staff/Settings` to a folder means `AuthorizePage` no longer matches `/Staff/Settings/Index`; use `AuthorizeFolder`. Avoid `git rm --cached` (touches the index; coordinator commits) - just `mv`.

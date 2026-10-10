@@ -4,6 +4,7 @@ using ClientHub.Web.Data.Entities;
 using ClientHub.Web.Services.Access;
 using ClientHub.Web.Services.Chat;
 using ClientHub.Web.Services.Documents;
+using ClientHub.Web.Services.Settings;
 using Microsoft.EntityFrameworkCore;
 
 namespace ClientHub.Web.Services.Storage;
@@ -34,12 +35,13 @@ public class UploadService : IUploadService
     private readonly IUploadTicketProtector _tickets;
     private readonly IDocumentService _documents;
     private readonly IChatService _chat;
+    private readonly IFirmSettingsService _settings;
     private readonly ILogger<UploadService> _log;
 
     public UploadService(AppDbContext db, IAccessService access, IStorageService storage, IUploadTicketProtector tickets,
-        IDocumentService documents, IChatService chat, ILogger<UploadService> log)
+        IDocumentService documents, IChatService chat, IFirmSettingsService settings, ILogger<UploadService> log)
     {
-        _db = db; _access = access; _storage = storage; _tickets = tickets; _documents = documents; _chat = chat; _log = log;
+        _db = db; _access = access; _storage = storage; _tickets = tickets; _documents = documents; _chat = chat; _settings = settings; _log = log;
     }
 
     public async Task<StartUploadResult> StartAsync(ClaimsPrincipal user, UploadTarget target, string? fileName, long size, CancellationToken ct = default)
@@ -53,10 +55,13 @@ public class UploadService : IUploadService
             case UploadProblem.TooLarge: return new(UploadError.TooLarge);
         }
         var contentType = UploadRules.ContentTypeFor(name)!;
+        // The DuitNow QR is shown as an image on bills: JPG or PNG only. Completion checks the stored type against this one.
+        if (target.Kind == UploadTargetKind.SettingsQr && !UploadRules.ImageContentTypes.Contains(contentType)) return new(UploadError.BadType);
         var key = target.Kind switch
         {
             UploadTargetKind.Case => StorageKeys.ForCase(target.CaseId!.Value, name),
             UploadTargetKind.Chat => StorageKeys.ForChat(target.ClientId!.Value, name),
+            UploadTargetKind.SettingsQr => StorageKeys.ForQr(name),
             _ => throw new InvalidOperationException("Target not supported yet.")
         };
         var staging = StorageKeys.ForStaging();
@@ -103,6 +108,7 @@ public class UploadService : IUploadService
             {
                 UploadTargetKind.Case => await _documents.RecordUploadAsync(t, stored, ct),
                 UploadTargetKind.Chat => await _chat.RecordUploadAsync(t, stored, caption, ct),
+                UploadTargetKind.SettingsQr => await _settings.RecordQrAsync(t, ct),
                 _ => throw new InvalidOperationException("Target not supported yet.")
             };
         }
@@ -119,6 +125,12 @@ public class UploadService : IUploadService
     /// <summary>The row already written for this ticket's key: its id, 404 if removed or no longer accessible, null if none.</summary>
     private async Task<CompleteUploadResult?> ExistingAsync(ClaimsPrincipal user, UploadTicket t, CancellationToken ct)
     {
+        if (t.Target.Kind == UploadTargetKind.SettingsQr)
+        {
+            var settingsId = await _settings.QrRecordedAsync(t.Key, ct);
+            if (settingsId is null) return null;
+            return _access.CanManageSettings(user) ? new(UploadError.None, settingsId) : new(UploadError.NotFound);
+        }
         if (t.Target.Kind == UploadTargetKind.Chat)
         {
             var messageId = await _db.Messages.Where(m => m.AttachmentKey == t.Key).Select(m => (Guid?)m.Id).FirstOrDefaultAsync(ct);
@@ -156,15 +168,19 @@ public class UploadService : IUploadService
             && t.StagingKey.StartsWith(StorageKeys.StagingPrefix, StringComparison.Ordinal),
         UploadTargetKind.Chat => t.Target.ClientId is { } cl && t.Key.StartsWith(StorageKeys.ChatPrefix(cl), StringComparison.Ordinal)
             && t.StagingKey.StartsWith(StorageKeys.StagingPrefix, StringComparison.Ordinal),
+        UploadTargetKind.SettingsQr => t.Key.StartsWith(StorageKeys.QrPrefix, StringComparison.Ordinal)
+            && UploadRules.ImageContentTypes.Contains(t.ContentType)
+            && t.StagingKey.StartsWith(StorageKeys.StagingPrefix, StringComparison.Ordinal),
         _ => false
     };
 
     /// <summary>
     /// Case: anyone who can open the case. Clients only against a Pending or Rejected request of that case (R-046, R-049, Q-11);
-    /// firm uploads are plain case documents (no request). Chat: anyone who can open the client (R-067). SettingsQr (M6) is not accepted yet.
+    /// firm uploads are plain case documents (no request). Chat: anyone who can open the client (R-067). SettingsQr: Lawyer only (R-111).
     /// </summary>
     private async Task<bool> CanUseTargetAsync(ClaimsPrincipal user, UploadTarget target, CancellationToken ct)
     {
+        if (target.Kind == UploadTargetKind.SettingsQr) return _access.CanManageSettings(user);
         if (target.Kind == UploadTargetKind.Chat)
             return target.ClientId is { } clientId && await _access.CanAccessClientAsync(user, clientId, ct);
         if (target.Kind != UploadTargetKind.Case || target.CaseId is not { } caseId) return false;

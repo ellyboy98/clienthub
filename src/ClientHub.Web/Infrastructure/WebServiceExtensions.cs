@@ -2,11 +2,13 @@ using System.Globalization;
 using ClientHub.Web.Data.Entities;
 using ClientHub.Web.Services.Access;
 using ClientHub.Web.Services.Audit;
+using ClientHub.Web.Services.Bills;
 using ClientHub.Web.Services.Cases;
 using ClientHub.Web.Services.Chat;
 using ClientHub.Web.Services.Clients;
 using ClientHub.Web.Services.Documents;
 using ClientHub.Web.Services.Email;
+using ClientHub.Web.Services.Settings;
 using ClientHub.Web.Services.Storage;
 using Microsoft.AspNetCore.HostFiltering;
 using Microsoft.AspNetCore.HttpOverrides;
@@ -75,7 +77,7 @@ public static class WebServiceExtensions
         services.AddRazorPages(o =>
             {
                 o.Conventions.AuthorizeFolder("/Staff", FirmOnly);
-                o.Conventions.AuthorizePage("/Staff/Settings", LawyerOnly);
+                o.Conventions.AuthorizeFolder("/Staff/Settings", LawyerOnly);
                 o.Conventions.AuthorizeFolder("/Portal", ClientOnly);
                 o.Conventions.AuthorizeFolder("/Account/Manage");
                 o.Conventions.AuthorizeFolder("/Uploads");
@@ -117,6 +119,9 @@ public static class WebServiceExtensions
         services.AddScoped<IUploadService, UploadService>();
         services.AddScoped<IDocumentService, DocumentService>();
         services.AddScoped<IChatService, ChatService>();
+        services.AddScoped<IAccountEmails, AccountEmails>();
+        services.AddScoped<IFirmSettingsService, FirmSettingsService>();
+        services.AddScoped<IBillService, BillService>();
         return services;
     }
 }

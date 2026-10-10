@@ -103,27 +103,6 @@ public class Message : Entity
     public DateTime? ReadAt { get; set; }
 }
 
-public class Bill : Entity
-{
-    public Guid CaseId { get; set; }
-    public string BillNo { get; set; } = "";
-    public string Status { get; set; } = BillStatus.Draft;
-    public string? NoteToClient { get; set; }
-    public DateTime? IssuedAt { get; set; }
-    public DateTime? PaidAt { get; set; }
-    public decimal Total { get; set; }
-    public List<BillLine> Lines { get; set; } = new();
-}
-
-public class BillLine : Entity
-{
-    public Guid BillId { get; set; }
-    public string LineType { get; set; } = Entities.LineType.Fee;
-    public string Description { get; set; } = "";
-    public decimal Amount { get; set; }
-    public int SortOrder { get; set; }
-}
-
 public class Notification : Entity
 {
     public Guid UserId { get; set; }

@@ -283,4 +283,106 @@ If the link has expired, use "Forgot password" on the sign-in page.</value></dat
   <data name="Chat.Error.Empty" xml:space="preserve"><value>Write a message first.</value></data>
   <data name="Chat.Error.TooLong" xml:space="preserve"><value>A message can be up to 4,000 characters.</value></data>
   <data name="Staff.Chats.Profile" xml:space="preserve"><value>Client profile</value></data>
+  <data name="Staff.Settings.Firm" xml:space="preserve"><value>Firm details</value></data>
+  <data name="Staff.Settings.FirmName" xml:space="preserve"><value>Firm name</value></data>
+  <data name="Staff.Settings.Bank" xml:space="preserve"><value>Bank account for bills</value></data>
+  <data name="Staff.Settings.BankIntro" xml:space="preserve"><value>Shown to clients on every bill.</value></data>
+  <data name="Staff.Settings.BankName" xml:space="preserve"><value>Bank name</value></data>
+  <data name="Staff.Settings.AccountName" xml:space="preserve"><value>Account name</value></data>
+  <data name="Staff.Settings.AccountNo" xml:space="preserve"><value>Account number</value></data>
+  <data name="Staff.Settings.Smtp" xml:space="preserve"><value>Email (SMTP)</value></data>
+  <data name="Staff.Settings.SmtpIntro" xml:space="preserve"><value>Used to send emails to clients. Leave the host empty to only log emails.</value></data>
+  <data name="Staff.Settings.SmtpHost" xml:space="preserve"><value>SMTP host</value></data>
+  <data name="Staff.Settings.SmtpHostHint" xml:space="preserve"><value>For example smtp.gmail.com</value></data>
+  <data name="Staff.Settings.SmtpPort" xml:space="preserve"><value>Port</value></data>
+  <data name="Staff.Settings.SmtpPortHint" xml:space="preserve"><value>465 or 587</value></data>
+  <data name="Staff.Settings.SmtpUser" xml:space="preserve"><value>Username</value></data>
+  <data name="Staff.Settings.SmtpPassword" xml:space="preserve"><value>Password</value></data>
+  <data name="Staff.Settings.SmtpPasswordKeep" xml:space="preserve"><value>A password is saved. Leave blank to keep it.</value></data>
+  <data name="Staff.Settings.SmtpPasswordNone" xml:space="preserve"><value>No password saved yet.</value></data>
+  <data name="Staff.Settings.SmtpPasswordClear" xml:space="preserve"><value>Remove the saved password</value></data>
+  <data name="Staff.Settings.SmtpFrom" xml:space="preserve"><value>From address</value></data>
+  <data name="Staff.Settings.Qr" xml:space="preserve"><value>DuitNow QR</value></data>
+  <data name="Staff.Settings.QrIntro" xml:space="preserve"><value>Shown to clients on every bill.</value></data>
+  <data name="Staff.Settings.QrNone" xml:space="preserve"><value>No QR image uploaded yet.</value></data>
+  <data name="Staff.Settings.QrUpload" xml:space="preserve"><value>Upload QR image</value></data>
+  <data name="Staff.Settings.QrReplace" xml:space="preserve"><value>Replace QR image</value></data>
+  <data name="Staff.Settings.QrHint" xml:space="preserve"><value>JPG or PNG, up to 20 MB</value></data>
+  <data name="Staff.Settings.StaffAccounts" xml:space="preserve"><value>Staff accounts</value></data>
+  <data name="Staff.Settings.AddStaff" xml:space="preserve"><value>Add staff</value></data>
+  <data name="Staff.Settings.Name" xml:space="preserve"><value>Name</value></data>
+  <data name="Staff.Settings.Email" xml:space="preserve"><value>Email</value></data>
+  <data name="Staff.Settings.EmailHint" xml:space="preserve"><value>A link to set the password is sent to this address.</value></data>
+  <data name="Staff.Settings.Role" xml:space="preserve"><value>Role</value></data>
+  <data name="Staff.Settings.TwoFactor" xml:space="preserve"><value>Two-step sign-in</value></data>
+  <data name="Staff.Settings.TwoFactorOn" xml:space="preserve"><value>On</value></data>
+  <data name="Staff.Settings.TwoFactorOff" xml:space="preserve"><value>Off</value></data>
+  <data name="Staff.Settings.State" xml:space="preserve"><value>Account</value></data>
+  <data name="Staff.Settings.Actions" xml:space="preserve"><value>Actions</value></data>
+  <data name="Staff.Settings.Deactivate" xml:space="preserve"><value>Deactivate</value></data>
+  <data name="Staff.Settings.Reactivate" xml:space="preserve"><value>Reactivate</value></data>
+  <data name="Staff.Settings.Deactivated" xml:space="preserve"><value>Account deactivated. The user can no longer sign in.</value></data>
+  <data name="Staff.Settings.Reactivated" xml:space="preserve"><value>Account reactivated.</value></data>
+  <data name="Staff.Settings.CannotDeactivateSelf" xml:space="preserve"><value>You cannot deactivate your own account.</value></data>
+  <data name="Staff.Settings.CreateSubmit" xml:space="preserve"><value>Create account</value></data>
+  <data name="Staff.Settings.AccountCreated" xml:space="preserve"><value>Account created. A set-password link was sent to {0}.</value></data>
+  <data name="Staff.Settings.EmailNotSent" xml:space="preserve"><value>Account created, but the email could not be sent. Ask the user to use Forgot password.</value></data>
+  <data name="Validation.Port" xml:space="preserve"><value>Enter a port between 1 and 65535.</value></data>
+  <data name="Upload.Error.ImageOnly" xml:space="preserve"><value>Choose a JPG or PNG image.</value></data>
+  <data name="Bill.Number" xml:space="preserve"><value>Bill no.</value></data>
+  <data name="Bill.Type" xml:space="preserve"><value>Type</value></data>
+  <data name="Bill.Description" xml:space="preserve"><value>Description</value></data>
+  <data name="Bill.Amount" xml:space="preserve"><value>Amount (RM)</value></data>
+  <data name="Bill.Total" xml:space="preserve"><value>Total</value></data>
+  <data name="Bill.Issued" xml:space="preserve"><value>Issued</value></data>
+  <data name="Bill.PaidOn" xml:space="preserve"><value>Paid on</value></data>
+  <data name="Bill.BankName" xml:space="preserve"><value>Bank</value></data>
+  <data name="Bill.AccountName" xml:space="preserve"><value>Account name</value></data>
+  <data name="Bill.AccountNo" xml:space="preserve"><value>Account number</value></data>
+  <data name="Bill.Reference" xml:space="preserve"><value>Payment reference</value></data>
+  <data name="Bill.NotSet" xml:space="preserve"><value>Not set</value></data>
+  <data name="Bill.QrAlt" xml:space="preserve"><value>DuitNow QR code</value></data>
+  <data name="Bill.QrCaption" xml:space="preserve"><value>Scan with your banking app</value></data>
+  <data name="LineType.Fee" xml:space="preserve"><value>Fee</value></data>
+  <data name="LineType.Expense" xml:space="preserve"><value>Expense</value></data>
+  <data name="Staff.Bill.Lines" xml:space="preserve"><value>Lines</value></data>
+  <data name="Staff.Bill.AddLine" xml:space="preserve"><value>+ Add line</value></data>
+  <data name="Staff.Bill.RemoveLine" xml:space="preserve"><value>Delete</value></data>
+  <data name="Staff.Bill.NoLines" xml:space="preserve"><value>No lines yet. Add a fee or an expense.</value></data>
+  <data name="Staff.Bill.TotalHint" xml:space="preserve"><value>The total is calculated by the system.</value></data>
+  <data name="Staff.Bill.LineInvalid" xml:space="preserve"><value>Enter a type, a description and an amount above RM 0.00.</value></data>
+  <data name="Staff.Bill.TotalTooLarge" xml:space="preserve"><value>The bill total is too large.</value></data>
+  <data name="Staff.Bill.Note" xml:space="preserve"><value>Note to client</value></data>
+  <data name="Staff.Bill.SaveNote" xml:space="preserve"><value>Save note</value></data>
+  <data name="Staff.Bill.Status" xml:space="preserve"><value>Status</value></data>
+  <data name="Staff.Bill.SendFreezes" xml:space="preserve"><value>Sending freezes the lines.</value></data>
+  <data name="Staff.Bill.MarkSent" xml:space="preserve"><value>Mark sent</value></data>
+  <data name="Staff.Bill.MarkPaid" xml:space="preserve"><value>Mark paid</value></data>
+  <data name="Staff.Bill.SentNotice" xml:space="preserve"><value>Bill sent. The client can now see it.</value></data>
+  <data name="Staff.Bill.PaidNotice" xml:space="preserve"><value>Bill marked paid.</value></data>
+  <data name="Staff.Bill.NeedsLine" xml:space="preserve"><value>Add at least one line before sending.</value></data>
+  <data name="Staff.Bill.BankPreview" xml:space="preserve"><value>Bank details and QR</value></data>
+  <data name="Staff.Bill.BankMissing" xml:space="preserve"><value>Bank details and QR are set in Settings by a lawyer.</value></data>
+  <data name="Staff.Bills.Intro" xml:space="preserve"><value>Bills on the cases you can open.</value></data>
+  <data name="Staff.Bills.Empty" xml:space="preserve"><value>No bills yet. Create one from a case page.</value></data>
+  <data name="Staff.Bills.Client" xml:space="preserve"><value>Client</value></data>
+  <data name="Staff.Bills.Case" xml:space="preserve"><value>Case</value></data>
+  <data name="Staff.Bills.Status" xml:space="preserve"><value>Status</value></data>
+  <data name="Staff.Case.Bills" xml:space="preserve"><value>Bills</value></data>
+  <data name="Staff.Case.NoBills" xml:space="preserve"><value>No bills for this case yet.</value></data>
+  <data name="Staff.Case.NewBill" xml:space="preserve"><value>+ New bill</value></data>
+  <data name="Portal.Bills.Empty" xml:space="preserve"><value>No bills yet.</value></data>
+  <data name="Portal.Bill.AmountDue" xml:space="preserve"><value>Amount due</value></data>
+  <data name="Portal.Bill.AmountPaid" xml:space="preserve"><value>Amount paid</value></data>
+  <data name="Portal.Bill.Details" xml:space="preserve"><value>Bill details</value></data>
+  <data name="Portal.Bill.Note" xml:space="preserve"><value>Note from the firm</value></data>
+  <data name="Portal.Bill.HowToPay" xml:space="preserve"><value>How to pay</value></data>
+  <data name="Portal.Bill.Print" xml:space="preserve"><value>Print / Save as PDF</value></data>
+  <data name="Email.StaffAccountCreated.Subject" xml:space="preserve"><value>Your Client Hub staff account</value></data>
+  <data name="Email.StaffAccountCreated.Body" xml:space="preserve"><value>Hello {0},
+
+A lawyer has created your staff account on the firm's Client Hub. Use this link to set your password. It works for one day:
+{1}
+
+If the link has expired, use Forgot password on the sign-in page.</value></data>
 </root>

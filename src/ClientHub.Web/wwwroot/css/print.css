@@ -1,0 +1,12 @@
+/* Bill print / Save as PDF (R-085). Basic: hide navigation and controls, white background, no shadows. */
+@media print {
+  nav, aside, .no-print, [data-upload], button { display: none !important; }
+  .print-only { display: block !important; }
+  html, body { background: #fff !important; }
+  header { background: #fff !important; color: #111827 !important; padding: 0 0 12px !important; position: static !important; }
+  header * { color: #111827 !important; }
+  main { max-width: none !important; padding: 0 !important; }
+  .card { box-shadow: none !important; break-inside: avoid; }
+  a { text-decoration: none !important; color: inherit !important; }
+  * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}

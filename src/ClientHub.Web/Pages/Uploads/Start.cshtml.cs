@@ -23,6 +23,7 @@ public class StartModel : PageModel
         {
             null or UploadTargetKind.Case when caseId is { } c => UploadTarget.Case(c, requestId),
             UploadTargetKind.Chat when clientId is { } cl => UploadTarget.Chat(cl),
+            UploadTargetKind.SettingsQr => UploadTarget.SettingsQr(),
             _ => null
         };
         if (target is null) return NotFound();

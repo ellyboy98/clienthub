@@ -12,7 +12,7 @@
         new TabItem(L["Portal.Case.Tab.Bills"], baseUrl + "?tab=" + DetailsModel.TabBills, Model.Tab == DetailsModel.TabBills),
     });
     var noUpdates = new EmptyStateModel(L["Portal.Case.NoUpdates"]);
-    var soon = new EmptyStateModel(L["Common.ComingSoon"]);
+    var noBills = new EmptyStateModel(L["Portal.Bills.Empty"]);
     var noDocuments = new EmptyStateModel(L["Portal.Case.NoDocuments"]);
     var back = c.IsClosed ? "/Portal/Cases/Past" : "/Portal/Cases";
 }
@@ -124,8 +124,12 @@
             </ul>
         }
     }
+    else if (Model.Bills.Count == 0)
+    {
+        <partial name="Components/_EmptyState" model="noBills" />
+    }
     else
     {
-        <partial name="Components/_EmptyState" model="soon" />
+        <partial name="/Pages/Portal/Bills/_BillCards.cshtml" model="Model.Bills" />
     }
 </div>

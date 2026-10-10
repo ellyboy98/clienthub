@@ -1,6 +1,7 @@
 using ClientHub.Web.Data;
 using ClientHub.Web.Data.Entities;
 using ClientHub.Web.Services.Access;
+using ClientHub.Web.Services.Bills;
 using ClientHub.Web.Services.Documents;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -9,7 +10,8 @@ using Microsoft.EntityFrameworkCore;
 namespace ClientHub.Web.Pages.Portal.Cases;
 
 /// <summary>
-/// Client case page (R-042, R-043, R-152): read only. open requests at the top with Upload/Re-upload, Updates and Documents tabs; Bills tab is M6.
+/// Client case page (R-042, R-043, R-152): read only. Open requests at the top with Upload/Re-upload; Updates, Documents and Bills tabs
+/// (Bills: Sent and Paid only, through IBillService.ListFor).
 /// </summary>
 public class DetailsModel : PageModel
 {
@@ -17,7 +19,11 @@ public class DetailsModel : PageModel
     private readonly AppDbContext _db;
     private readonly IAccessService _access;
     private readonly IDocumentService _documents;
-    public DetailsModel(AppDbContext db, IAccessService access, IDocumentService documents) { _db = db; _access = access; _documents = documents; }
+    private readonly IBillService _bills;
+    public DetailsModel(AppDbContext db, IAccessService access, IDocumentService documents, IBillService bills)
+    {
+        _db = db; _access = access; _documents = documents; _bills = bills;
+    }
 
     [BindProperty(SupportsGet = true)] public Guid Id { get; set; }
     [BindProperty(SupportsGet = true)] public string Tab { get; set; } = TabUpdates;
@@ -28,6 +34,7 @@ public class DetailsModel : PageModel
     /// <summary>Received requests, shown read only (status pill, no upload).</summary>
     public List<RequestRow> ReceivedRequests { get; private set; } = new();
     public List<DocumentRow> Documents { get; private set; } = new();
+    public List<BillRow> Bills { get; private set; } = new();
 
     public async Task<IActionResult> OnGetAsync()
     {
@@ -41,6 +48,7 @@ public class DetailsModel : PageModel
         OpenRequests = requests.Where(r => r.Status != RequestStatus.Received).ToList();
         ReceivedRequests = requests.Where(r => r.Status == RequestStatus.Received).ToList();
         if (Tab == TabDocuments) Documents = await _documents.DocumentsAsync(Id);
+        if (Tab == TabBills) Bills = await _bills.ListFor(User, Id).ToListAsync();
         return Page();
     }
 }

@@ -13,7 +13,7 @@ Start with Prompt 1 in KICKOFF.md once the 5-hour usage window has reset.
 | M3 | Clients and cases | 30 min | built, review fixes applied, 75/75 tests green, not committed |
 | M4 | Storage and documents | 30 min | built, review fixes applied, 119/119 tests green, not committed |
 | M5 | Chat | 20 min | built, review fixes applied, 133/133 tests green, not committed |
-| M6 | Bills and Settings | 25 min | not started |
+| M6 | Bills and Settings | 25 min | built, 157/157 tests green, not committed |
 | M7 | Notifications and email | 20 min | not started |
 | M8 | Deploy and backups (deployer) | 10 min | not started |
 
@@ -207,3 +207,32 @@ Review fixes (M5 review, 2026-10-10):
 - New tests: Poll_LateCommittedEarlierStamp_StillShown_HiddenPollLeavesUnread, Poll_UncommittedInsert_NotSkippedNorMarkedRead,
   ConcurrentSends_AllShownInSeqOrder, ChatFile_CarriesCaption_TooLongRefused. ChatTests 14/14 in 5 consecutive runs; full suite 133/133.
 - Tester: with the thread open in a background tab, a new client message must stay unread (pill stays) until the tab is shown.
+
+
+## M6 Bills and Settings (developer, 2026-10-10)
+
+Built:
+- Domain: `Data/Entities/{Bill.cs,BillLine.cs}` (moved out of Domain.cs; `Recalculate`, `AddLine/UpdateLine/RemoveLine/SetNote` Draft only,
+  `MarkSent` (>=1 line, issued_at), `MarkPaid` (Sent only), `BillRuleException`). No migration (model unchanged).
+- Services: `Services/Bills/BillNumberGenerator.cs` (per-year `pg_advisory_xact_lock` + unique index), `Services/Bills/BillService.cs`
+  (`FindAsync`/`ListFor(user, caseId?)` = access gates via CasesFor, Clients never see Draft; every change locks the bill row
+  `FOR UPDATE` in a transaction; status audit `Bill.StatusChanged` in the same transaction; `// NOTIFY: BillSent / BillPaid R-094`),
+  `Services/Settings/FirmSettingsService.cs` (settings, SMTP password protected with purpose `ClientHub.SmtpPassword`, bank view +
+  5-min presigned QR URL, firm accounts create/deactivate/reactivate), `Services/Access/AccountEmails.cs` (set-password email; staff kind).
+- Uploads: `UploadService` SettingsQr branch (Lawyer only, JPG/PNG only, key `settings/qr/<uuid>/<name>`, staging -> copy as before);
+  `Uploads/Start` accepts `kind=SettingsQr`; `UploadRules.ImageContentTypes/ImageExtensions`; `_FileUpload` gains `ImagesOnly`/`Hint`.
+- Pages: `Staff/Bills/{Index,Edit,_BillLines}` (HTMX add/edit/remove line swaps `#bill-lines`), `Portal/Bills/{Index,Details,_BillCards}`,
+  `Staff/Settings/{Index,StaffAccounts}` (old `Staff/Settings.cshtml` moved to `Settings/Index`; policy now `AuthorizeFolder("/Staff/Settings", LawyerOnly)`).
+  Staff case page: Bills card with "+ New bill" (`?handler=NewBill`). Portal case page: Bills tab. `Components/_BankDetails` + `BankDetailsModel`.
+  `wwwroot/css/print.css` (linked media=print in `_Head`). 97 resx keys en + ms. `WebServiceExtensions` registers the new services.
+- Tests: `Bills/BillTests.cs` (14), `Bills/BillAccessTests.cs` (5), `Settings/SettingsTests.cs` (6). Full suite 157/157.
+
+Skipped: Settings "Send test email" (R-113, cut). Staff deactivation has no confirm dialog. ClientService keeps its own account email
+method (AccountEmails not back-ported, to avoid touching M3 code).
+
+Tester notes:
+- `npm run css:build` first. As Staff on an assigned case: "+ New bill" -> editor; add Fee/Expense lines (total updates, read only);
+  Mark sent -> line controls gone; Mark paid. Client: `/Portal/Bills`, `/Portal/Bills/Details/{id}`, print preview hides nav/header icons/button.
+- Draft bill URL as the client -> 404. Settings as lawyer1: save firm/bank/SMTP (password field never filled back), upload a PNG QR,
+  Add staff (set-password email in console log), Deactivate/Reactivate. OM/Staff get 404 on `/Staff/Settings*`.
+- Check at 390px: `/Portal/Bills`, `/Portal/Bills/Details/{id}`, `/Portal/Cases/Details/{id}?tab=bills`.

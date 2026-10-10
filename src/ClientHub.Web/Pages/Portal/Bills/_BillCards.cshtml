@@ -1,0 +1,17 @@
+@model IReadOnlyList<ClientHub.Web.Services.Bills.BillRow>
+@* Client bill cards (Sent and Paid only; drafts never reach this list, R-079). Used by Bills and the case Bills tab. *@
+<ul class="space-y-3" data-bills>
+    @foreach (var r in Model)
+    {
+        <li>
+            <a href="/Portal/Bills/Details/@r.Id" class="card block min-h-[44px] space-y-2" data-bill="@r.Id">
+                <div class="flex items-center justify-between gap-2">
+                    <span class="text-label tabular-nums">@r.BillNo</span>
+                    <partial name="Components/_StatusBadge" model="r.Status" />
+                </div>
+                <p class="truncate text-caption text-text-secondary">@r.CaseTitle · @L["Bill.Issued"] @Format.Date(r.IssuedAt)</p>
+                <p class="text-h3 tabular-nums">@Format.Rm(r.Total)</p>
+            </a>
+        </li>
+    }
+</ul>

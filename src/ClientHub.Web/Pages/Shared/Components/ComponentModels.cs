@@ -36,8 +36,13 @@ public record ConfirmDialogModel(string Id, string Title, string Message, string
 /// File picker wired by wwwroot/js/upload.js: start → PUT with progress → complete, then the page reloads.
 /// Target fields are posted to /Uploads/Start as they are (kind, caseId, requestId); the server builds the key.
 /// </summary>
-public record FileUploadModel(string Id, string Label, IReadOnlyDictionary<string, string> Target, bool Accent = false, bool ShowHint = true)
+/// <summary>ImagesOnly: JPG/PNG only (Settings DuitNow QR); Hint replaces the default pdf/docx/jpg/png hint.</summary>
+public record FileUploadModel(string Id, string Label, IReadOnlyDictionary<string, string> Target, bool Accent = false, bool ShowHint = true,
+    bool ImagesOnly = false, string? Hint = null)
 {
+    public static FileUploadModel ForSettingsQr(string id, string label, string hint) =>
+        new(id, label, new Dictionary<string, string> { ["kind"] = "SettingsQr" }, ImagesOnly: true, Hint: hint);
+
     public static FileUploadModel ForCase(string id, string label, Guid caseId, Guid? requestId = null, bool accent = false, bool showHint = true)
     {
         var target = new Dictionary<string, string> { ["kind"] = "Case", ["caseId"] = caseId.ToString() };
@@ -67,3 +72,6 @@ public record ChatMessagesModel(ChatViewModel Chat, IReadOnlyList<ClientHub.Web.
 
 /// <summary>Mine: on the viewer's side (navy, right). The sender name shows on every message not written by the viewer.</summary>
 public record MessageBubbleModel(ClientHub.Web.Services.Chat.ChatMessageView Message, bool Mine, bool ShowName);
+
+/// <summary>Bank details and DuitNow QR from Settings with the bill number as payment reference (R-084, R-147, R-154).</summary>
+public record BankDetailsModel(ClientHub.Web.Services.Settings.BankView Bank, string Reference);

@@ -2,8 +2,8 @@
 @using ClientHub.Web.Services.Storage
 @* Behaviour: wwwroot/js/upload.js. Allowed: pdf, docx, jpg, png, up to 20 MB (checked here and again on the server). *@
 <div class="space-y-2" data-upload data-upload-start="/Uploads/Start" data-upload-complete="/Uploads/Complete"
-     data-upload-max="@UploadRules.MaxBytes" data-upload-ext="@string.Join(",", UploadRules.Extensions)"
-     data-msg-type="@L["Upload.Error.BadType"]" data-msg-size="@L["Upload.Error.TooLarge"]"
+     data-upload-max="@UploadRules.MaxBytes" data-upload-ext="@string.Join(",", Model.ImagesOnly ? UploadRules.ImageExtensions : UploadRules.Extensions)"
+     data-msg-type="@(Model.ImagesOnly ? L["Upload.Error.ImageOnly"] : L["Upload.Error.BadType"])" data-msg-size="@L["Upload.Error.TooLarge"]"
      data-msg-failed="@L["Upload.Error.Failed"]" data-msg-uploading="@L["Upload.Uploading"]">
     @Html.AntiForgeryToken()
     @foreach (var f in Model.Target)
@@ -11,8 +11,8 @@
         <input type="hidden" data-upload-field name="@f.Key" value="@f.Value" />
     }
     <label for="@Model.Id" class="btn @(Model.Accent ? "btn-accent" : "btn-secondary") cursor-pointer">@Model.Label</label>
-    <input id="@Model.Id" type="file" class="sr-only" accept=".pdf,.docx,.jpg,.jpeg,.png,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,image/jpeg,image/png" />
-    @if (Model.ShowHint) { <p class="text-caption text-text-muted">@L["Common.Upload.Hint"]</p> }
+    <input id="@Model.Id" type="file" class="sr-only" accept="@(Model.ImagesOnly ? ".jpg,.jpeg,.png,image/jpeg,image/png" : ".pdf,.docx,.jpg,.jpeg,.png,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,image/jpeg,image/png")" />
+    @if (Model.ShowHint) { <p class="text-caption text-text-muted">@(Model.Hint ?? L["Common.Upload.Hint"].Value)</p> }
     <p class="hidden text-caption text-text-secondary" data-upload-status></p>
     <div class="hidden h-2 w-full overflow-hidden rounded-full bg-bg-subtle" data-upload-progress>
         <div class="h-full w-0 bg-brand-gold transition-all" data-upload-bar></div>

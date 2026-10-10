@@ -14,6 +14,7 @@
     var profile = new ButtonModel(L["Staff.Case.Profile"], ButtonVariant.Ghost, Href: $"/Staff/Clients/Details/{c.ClientId}");
     var addRequest = new ButtonModel(L["Staff.Case.AddRequest"], ButtonVariant.Secondary);
     var upload = FileUploadModel.ForCase("case-upload", L["Staff.Case.UploadDocument"], c.Id);
+    var newBill = new ButtonModel(L["Staff.Case.NewBill"], ButtonVariant.Secondary);
     var staffNames = c.StaffLinks.Select(s => s.User?.DisplayName).Where(n => n is not null).OrderBy(n => n).ToList();
 }
 <div class="space-y-5">
@@ -231,6 +232,34 @@
                     <partial name="Components/_Button" model="chat" />
                     <partial name="Components/_Button" model="profile" />
                 </div>
+            </section>
+
+            <section class="card space-y-3" id="bills" data-bills>
+                <div class="flex items-center justify-between gap-2">
+                    <h2 class="text-h3">@L["Staff.Case.Bills"]</h2>
+                    <form method="post" asp-page-handler="NewBill" asp-route-id="@c.Id"><partial name="Components/_Button" model="newBill" /></form>
+                </div>
+                @if (Model.Bills.Count == 0)
+                {
+                    <p class="text-body-sm text-text-secondary">@L["Staff.Case.NoBills"]</p>
+                }
+                else
+                {
+                    <ul class="divide-y divide-border">
+                        @foreach (var bl in Model.Bills)
+                        {
+                            <li data-bill="@bl.Id">
+                                <a href="/Staff/Bills/Edit/@bl.Id" class="flex min-h-[44px] items-center justify-between gap-2 py-2 hover:bg-bg-subtle">
+                                    <span class="text-label tabular-nums">@bl.BillNo</span>
+                                    <span class="flex items-center gap-2">
+                                        <span class="text-body-sm tabular-nums">@Format.Rm(bl.Total)</span>
+                                        <partial name="Components/_StatusBadge" model="bl.Status" />
+                                    </span>
+                                </a>
+                            </li>
+                        }
+                    </ul>
+                }
             </section>
         </aside>
     </div>

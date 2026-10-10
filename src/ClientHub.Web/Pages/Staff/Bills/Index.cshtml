@@ -1,0 +1,46 @@
+@page
+@model ClientHub.Web.Pages.Staff.Bills.IndexModel
+@{
+    ViewData["Title"] = L["Staff.Nav.Bills"];
+    var empty = new EmptyStateModel(L["Staff.Bills.Empty"]);
+}
+<div class="space-y-5">
+    <div>
+        <h1 class="text-h1">@L["Staff.Nav.Bills"]</h1>
+        <p class="text-body-sm text-text-secondary">@L["Staff.Bills.Intro"]</p>
+    </div>
+    @if (Model.Rows.Count == 0)
+    {
+        <partial name="Components/_EmptyState" model="empty" />
+    }
+    else
+    {
+        <div class="card overflow-x-auto p-0 md:p-0">
+            <table class="w-full text-left text-body-sm">
+                <thead class="bg-bg-subtle text-badge text-text-secondary">
+                    <tr>
+                        <th class="px-4 py-3">@L["Bill.Number"]</th>
+                        <th class="px-4 py-3">@L["Staff.Bills.Client"]</th>
+                        <th class="px-4 py-3">@L["Staff.Bills.Case"]</th>
+                        <th class="px-4 py-3">@L["Staff.Bills.Status"]</th>
+                        <th class="px-4 py-3 text-right">@L["Bill.Total"]</th>
+                        <th class="px-4 py-3">@L["Bill.Issued"]</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-border">
+                    @foreach (var r in Model.Rows)
+                    {
+                        <tr data-bill="@r.Id">
+                            <td class="px-4 py-3"><a href="/Staff/Bills/Edit/@r.Id" class="inline-flex min-h-[44px] items-center font-medium text-brand-navy hover:underline tabular-nums">@r.BillNo</a></td>
+                            <td class="px-4 py-3">@r.ClientName</td>
+                            <td class="px-4 py-3"><a href="/Staff/Cases/Details/@r.CaseId" class="hover:underline">@r.CaseTitle</a></td>
+                            <td class="px-4 py-3"><partial name="Components/_StatusBadge" model="r.Status" /></td>
+                            <td class="px-4 py-3 text-right tabular-nums">@Format.Rm(r.Total)</td>
+                            <td class="px-4 py-3">@Format.Date(r.IssuedAt)</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>

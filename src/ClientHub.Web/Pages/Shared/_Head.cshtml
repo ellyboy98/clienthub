@@ -2,6 +2,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>@(ViewData["Title"]?.ToString() is { Length: > 0 } t ? t + " · " : "")@L["Common.AppName"]</title>
 <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+<link rel="stylesheet" href="~/css/print.css" media="print" asp-append-version="true" />
 <script src="https://unpkg.com/htmx.org@2.0.4/dist/htmx.min.js" integrity="sha384-HGfztofotfshcF7+8n44JQL2oJmowVChPTg48S+jvZoztPfvwD79OC/LTtG6dMp+" crossorigin="anonymous" defer></script>
 <script src="https://unpkg.com/alpinejs@3.14.8/dist/cdn.min.js" integrity="sha384-X9kJyAubVxnP0hcA+AMMs21U445qsnqhnUF8EBlEpP3a42Kh/JwWjlv2ZcvGfphb" crossorigin="anonymous" defer></script>
 <script src="~/js/upload.js" asp-append-version="true" defer></script>

@@ -21,6 +21,9 @@ public static class UploadRules
 
     public static readonly string[] Extensions = Types.Keys.ToArray();
     public static readonly string[] ContentTypes = Types.Values.Distinct().ToArray();
+    /// <summary>Settings DuitNow QR: images only.</summary>
+    public static readonly string[] ImageContentTypes = { Jpeg, Png };
+    public static readonly string[] ImageExtensions = { ".jpg", ".jpeg", ".png" };
 
     /// <summary>Content type for an allowed file name, or null.</summary>
     public static string? ContentTypeFor(string fileName) =>
