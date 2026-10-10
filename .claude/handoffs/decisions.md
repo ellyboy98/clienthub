@@ -2,6 +2,7 @@
 
 Format: date · who · decision · why. Newest first.
 
+- 2026-10-10 · Fiqri · Dev/CI S3 storage is SeaweedFS instead of MinIO · MinIO no longer publishes community images; production remains Cloudflare R2.
 - 2026-10-10 · Fiqri · Storage is S3-compatible (Cloudflare R2 in production and preview, MinIO in dev and CI) through `AWSSDK.S3` presigned PUT/GET, replacing Vercel Blob · Blob's client-upload handshake exists only in its JS SDK and needs a callback that cannot reach localhost. Presigned S3 is standard in .NET, private by default, and works the same in dev and prod.
 - 2026-10-10 · Fiqri · Daily backups: encrypted `pg_dump` plus a file-bucket mirror, uploaded to a separate R2 bucket by a GitHub Actions cron job, kept 30 days, with Neon point-in-time restore as the first layer · The FSD requires daily backups (PDPA) and the app has no background process.
 - 2026-10-10 · Fiqri · Chat attachments use the same presigned flow with an upload target of `Chat(clientId)`. "Save to case" copies the object server side into the case and writes a `documents` row · The upload-token design only covered cases; chat is per client.
@@ -11,3 +12,5 @@ Format: date · who · decision · why. Newest first.
 - 2026-10-10 · Fiqri · Default language is English for new users and the login page. There is no firm-wide language setting; each user changes their own in My account · Simplest reading of "default language is English".
 - 2026-10-10 · Fiqri · Version 1 is built on branch `build/v1`, one commit per milestone, merged into `main` through one pull request · `main` has branch protection (PR plus green CI), so direct milestone commits to `main` would be rejected.
 - 2026-10-10 · Fiqri · Vercel Hobby plan accepted for now · Family project for the firm. The TSD's plan to move to Pro stays.
+- 2026-10-10 · Fiqri · Open questions Q-01..Q-22 in requirements.md: all defaults approved as written · Plan review before the build.
+- 2026-10-10 · Fiqri · Cut from v1: Save to case from chat (R-070..R-072), the dashboard "Needs your attention" feed (R-138 second half), and Settings "Send test email" (R-113) · The time boxes were tight; these were cut up front.

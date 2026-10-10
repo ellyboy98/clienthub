@@ -1,0 +1,82 @@
+services:
+  app:
+    build:
+      context: .devcontainer
+    working_dir: /workspace
+    volumes:
+      - .:/workspace:cached
+      - nuget-cache:/root/.nuget/packages
+    env_file:
+      - path: .env
+        required: false
+    environment:
+      ASPNETCORE_URLS: http://0.0.0.0:5000
+      ConnectionStrings__Default: Host=db;Port=5432;Database=${POSTGRES_DB:-clienthub};Username=${POSTGRES_USER:-clienthub};Password=${POSTGRES_PASSWORD:-clienthub}
+      S3_ENDPOINT: http://storage:9000
+      S3_PUBLIC_ENDPOINT: http://localhost:9000
+      TEST_DB_HOST: db
+    ports:
+      - "5000:5000"
+    depends_on:
+      db:
+        condition: service_healthy
+      storage:
+        condition: service_healthy
+
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-clienthub}
+      POSTGRES_USER: ${POSTGRES_USER:-clienthub}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-clienthub}
+    ports:
+      - "5432:5432"
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-clienthub}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  storage:
+    image: chrislusf/seaweedfs:4.48
+    command: server -dir=/data -master.volumeSizeLimitMB=256 -s3 -s3.port=9000
+    environment:
+      AWS_ACCESS_KEY_ID: ${S3_ACCESS_KEY_ID:-clienthub}
+      AWS_SECRET_ACCESS_KEY: ${S3_SECRET_ACCESS_KEY:-clienthub-dev-secret}
+    ports:
+      - "9000:9000"
+    volumes:
+      - storage-data:/data
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q -O /dev/null http://127.0.0.1:9000/healthz"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  storage-init:
+    image: amazon/aws-cli
+    depends_on:
+      storage:
+        condition: service_healthy
+    restart: "no"
+    environment:
+      AWS_ACCESS_KEY_ID: ${S3_ACCESS_KEY_ID:-clienthub}
+      AWS_SECRET_ACCESS_KEY: ${S3_SECRET_ACCESS_KEY:-clienthub-dev-secret}
+      AWS_DEFAULT_REGION: us-east-1
+    volumes:
+      - ./.devcontainer/cors.json:/cors.json:ro
+    entrypoint: >
+      /bin/sh -c "
+      for b in clienthub-files clienthub-test; do
+        aws --endpoint-url http://storage:9000 s3api head-bucket --bucket $$b 2>/dev/null ||
+        aws --endpoint-url http://storage:9000 s3api create-bucket --bucket $$b || exit 1;
+        aws --endpoint-url http://storage:9000 s3api put-bucket-cors --bucket $$b --cors-configuration file:///cors.json || exit 1;
+      done;
+      echo buckets ready"
+
+volumes:
+  db-data:
+  storage-data:
+  nuget-cache:

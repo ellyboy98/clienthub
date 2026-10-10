@@ -1,0 +1,17 @@
+{
+  "name": "Client Management Hub",
+  "dockerComposeFile": ["../docker-compose.yml"],
+  "service": "app",
+  "runServices": ["app", "db", "storage", "storage-init"],
+  "workspaceFolder": "/workspace",
+  "forwardPorts": [5000, 9000, 9001],
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-dotnettools.csdevkit",
+        "ms-dotnettools.csharp",
+        "bradlc.vscode-tailwindcss"
+      ]
+    }
+  }
+}
