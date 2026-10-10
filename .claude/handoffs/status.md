@@ -1,6 +1,6 @@
 # Build status
 
-Branch `build/v1`. All milestones built, reviewed and tested locally: 180/180 tests green. M8 is not yet committed. Nothing pushed or deployed.
+Branch `build/v1`. All milestones built, reviewed and tested locally: 180/180 tests green. All milestones committed on `build/v1`. Nothing deployed.
 
 ## Milestones
 
@@ -13,7 +13,7 @@ Branch `build/v1`. All milestones built, reviewed and tested locally: 180/180 te
 | M5 | Chat (with file messages) | 18ff3f0 | done |
 | M6 | Bills and Settings | 3e1da36 | done |
 | M7 | Notifications and email | 2e2c5e2 | done |
-| M8 | Deploy and backups (deployer) | pending commit | built; image and workflow verified locally only |
+| M8 | Deploy and backups (deployer) | 312a0f2 | built; image and workflow verified locally only |
 
 Open questions Q-01..Q-22: defaults approved (decisions.md).
 
@@ -36,7 +36,7 @@ Open questions Q-01..Q-22: defaults approved (decisions.md).
 ## Steps for Fiqri by hand
 
 Full detail in `.claude/handoffs/deploy.md`.
-1. Commit M8, push `build/v1`, open one PR into `main`, merge when CI is green.
+1. Push `build/v1`, open one PR into `main`, merge when CI is green.
 2. Cloudflare R2: three private buckets, CORS on the two files buckets, lifecycle rules (`staging/` 1 day on files buckets, `db/` 30 days on backups), app and backup API tokens.
 3. Neon via Vercel Marketplace; confirm the PostgreSQL major version matches `PGMAJOR` in `backup.yml`.
 4. Vercel: import repo, set env vars (separate Production and Preview values; `PORT=8080`; `APP_BASE_URL` mandatory in Production; preview needs its own `APP_BASE_URL` or `AllowedHosts`), first deploy, run seed once.
